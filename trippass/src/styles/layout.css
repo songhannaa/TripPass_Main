@@ -1,0 +1,80 @@
+/* 전체 레이아웃을 설정 */
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* 콘텐츠 영역 설정 */
+.layout-content {
+  display: flex;
+  flex: 1;
+}
+
+/* 메인 콘텐츠 설정 */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #F5F5F5;
+}
+
+.header {
+  height: 60px;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.header-links {
+  list-style: none;
+  display: flex;
+}
+
+.header-links li {
+  margin-left: 20px;
+}
+
+.header-links a {
+  text-decoration: none;
+}
+.sidebar {
+  width: 250px;
+  background-color: #ffffff;
+  height: calc(100vh - 60px); 
+  padding: 20px;
+}
+
+.sidebar-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+  color: #333;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.sidebar ul li a:hover {
+  text-decoration: underline;
+}
+
