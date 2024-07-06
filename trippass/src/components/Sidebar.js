@@ -20,7 +20,7 @@ const Sidebar = () => {
       </div>
       <ul>
         <li>
-          <Link to="/"><img src={dashboardIcon} alt="Da  shboard Icon" />Dashboard</Link>
+          <Link to="/dashboard"><img src={dashboardIcon} alt="Dashboard Icon" />Dashboard</Link>
         </li>
         <li>
           <Link to="/tripPlan"><img src={dashboardIcon} alt="Dashboard Icon" />TripPlan</Link>

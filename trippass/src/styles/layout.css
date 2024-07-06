@@ -1,9 +1,4 @@
-@font-face {
-  font-family: 'Pretendard-Regular';
-  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-}
+
 /* 전체 레이아웃 */
 .layout {
   display: flex;
@@ -21,6 +16,7 @@
 /* 메인 콘텐츠 */
 .main-content {
   flex: 1;
+  height: calc(100vh - 70px);
   padding: 20px;
   overflow-y: auto;
   background-color: #F5F5F5;
