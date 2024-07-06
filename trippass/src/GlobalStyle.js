@@ -3,7 +3,12 @@ import reset from "styled-reset";
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
-  /* 글로벌 스타일 추가 */
+  @font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  }
   body {
     font-family: Arial, sans-serif;
   }
@@ -36,7 +41,6 @@ const GlobalStyle = createGlobalStyle`
     outline: none;
   }
 
-  /* 글로벌 스타일 추가 */
   ::-webkit-scrollbar {
     width: 10px;
   }

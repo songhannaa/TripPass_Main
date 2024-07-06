@@ -15,7 +15,8 @@ function App() {
     <BrowserRouter>
       <GlobalStyle />
       <Routes>
-        <Route path="/" element={<DashBoardPage />} />
+        <Route path="/dashboard" element={<DashBoardPage />} />
+        <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/user" element={<UserPage />} />
