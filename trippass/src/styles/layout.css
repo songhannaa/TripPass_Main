@@ -1,0 +1,142 @@
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+/* 전체 레이아웃 */
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  font-family: 'Pretendard-Regular';
+}
+
+/* 콘텐츠 영역 */
+.layout-content {
+  display: flex;
+  flex: 1;
+}
+
+/* 메인 콘텐츠 */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #F5F5F5;
+}
+
+/* 헤더 */
+.header {
+  height: 70px;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+
+}
+
+.header-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+.header-links li {
+  margin-left: 30px;
+}
+
+.dropdown {
+  padding: 15px 30px 15px 15px;
+  background-color: #F5F5F5;
+  width: 350px;
+  border-radius: 10px;
+}
+
+.header-links a {
+  text-decoration: none;
+}
+
+/* 사이드바 */
+.sidebar {
+  width: 250px;
+  background-color: #ffffff;
+  height: calc(100vh - 70px);
+  padding: 20px 15px 20px 20px;
+}
+
+/* 여행 계획 만드는 버튼 */
+.planInsert {
+  background-color: #525ACE;
+  border-radius: 20px;
+  display: flex;
+  padding: 15px 5px;
+}
+
+.botProfile {
+  display: flex;
+  align-items: center;
+}
+
+.planInsertText{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  font-size: 13px;
+  font-weight: 500;
+  align-items: center;
+}
+
+.description{
+  color: #ffffff;
+  margin-bottom: 10px;
+  line-height: 1.3rem;
+}
+
+.planInsertBtn{
+  background-color: #ffffff;
+  border-radius: 13px;
+  padding: 10px 15px;
+  justify-content: center;
+  display: flex;
+  font-weight: bold;
+}
+
+/* 사이드바 리스트 */
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 30px;
+}
+
+.sidebar ul li {
+  padding: 15px 0 15px 10px;
+  display: flex;
+
+}
+.sidebar ul li img{
+  margin-right: 10px;
+}
+
+.sidebar ul li a {
+  color: #333;
+  text-decoration: none;
+  display: flex;
+  width:100%;
+  align-items: center;
+  font-size: 19px;
+}
+
+.sidebar ul li:hover {
+  background-color: #dddddd;
+  border-radius: 13px;
+}
+
