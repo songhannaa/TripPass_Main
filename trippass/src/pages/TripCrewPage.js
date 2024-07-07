@@ -1,13 +1,13 @@
-import React, { Component } from "react";
+import React from "react";
 import Layout from "../templates/Layout";
-import TripCrew from "../components/TripCrew";
 
-export default class TripCrewPage extends Component {
-  render() {
-    return (
-      <Layout>
-        <TripCrew />
-      </Layout>
-    );
-  }
-}
+
+const TripCrewPage = () => {
+  return (
+    <Layout>
+
+    </Layout>
+  );
+};
+
+export default TripCrewPage;

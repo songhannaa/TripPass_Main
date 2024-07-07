@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../styles/signup.css';
-import userImage from '../assets/user.png'; 
+import '../../styles/signup.css';
+import userImage from '../../assets/user.png'; 
 
 const Signup = () => {
   const [id, setId] = useState('');

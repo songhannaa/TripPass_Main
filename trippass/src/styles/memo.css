@@ -1,0 +1,73 @@
+.memo {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 20px;
+    height: 100%;
+  }
+  
+  .memoTitle {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #454545;
+  }
+  
+  .memoContent {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    font-weight: 600;
+    color: #8a8a8a;
+  }
+  
+  .memoContent textarea {
+    width: 100%;
+    height: 70%;
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    resize: none;
+  }
+  
+  .memoContent p {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  
+  .editButton {
+    font-size: 1rem;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: #A2A2A2;
+  }
+  
+  .editButton:hover {
+    color: #525ACE;
+  }
+  
+  .saveButton {
+    border: none;
+    padding: 8px 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: #525ACE;
+    color: #fff;
+  }
+  
+  .saveButton:hover {
+    background-color: #343986;
+  }
+  
+  .saveButton:focus {
+    outline: none;
+  }
+  
