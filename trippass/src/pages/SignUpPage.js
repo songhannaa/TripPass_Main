@@ -1,13 +1,13 @@
-import React, { Component } from "react";
+import React from "react";
 import Layout from "../templates/Layout";
-import SignUp from "../components/SignUp";
+import SignUp from "../components/signup/SignUp";
 
-export default class SignUpPage extends Component {
-  render() {
-    return (
-      <Layout>
-        <SignUp />
-      </Layout>
-    );
-  }
-}
+const SignUpPage = () => {
+  return (
+    <Layout>
+      <SignUp />
+    </Layout>
+  );
+};
+
+export default SignUpPage;

@@ -1,7 +1,7 @@
 import React from "react";
 import GlobalStyle from "./GlobalStyle";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import DashBoardPage from "./pages/DashBoardPage.js";
+import DashboardPage from "./pages/DashboardPage.js";
 import LoginPage from "./pages/LoginPage.js";
 import TripPlanPage from "./pages/TripPlanPage.js";
 import TripCrewPage from "./pages/TripCrewPage.js";
@@ -15,7 +15,7 @@ function App() {
     <BrowserRouter>
       <GlobalStyle />
       <Routes>
-        <Route path="/dashboard" element={<DashBoardPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
