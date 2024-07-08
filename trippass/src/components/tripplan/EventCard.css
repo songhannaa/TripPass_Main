@@ -1,0 +1,44 @@
+/* src/components/EventCard.css */
+.event-card {
+  background-color: #fff;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between; /* 좌우로 정렬 */
+  align-items: center;
+  background-color: #EBF3FF; /* 배경색 설정 */
+  padding: 5px;
+  border-radius: 4px; /* 모서리 둥글게 */
+  margin-bottom: 10px; /* 아래 요소와 간격 */
+}
+.event-description {
+  margin : 5px;
+  line-height: 1.3rem;
+}
+.event-title {
+  font-weight: bold; /* 제목 강조 */
+  color : #46485B;
+  margin : 5px;
+}
+
+.event-time {
+  color : #717171 /* 시간 강조 */
+}
+
+.event-card .location {
+  display: flex;
+  align-items: center;
+  margin : 5px;
+
+}
+
+.event-card .location-icon {
+  width: 16px; /* 아이콘 크기 */
+  height: 16px;
+  margin-right: 5px; /* 텍스트와 아이콘 사이 간격 */
+}

@@ -54,7 +54,7 @@ const Signup = () => {
         console.log(key, value);
       });
 
-      const response = await axios.post(`${process.env.REACT_APP_API_URL1}/insertUser`, formData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL2}/insertUser`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
