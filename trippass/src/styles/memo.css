@@ -39,6 +39,7 @@
   .memoContent p {
     font-size: 1rem;
     margin-bottom: 10px;
+    line-height: 1.8rem;
   }
   
   .editButton {

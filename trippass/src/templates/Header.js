@@ -1,34 +1,41 @@
-import React , { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../store/userSlice';
 import "../styles/layout.css"; 
 import logo from "../assets/logo.png";
-import notification from "../assets/notification.png";
-import user from "../assets/user.png";
+import { MdOutlineNotificationsNone } from "react-icons/md";
+import { FiLogOut } from "react-icons/fi";
 
 const Header = () => {
-  const [selected, setSelected] = useState('');
+  const { isAuthenticated } = useSelector(state => state.user);
+  const dispatch = useDispatch();
 
-  const handleChange = (event) => {
-    setSelected(event.target.value);
+  const handleLogout = () => {
+    dispatch(logout());
   };
 
   return (
     <div className="header">
       <div className="logo"><Link to="/"><img src={logo} alt="logo" /></Link></div>
-      <ul className="header-links">
-        <li>
-          <select className="dropdown" id="dropdown" value={selected} onChange={handleChange}>
-            <option value="">여행을 선택해 주세요</option>
-            <option value="option1">option1</option>
-            <option value="option2">option2</option>
-            <option value="option3">option3</option>
-          </select>
-        </li>
-        <li><img src={notification} alt="notification" /></li>
-        <li>
-          <Link to="/user"><img src={user} alt="user profile" /></Link>
-        </li>
-      </ul>
+      {isAuthenticated ? (
+        <ul className="header-links">
+          <li>
+            <select className="dropdown">
+              <option value="">여행을 선택해 주세요</option>
+              <option value="option1">option1</option>
+              <option value="option2">option2</option>
+              <option value="option3">option3</option>
+            </select>
+          </li>
+          <li><MdOutlineNotificationsNone size={22} /></li>
+          <li>
+            <button className="logout-button" onClick={handleLogout}><FiLogOut size={18}/></button>
+          </li>
+        </ul>
+      ) : (
+        <p>로그인 후 이용 가능합니다.</p>
+      )}
     </div>
   );
 };
