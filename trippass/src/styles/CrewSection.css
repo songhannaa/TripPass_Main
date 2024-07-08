@@ -1,0 +1,53 @@
+/* src/styles/CrewSection.css */
+.crew-section {
+  padding: 20px;
+}
+
+.crew-section h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  color: black;
+}
+
+.slick-slide {
+  padding: 0; /* 슬라이드 내부 패딩 제거 */
+}
+
+.slick-list {
+  margin: 0 -10px; /* 슬라이드 리스트의 마진 조정 */
+}
+
+.crew-card {
+  margin: 0; /* 카드 간격을 0으로 설정 */
+}
+
+.create-crew-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  height: 121.78px; /* 크루 카드와 동일한 높이로 설정 */
+  width: 171px; /* 크루 카드와 동일한 너비로 설정 */
+  margin: 0; /* 카드 간격을 0으로 설정 */
+}
+
+.create-crew-button {
+  padding: 10px 20px;
+  font-size: 14px; /* 크기에 맞춰 폰트 사이즈 조정 */
+  color: #007bff;
+  background-color: #fff;
+  border: 2px dashed #007bff;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.create-crew-button:hover {
+  background-color: #007bff;
+  color: #fff;
+}

@@ -1,0 +1,49 @@
+/* src/styles/SearchCrewCard.css */
+.search-crew-card {
+    display: flex;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-crew-card-image {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .search-crew-card-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .search-crew-card-date,
+  .search-crew-card-location,
+  .search-crew-card-description,
+  .search-crew-card-participants {
+    margin: 0 0 10px 0;
+  }
+  
+  .search-crew-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .search-crew-card-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .search-crew-card-button:hover {
+    background-color: #0056b3;
+  }
+  
