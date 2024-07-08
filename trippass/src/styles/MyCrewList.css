@@ -1,0 +1,123 @@
+/* src/styles/MyCrewList.css */
+
+/* CrewCard 스타일 */
+.crew-card {
+    width: 171px; /* 카드 너비 */
+    height: 121.78px; /* 카드 높이 */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0 10px; /* 카드 간격 조정 */
+  }
+  
+  .crew-card-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .crew-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 이미지가 박스에 맞게 조절되도록 설정 */
+  }
+  
+  .crew-card-overlay {
+    position: absolute;
+    top: 0; /* 상단에 위치시킴 */
+    left: 0;
+    width: 100%;
+    height: 100%; /* 높이를 100%로 설정 */
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    color: #fff;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 좌측 상단으로 정렬 */
+  }
+  
+  .crew-card-overlay h3 {
+    margin: 0;
+    font-size: 14px; /* 제목 크기에 맞춰 폰트 사이즈 조정 */
+  }
+  
+  .crew-card-overlay p {
+    margin: 5px 0 0;
+    font-size: 12px; /* 날짜 크기에 맞춰 폰트 사이즈 조정 */
+  }
+  
+  /* CrewSection 스타일 */
+  .crew-section {
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .crew-section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .slider-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+  }
+  
+  .slider-wrapper {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+  
+  .slider {
+    display: flex;
+  }
+  
+  .slider-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .slider-button-left {
+    left: 10px;
+  }
+  
+  .slider-button-right {
+    right: 10px;
+  }
+  
+  .create-crew-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    height: 121.78px; /* 크루 카드와 동일한 높이로 설정 */
+    width: 171px; /* 크루 카드와 동일한 너비로 설정 */
+    margin: 0 10px; /* 카드 간격 조정 */
+  }
+  
+  .create-crew-image {
+    width: 100%;
+    height: auto;
+  }
+  
+  /* TripCrewPage 추가 스타일 */
+  .trip-crew-page-content {
+    padding: 20px;
+  }
+  
+  .trip-crew-page-content h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
