@@ -1,0 +1,67 @@
+.trip-plan {
+  padding: 20px;
+  flex-grow: 1;
+}
+
+.trip-plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.trip-plan-header h2 {
+  color: #5F6165; /* 년 월 일의 색상 변경 */
+  letter-spacing: -0.5px; /* 자간 줄이기 */
+  font-weight: bold;
+  font-size: 20px;
+  margin: 10px;
+}
+
+.days {
+  display: flex;
+  justify-content: space-between;
+}
+
+.no-schedule {
+  text-align: center;
+  color: #5F6165;
+  margin-top: 50px;
+}
+
+.no-schedule-robot {
+  width: 50%; /* 이미지의 너비를 50%로 설정 */
+  height: 50%; /* 이미지의 높이를 50%로 설정 */
+  object-fit: cover; /* 이미지를 잘라서 보여줌 */
+  object-position: top; /* 이미지의 중앙 부분을 보여줌 */
+  margin-top: 20px;
+}
+
+.no-schedule p {
+  font-size: 40px; /* 글자 크기 조정 */
+  line-height: 1.5; /* 행간 조정 */
+  font-weight: bold;
+  color: #84868A;
+}
+
+.pagination-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.pagination-buttons button {
+  color: #84868A;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px; /* 버튼 글자 크기 */
+}
+
+.pagination-buttons button:disabled {
+  opacity: 0.5; /* 비활성화된 버튼을 흐리게 */
+  cursor: not-allowed;
+}
+
+.pagination-buttons button:hover:not(:disabled) {
+  color: #525ACE;
+}
