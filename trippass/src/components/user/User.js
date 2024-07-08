@@ -13,7 +13,7 @@ const User = () => {
     birthdate: '2001년 3월 2일',
     sex: '여자',
     nickname: 'Naruto'
-  });
+  }); 
 
   const [preferences, setPreferences] = useState([]);
   const [editing, setEditing] = useState(false);
