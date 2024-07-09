@@ -18,7 +18,7 @@ const TripCrewPage = () => {
   useEffect(() => {
     const fetchTripId = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL1}/getMyTrips`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getMyTrips`, {
           params: { userId }
         });
 

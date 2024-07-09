@@ -21,7 +21,7 @@ const SearchCrew = ({ userId, tripId }) => {
   useEffect(() => {
     const fetchCrewData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL2}/getCrewCalc`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getCrewCalc`, {
           params: { userId, tripId }
         });
 

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import '../../styles/NewTripCrewPop.css';
 
 const NewTripCrewPop = ({ onClose, onSave }) => {
@@ -60,10 +59,6 @@ const NewTripCrewPop = ({ onClose, onSave }) => {
             <input type="date" name="date" value={formData.date} onChange={handleChange} />
           </label>
           <label>
-            시간
-            <input type="time" name="time" value={formData.time} onChange={handleChange} />
-          </label>
-          <label>
             연락처
             <input type="text" name="contact" value={formData.contact} onChange={handleChange} />
           </label>
@@ -76,7 +71,7 @@ const NewTripCrewPop = ({ onClose, onSave }) => {
             <textarea name="note" maxLength="200" value={formData.note} onChange={handleChange}></textarea>
           </label>
           <label>
-            배너 이미지
+            이미지
             <input type="file" name="banner" accept="banner/*" onChange={handleBannerChange} />
           </label>
           {formData.bannerPreview && (
