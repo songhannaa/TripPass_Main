@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DayPlan from './DayPlan';
-import './DayPlan.css';
-import './TripPlan.css';
+import '../../styles/tripplan.css';
 import noScheduleRobot from '../../assets/margnun.png'; // 로봇 이미지 경로
 import { RiArrowLeftWideFill } from "react-icons/ri";
 import { RiArrowRightWideFill } from "react-icons/ri";

@@ -1,5 +1,5 @@
 import React from 'react';
-import './EventCard.css';
+import '../../styles/tripplan.css';
 import locationIcon from '../../assets/location-icon.png';
 
 const EventCard = ({ event }) => {
