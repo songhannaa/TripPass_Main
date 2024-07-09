@@ -1,15 +1,14 @@
-// src/components/tripcrew/MyCrewList.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import NewTripCrewPop from './NewTripCrewPop';
 import '../../styles/MyCrewList.css';
 
-/*크루 카드, 안에 들어가는 내용 설정*/
+/* 크루 카드, 안에 들어가는 내용 설정 */
 const CrewCard = ({ banner, date, time, title }) => {
   return (
     <div className="crew-card">
       <div className="crew-card-image-wrapper">
-        <img src={banner} alt={title} className="crew-card-image" />
+        <img src={banner} alt="Crew Banner" className="crew-card-image" />
         <div className="crew-card-overlay">
           <h3>{title}</h3>
           <p>{date}</p>
@@ -27,22 +26,33 @@ const MyCrewList = ({ userId, tripId }) => {
   useEffect(() => {
     const fetchCrewData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getCrew`, {
+        console.log(`Fetching data for userId: ${userId}, tripId: ${tripId}`);
+
+        const response = await axios.get(`${process.env.REACT_APP_API_URL1}/getMyCrew`, {
           params: { userId, tripId }
         });
+
+        console.log('getMyCrew response:', response);
+
         const data = response.data.response.map(crew => ({
           banner: crew.banner ? `data:image/jpeg;base64,${crew.banner}` : 'https://via.placeholder.com/150',
           date: crew.date,
-          time: crew.time
+          time: crew.time,
+          title: crew.title,
         }));
+
+        console.log('Formatted crew data:', data);
+
         setCrews(data);
       } catch (error) {
         console.error('Error fetching crew data:', error);
       }
     };
 
-    fetchCrewData();
-  }, [userId], [tripId]);
+    if (userId && tripId) {
+      fetchCrewData();
+    }
+  }, [userId, tripId]);
 
   const handleSave = (newCrew) => {
     const newCrewData = {
@@ -52,6 +62,35 @@ const MyCrewList = ({ userId, tripId }) => {
       title: newCrew.crewName,
     };
     setCrews([...crews, newCrewData]);
+
+    // Save new crew to the database
+    const data = new FormData();
+    data.append('planId', newCrew.planId);
+    data.append('date', newCrew.date);
+    data.append('title', newCrew.crewName);
+    data.append('contact', newCrew.contact);
+    data.append('note', newCrew.note);
+    data.append('numOfMate', newCrew.numOfMate);
+    if (newCrew.banner) {
+      data.append('banner', newCrew.banner);
+    }
+    data.append('sincheongIn', '');
+
+    axios.post(`${process.env.REACT_APP_API_URL1}/insertCrew`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    .then(response => {
+      if (response.status === 200) {
+        console.log('Crew saved successfully');
+      } else {
+        console.error('Error saving crew:', response.data);
+      }
+    })
+    .catch(error => {
+      console.error('Error saving crew:', error);
+    });
   };
 
   const openPopup = () => {

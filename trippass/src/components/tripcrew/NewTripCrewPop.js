@@ -36,39 +36,13 @@ const NewTripCrewPop = ({ onClose, onSave }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = new FormData();
-    data.append('planId', formData.planId);
-    data.append('date', formData.date);
-    data.append('title', formData.crewName);
-    data.append('contact', formData.contact);
-    data.append('note', formData.description);
-    data.append('numOfMate', formData.members);
-    if (formData.banner) {
-      data.append('banner', formData.banner);
-    }
-    data.append('sincheongIn', '');
+    const newCrew = {
+      ...formData,
+      bannerPreview: formData.bannerPreview,
+    };
 
-    try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/insertCrew`, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      if (response.status === 200) {
-        const newCrewId = response.data.response;
-        onSave({
-          ...formData,
-          crewId: newCrewId,
-          bannerPreview: formData.bannerPreview,
-        });
-        onClose();
-      } else {
-        console.error('Error saving crew:', response.data);
-      }
-    } catch (error) {
-      console.error('Error saving crew:', error);
-    }
+    onSave(newCrew);
+    onClose();
   };
 
   return (
@@ -84,6 +58,10 @@ const NewTripCrewPop = ({ onClose, onSave }) => {
           <label>
             일자
             <input type="date" name="date" value={formData.date} onChange={handleChange} />
+          </label>
+          <label>
+            시간
+            <input type="time" name="time" value={formData.time} onChange={handleChange} />
           </label>
           <label>
             연락처
