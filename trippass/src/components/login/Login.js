@@ -29,7 +29,7 @@ const Login = () => {
         }
       };
 
-      const response = await axios.post(`${process.env.REACT_APP_API_URL2}/login`, formData.toString(), config);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL1}/login`, formData.toString(), config);
 
       // 로그인 성공 처리
       dispatch(loginSuccess(response.data));

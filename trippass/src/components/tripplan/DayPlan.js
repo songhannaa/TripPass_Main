@@ -1,6 +1,6 @@
 import React from 'react';
 import EventCard from './EventCard';
-import './DayPlan.css';
+import '../../styles/tripplan.css';
 
 const DayPlan = ({ date, events }) => {
   return (
