@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DayPlan from './DayPlan';
-import './DayPlan.css';
-import './TripPlan.css';
+import '../../styles/tripplan.css';
 import noScheduleRobot from '../../assets/margnun.png'; // 로봇 이미지 경로
 import { RiArrowLeftWideFill } from "react-icons/ri";
 import { RiArrowRightWideFill } from "react-icons/ri";
@@ -18,7 +17,7 @@ const TripPlan = () => {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
   const itemsPerPage = 3; // 페이지당 항목 수
   const userId = '9a29fb74-cf6f-4eff-b0e2-249ed3677527'; //userid
-  const apiUrl = process.env.REACT_APP_API_URL + '/getMyTrips?userId=' + userId;
+  const apiUrl = process.env.REACT_APP_API_URL1 + '/getMyTrips?userId=' + userId;
 
   useEffect(() => {
     axios.get(apiUrl)
@@ -35,7 +34,7 @@ const TripPlan = () => {
         setEndMonth(endM);
         setEndDay(endD);
 
-        return axios.get(`${process.env.REACT_APP_API_URL}/getTripPlans?tripId=${tripId}`);
+        return axios.get(`${process.env.REACT_APP_API_URL1}/getTripPlans?tripId=${tripId}`);
       })
       .then(response => {
         const plans = response.data.response;

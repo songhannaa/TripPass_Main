@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import "../styles/layout.css"; 
 import bot from "../assets/bot1.png";
 import dashboardIcon from "../assets/dashboard.png";
+import NewTrip from "../components/dashboard/NewTrip";
 
 const Sidebar = () => {
   const { isAuthenticated, user } = useSelector(state => state.user);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const handleButtonClick = () => {
+    setIsPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
 
   return (
     <div className="sidebar">
@@ -16,9 +26,9 @@ const Sidebar = () => {
             <img src={bot} alt="trippass bot1" />
           </div>
           <div className="planInsertText">
-            <div className="description">같이 계획을 만들어요!</div>
-            <div className="planInsertBtn">
-              챗봇 채팅 시작하기
+            <div className="description">어디로 여행을 가시나요?</div>
+            <div className="planInsertBtn" onClick={handleButtonClick}>
+              새로운 여행 계획하기
             </div>
           </div>
         </div>
@@ -100,6 +110,7 @@ const Sidebar = () => {
           </NavLink>
         )}
       </div>
+      {isPopupOpen && <NewTrip onClose={handleClosePopup} />}
     </div>
   );
 };
