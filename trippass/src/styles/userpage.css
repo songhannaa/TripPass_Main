@@ -1,127 +1,114 @@
 .profile-container {
-	margin: 20px;
 	background-color: #ffffff;
-	padding: 20px;
-	border-radius: 10px;
-  }
+	padding: 50px;
+	border-radius: 10px 10px 0px 0px;
+}
 
-  .section-title {
-	margin: 25px 55px; /* 제목과 내용 사이의 간격 */
-	font-size: 18px;
-	font-weight: 900;
-	color: #5F6165;
-	letter-spacing: -0.7px;
-  }
+.section-title {
+	font-size: 20px;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
 
-
-/* 회원정보 영역 */
-
-  .section-user-info {
-	border-radius: 8px;
-  }
-  
-  .profile-content {
+.profile-content {
 	display: flex;
-	align-items: center;
-	margin-bottom: 10%;
-  }
-  
-  .profile-image-container {
+	justify-content: flex-start;
+}
+
+.profile-image-container {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-  }
-  
-  .profile-image {
-	margin: 20px 10px 20px 10px; /* 상 우 하 좌 */
-	width: 50%;
+	position: relative;
+	margin: 0 10% 0 3%;
+}
+.profile-update{
+	position: absolute;
+	bottom:25%;
+	right: 10%;
+	background-color: #6C73D6;
+	color: #fff;
+	width: 35px;
+	height: 35px;
+	text-align: center;
+	line-height: 37px;
+	border-radius: 50%;
+}
+.profile-image {
+	margin: 20px 10px;
+	width: 100px;
 	height: auto;
 	border-radius: 50%;
-  }
-  
-  .user-name {
-	font-size: 14px;
+}
+
+.user-name {
+	font-size: 17px;
 	font-weight: bold;
-	color: #4D4D4D;
-  }
-  
-  .profile-details-container {
+}
+
+.profile-details-container {
 	display: flex;
 	align-items: center;
-  }
-  
-  .details-grid {
+}
+
+.details-grid {
 	display: grid;
 	grid-template-columns: 1fr 4fr 1fr 3fr; 
 	margin: 0px;
-	gap: 50px; /* 항목 간의 간격 */
+	gap: 60px; /* 항목 간의 간격 */
 	align-items: center;
 	justify-content: start; /* 내용이 시작 부분에 정렬되도록 설정 */
-  }
-  
-  .details-label {
+}
+
+.details-label {
 	color: #5F6165;
-	font-size: 12px;
 	font-weight: bold;
 	text-align: left;
 	display: flex;
 	align-items: center;
-  }
-  
-  .details-value {
+}
+
+.details-value {
 	color: #718EBF;
-	font-size: 12px;
+	font-size: 16px;
 	display: flex;
 	align-items: center;
-  }
-  
-  .password-button {
+}
+
+.password-button {
 	background-color: #ffffff;
 	color: #718EBF;
-	font-size: 12px;
+	font-size: 14px;
 	border: 1.5px solid #DFEAF2;
 	padding: 7px 15px;
 	border-radius: 10px;
-	cursor: pointer;
-  }
+	cursor: pointer; 
+}
 
-
-/* 나의 여행 성향 영역 */
 
 .section-travel-preferences {
-	text-align: center;
+	background-color: #ffffff;
+	padding: 50px;
+	border-radius: 0px 0px 10px 10px;
+	display: flex;
+	flex-direction: column;
 }
-  .no-preferences {
+.no-preferences {
 	color: #718EBF;
 	font-weight: bold;
 	font-size: 18px;
 	letter-spacing: -0.7px;
 	text-align: center;
 	margin: 10%;
-  }
+}
 
-  .preferences-icons {
-	display: flex;
-	justify-content: center;
-	gap: 20px;
-	margin: 50px;
-  }
-  
-  .preferences-icons img {
-	display: block;
-	margin: 0 auto 30% auto;
-	width: 75%;
-	height: auto;
-  }
-
-  .preferences-icons p {
+.preferences-icons p {
 	white-space: pre-line;
 	color: #5F6165;
 	font-size: 13px;
-	letter-spacing: -0.7px;
-  }
-  
-  .edit-button {
+}
+
+.edit-button {
 	background-color: #ffffff;
 	color: #718EBF;
 	font-size: 12px;
@@ -129,4 +116,7 @@
 	padding: 7px 15px;
 	border-radius: 10px;
 	cursor: pointer;
-  }
+	text-align: center;
+	width: 15%;
+	margin: 0 auto;
+}
