@@ -47,14 +47,14 @@ export const updateProfileImageAsync = (userId, file) => async dispatch => {
   formData.append('profileImage', file);
 
   try {
-    const response = await axios.post(`${process.env.REACT_APP_API_URL1}/updateUserProfileImage`, formData, {
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/updateUserProfileImage`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     });
     if (response.data.result_code === 200) {
       // 이미지 업데이트 성공 시 새로운 사용자 데이터 가져오기
-      const userDataResponse = await axios.get(`${process.env.REACT_APP_API_URL1}/getUserData/${userId}`);
+      const userDataResponse = await axios.get(`${process.env.REACT_APP_API_URL}/getUserData/${userId}`);
       dispatch(updateProfileImage(userDataResponse.data.profileImage)); // 예시: 실제로는 사용자 데이터 전체를 업데이트해야 함
     } else {
       console.error('Error updating profile image:', response.data.response);
