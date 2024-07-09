@@ -18,7 +18,7 @@ const TripPlan = () => {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
   const itemsPerPage = 3; // 페이지당 항목 수
   const userId = '9a29fb74-cf6f-4eff-b0e2-249ed3677527'; //userid
-  const apiUrl = process.env.REACT_APP_API_URL + '/getMyTrips?userId=' + userId;
+  const apiUrl = process.env.REACT_APP_API_URL1 + '/getMyTrips?userId=' + userId;
 
   useEffect(() => {
     axios.get(apiUrl)
@@ -35,7 +35,7 @@ const TripPlan = () => {
         setEndMonth(endM);
         setEndDay(endD);
 
-        return axios.get(`${process.env.REACT_APP_API_URL}/getTripPlans?tripId=${tripId}`);
+        return axios.get(`${process.env.REACT_APP_API_URL1}/getTripPlans?tripId=${tripId}`);
       })
       .then(response => {
         const plans = response.data.response;
