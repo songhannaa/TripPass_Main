@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState } from "react";
 import GlobalStyle from "./GlobalStyle";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -37,6 +36,7 @@ function App() {
     const mouseY = e.clientY;
     setXY({ x: mouseX, y: mouseY });
   };
+
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
   return (

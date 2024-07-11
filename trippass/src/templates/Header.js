@@ -12,7 +12,9 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
+    alert("로그아웃 되었습니다");
     dispatch(logout());
+    window.location.reload();
   };
 
   return (
