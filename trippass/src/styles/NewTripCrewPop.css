@@ -34,13 +34,13 @@
     cursor: pointer;
   }
   
-  form {
+.new-crew-form {
     display: flex;
     flex-direction: column;
     gap: 15px;
   }
   
-  label {
+  .new-crew-form label {
     display: flex;
     flex-direction: row; /* 가로로 정렬 */
     align-items: center;
@@ -48,7 +48,8 @@
     width: 100%;
   }
   
-  input, textarea {
+  .new-crew-form input,
+  .new-crew-form textarea {
     width: 80%; /* 입력 필드 넓이 조정 */
     padding: 10px;
     border: 1px solid #ccc;
@@ -58,20 +59,21 @@
     transition: border-color 0.3s, box-shadow 0.3s;
   }
   
-  input[type="file"] {
+  .new-crew-form input[type="file"] {
     width: auto; /* 파일 선택 버튼은 넓이 자동 조정 */
   }
   
-  input:focus, textarea:focus {
+  .new-crew-form input:focus, 
+  .new-crew-form textarea:focus {
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
   }
   
-  textarea {
+  .new-crew-form textarea {
     resize: vertical;
   }
   
-  button[type="submit"] {
+  .new-crew-form button[type="submit"] {
     padding: 10px;
     background: #007bff;
     color: white;
@@ -82,7 +84,7 @@
     transition: background-color 0.3s, box-shadow 0.3s;
   }
   
-  button[type="submit"]:hover {
+  .new-crew-form button[type="submit"]:hover {
     background: #0056b3;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   }

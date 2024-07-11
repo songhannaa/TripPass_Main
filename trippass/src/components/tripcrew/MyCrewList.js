@@ -28,7 +28,7 @@ const MyCrewList = ({ userId, tripId }) => {
       try {
         console.log(`Fetching data for userId: ${userId}, tripId: ${tripId}`);
 
-        const response = await axios.get(`${process.env.REACT_APP_API_URL1}/getMyCrew`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getMyCrew`, {
           params: { userId, tripId }
         });
 
@@ -76,7 +76,7 @@ const MyCrewList = ({ userId, tripId }) => {
     }
     data.append('sincheongIn', '');
 
-    axios.post(`${process.env.REACT_APP_API_URL1}/insertCrew`, data, {
+    axios.post(`${process.env.REACT_APP_API_URL}/insertCrew`, data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

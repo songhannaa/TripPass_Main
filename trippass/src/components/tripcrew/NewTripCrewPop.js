@@ -50,7 +50,7 @@ const NewTripCrewPop = ({ onClose, onSave }) => {
       <div className="popup-content">
         <button className="close-button" onClick={onClose}>X</button>
         <h2>New Trip Crew</h2>
-        <form onSubmit={handleSubmit}>
+        <form className="new-crew-form" onSubmit={handleSubmit}>
           <label>
             제목
             <input type="text" name="crewName" value={formData.crewName} onChange={handleChange} />

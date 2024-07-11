@@ -73,7 +73,7 @@ textarea{
 
 .signup-form .half {
   display: inline-block;
-  width: calc(50% - 20px); 
+  width: calc(45% - 10px); 
   margin-bottom: 20px;
 
 }
