@@ -47,8 +47,8 @@ const TripCrewPage = () => {
 
   return (
     <Layout>
-      <MyCrewList userId={userId} tripId={tripId} />
-      <SearchCrew userId={userId} tripId={tripId} />
+      <MyCrewList />
+      <SearchCrew />
     </Layout>
   );
 };
