@@ -1,101 +1,100 @@
 /* src/styles/NewTripCrewPop.css */
 
-.popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .popup-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    width: 400px; /* 넓이를 더 넓게 설정 */
-    max-width: 90%;
-    text-align: center;
-    position: relative;
-  }
-  
-  .close-button {
-    background: transparent;
-    border: none;
-    font-size: 16px;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-  }
-  
-.new-crew-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .new-crew-form label {
-    display: flex;
-    flex-direction: row; /* 가로로 정렬 */
-    align-items: center;
-    justify-content: space-between; /* 공간을 최대한 활용 */
-    width: 100%;
-  }
-  
-  .new-crew-form input,
-  .new-crew-form textarea {
-    width: 80%; /* 입력 필드 넓이 조정 */
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-    background-color: #f9f9f9;
-    transition: border-color 0.3s, box-shadow 0.3s;
-  }
-  
-  .new-crew-form input[type="file"] {
-    width: auto; /* 파일 선택 버튼은 넓이 자동 조정 */
-  }
-  
-  .new-crew-form input:focus, 
-  .new-crew-form textarea:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-  }
-  
-  .new-crew-form textarea {
-    resize: vertical;
-  }
-  
-  .new-crew-form button[type="submit"] {
-    padding: 10px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s, box-shadow 0.3s;
-  }
-  
-  .new-crew-form button[type="submit"]:hover {
-    background: #0056b3;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  }
-  
-  .image-preview {
-    margin-top: 10px;
-  }
-  
-  .image-preview img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-  }
-  
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popupContent {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  width: 400px; /* 넓이를 더 넓게 설정 */
+  max-width: 90%;
+  text-align: center;
+  position: relative;
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.newCrewForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.newCrewForm label {
+  display: flex;
+  flex-direction: row; /* 가로로 정렬 */
+  align-items: center;
+  justify-content: space-between; /* 공간을 최대한 활용 */
+  width: 100%;
+}
+
+.newCrewForm input,
+.newCrewForm textarea {
+  width: 80%; /* 입력 필드 넓이 조정 */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.newCrewForm input[type="file"] {
+  width: auto; /* 파일 선택 버튼은 넓이 자동 조정 */
+}
+
+.newCrewForm input:focus,
+.newCrewForm textarea:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.newCrewForm textarea {
+  resize: vertical;
+}
+
+.newCrewForm button[type="submit"] {
+  padding: 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.newCrewForm button[type="submit"]:hover {
+  background: #0056b3;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.imagePreview {
+  margin-top: 10px;
+}
+
+.imagePreview img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
