@@ -19,8 +19,7 @@ const NewTrip = ({ onClose }) => {
   return (
     <div className="popup-overlay">
       <div className="popup-content">
-        <button className="close-btn" onClick={onClose}>&nbsp;X&nbsp;</button>
-        <h2 className="new-trip-title">New Trip</h2>
+        <div className="new-trip-title">New Trip</div>
         <form className="new-trip-form">
           <div className="form-group">
             <label>제목</label>
@@ -60,14 +59,17 @@ const NewTrip = ({ onClose }) => {
           </div>
           <div className="form-group">
             <label>이미지</label>
-            <input type="file" accept="image/*" onChange={handleFileChange} />
+            <input type="file" className='fileInput' accept="image/*" onChange={handleFileChange} />
           </div>
           {preview && (
             <div className="image-preview">
               <img src={preview} alt="미리보기" />
             </div>
           )}
-          <button type="submit">저장</button>
+          <div className="form-group btnList">
+            <button type="submit">저장</button>
+            <button type="reset" onClick={onClose}>닫기</button>
+          </div>
         </form>
       </div>
     </div>

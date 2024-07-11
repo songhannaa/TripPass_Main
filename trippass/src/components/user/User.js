@@ -1,13 +1,12 @@
+// src/components/User.js
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { FaPencilAlt } from "react-icons/fa";
-import Popup from './ProfilePopup';
-import { updateProfileImageAsync } from '../../store/userSlice';
+import ProfilePopup from './ProfilePopup';
 import '../../styles/userpage.css';
 
 const User = () => {
   const { isAuthenticated, user } = useSelector(state => state.user);
-  const dispatch = useDispatch();
   const [showPopup, setShowPopup] = useState(false);
 
   const handlePopupOpen = () => {
@@ -18,12 +17,6 @@ const User = () => {
     setShowPopup(false);
   };
 
-  const handleProfileImageSave = (file) => {
-    if (file && user) {
-      dispatch(updateProfileImageAsync(user.userId, file));
-    }
-  };
-
   return (
     <div className="profile-container">
       <div className="section-user-info">
@@ -31,7 +24,7 @@ const User = () => {
         {isAuthenticated && (
           <div className="profile-content">
             <div className="profile-image-container">
-              <img src={user.profileImage ? `data:image/jpeg;base64,${user.profileImage}` : null} alt="user profile" className="profile-image" />
+              <img src={`data:image/jpeg;base64,${user.profileImage}`} alt="user profile" className="profile-image" />
               <div className="profile-update" onClick={handlePopupOpen}><FaPencilAlt /></div>
               <div className="user-name">{user.nickname} 님</div>
             </div>
@@ -50,7 +43,7 @@ const User = () => {
           </div>
         )}
       </div>
-      {showPopup && <Popup onClose={handlePopupClose} onSave={handleProfileImageSave} />}
+      {showPopup && <ProfilePopup onClose={handlePopupClose} />}
     </div>
   );
 };
