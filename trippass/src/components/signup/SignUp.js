@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../styles/signup.css';
 import userImage from '../../assets/user.png'; 
+import { API_URL } from "../../config";
 
 const Signup = () => {
   const [id, setId] = useState('');
@@ -54,7 +55,7 @@ const Signup = () => {
         console.log(key, value);
       });
 
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/insertUser`, formData, {
+      const response = await axios.post(`${API_URL}/insertUser`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

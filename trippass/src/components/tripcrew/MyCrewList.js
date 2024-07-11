@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import NewTripCrewPop from './NewTripCrewPop';
 import '../../styles/MyCrewList.css';
+import { API_URL } from "../../config";
 
 /* 크루 카드, 안에 들어가는 내용 설정 */
 const CrewCard = ({ banner, date, time, title }) => {
@@ -28,7 +29,7 @@ const MyCrewList = ({ userId, tripId }) => {
       try {
         console.log(`Fetching data for userId: ${userId}, tripId: ${tripId}`);
 
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getMyCrew`, {
+        const response = await axios.get(`${ API_URL }/getMyCrew`, {
           params: { userId, tripId }
         });
 
@@ -111,7 +112,7 @@ const MyCrewList = ({ userId, tripId }) => {
               <CrewCard key={index} {...crew} />
             ))}
             <div className="crew-card create-crew-card" onClick={openPopup}>
-              <button className="create-crew-button">+ 새로운 크루 만들기</button>
+              <button className="create-crew-button">+<br />새로운 크루 만들기</button>
             </div>
           </div>
         </div>
