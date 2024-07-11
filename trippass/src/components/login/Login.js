@@ -7,6 +7,8 @@ import '../../styles/signup.css';
 import { loginSuccess, loginFailure } from '../../store/userSlice';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { API_URL } from "../../config";
+
 
 const Login = () => {
   const [id, setId] = useState('');
@@ -24,12 +26,14 @@ const Login = () => {
       formData.append('passwd', password);
 
       const config = {
+        baseURL: API_URL, 
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       };
 
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/login`, formData.toString(), config);
+      const response = await axios.post('/login', formData.toString(), config);
+
 
       // 로그인 성공 처리
       dispatch(loginSuccess(response.data));
@@ -56,7 +60,7 @@ const Login = () => {
 
   return (
     <>
-      <ToastContainer /> {/* 토스트 컨테이너를 컴포넌트 내에 추가 */}
+      <ToastContainer /> 
       <form className="login-form" onSubmit={onSubmit}>
         <div className="formTitle">로그인</div>
 
@@ -92,7 +96,7 @@ const Login = () => {
           <li className="kakaoLogin">카카오 계정으로 로그인</li>
         </ul>
 
-        {error && <p>{error}</p>} {/* 로그인 실패 시 에러 메시지 표시 */}
+
       </form>
     </>
   );

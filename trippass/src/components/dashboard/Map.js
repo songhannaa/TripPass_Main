@@ -7,6 +7,8 @@ import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
 // 기본 마커 아이콘 경로 설정
+delete L.Icon.Default.prototype._getIconUrl;
+
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x,
   iconUrl: markerIcon,
@@ -20,12 +22,6 @@ const markers = [
   { id: 3, position: [51.525, -0.12], popupText: "Marker 3" },
 ];
 
-// 경로 데이터
-const polylinePoints = [
-  [51.505, -0.09],
-  [51.515, -0.1],
-  [51.525, -0.12],
-];
 
 const Map = () => {
   return (
@@ -39,7 +35,7 @@ const Map = () => {
           <Popup>{marker.popupText}</Popup>
         </Marker>
       ))}
-      <Polyline positions={polylinePoints} color="blue" />
+
     </MapContainer>
   );
 };

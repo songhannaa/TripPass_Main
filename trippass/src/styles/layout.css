@@ -91,6 +91,7 @@
   color: #ffffff;
   margin-bottom: 10px;
   line-height: 1.3rem;
+  cursor: pointer;
 }
 
 .planInsertBtn {
@@ -100,6 +101,7 @@
   justify-content: center;
   display: flex;
   font-weight: bold;
+  cursor: pointer;
 }
 
 /* 사이드바 리스트 */

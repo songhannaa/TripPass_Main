@@ -2,6 +2,7 @@ import React from "react";
 import styled from 'styled-components'
 import bannerImage from "../../assets/banner.png"
 import bot from "../../assets/bot1.png"
+import { useSelector } from 'react-redux';
 
 const BannerWrapper = styled.div`
   width: 100%;
@@ -32,13 +33,16 @@ const BannerText = styled.div`
 `;
 
 const DashboardBanner = () => {
+  const { isAuthenticated, user } = useSelector(state => state.user);
   return (
       <>
       <BannerWrapper>
-        <BannerText>
-          <img src={bot} alt="여행봇" />
-          안녕하세요 회원님 ! 함께 여행 계획을 만들어 떠나볼까요?
-        </BannerText>
+      {isAuthenticated && (
+      <BannerText>
+        <img src={bot} alt="여행봇" />
+        안녕하세요 {user.nickname}님! 함께 여행 계획을 만들어 떠나볼까요?
+      </BannerText>
+      )}
       </BannerWrapper>    
       </>
 
