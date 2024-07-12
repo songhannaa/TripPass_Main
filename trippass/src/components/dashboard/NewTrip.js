@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useSelector } from 'react-redux';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/newtrip.css";
 
 const NewTrip = ({ onClose }) => {
+  const { isAuthenticated, user } = useSelector(state => state.user);
 	const [startDate, setStartDate] = useState(null);
 	const [endDate, setEndDate] = useState(null);
 	const [preview, setPreview] = useState(null);
