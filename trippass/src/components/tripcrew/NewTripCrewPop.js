@@ -1,19 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../styles/NewTripCrewPop.css';
+import axios from 'axios';
+import { API_URL } from "../../config";
 
-const NewTripCrewPop = ({ onClose, onSave }) => {
+const NewTripCrewPop = ({ onClose, onSave, tripId }) => {
   const [formData, setFormData] = useState({
     crewName: '',
-    date: '',
-    time: '',
-    location: '',
+    schedule: '',
     contact: '',
-    members: '',
-    description: '',
+    numOfMate: '',
+    note: '',
     banner: null,
     bannerPreview: null,
-    planId: 'your-plan-id', // 이 부분은 실제 planId로 교체해야 합니다.
   });
+
+  const [tripPlans, setTripPlans] = useState([]);
+
+  useEffect(() => {
+    const fetchTripPlans = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/getTripPlans`, { params: { tripId } });
+        setTripPlans(response.data.response);
+      } catch (error) {
+        console.error('Error fetching trip plans:', error);
+      }
+    };
+
+    fetchTripPlans();
+  }, [tripId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,8 +49,13 @@ const NewTripCrewPop = ({ onClose, onSave }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const selectedPlan = tripPlans.find(plan => plan.planId === formData.schedule);
     const newCrew = {
       ...formData,
+      date: selectedPlan.date,
+      time: selectedPlan.time,
+      place: selectedPlan.place,
+      planId: selectedPlan.planId,
       bannerPreview: formData.bannerPreview,
     };
 
@@ -45,18 +64,25 @@ const NewTripCrewPop = ({ onClose, onSave }) => {
   };
 
   return (
-    <div className="popup-overlay">
-      <div className="popup-content">
-        <button className="close-button" onClick={onClose}>X</button>
+    <div className="popupOverlay">
+      <div className="popupContent">
+        <button className="closeButton" onClick={onClose}>X</button>
         <h2>New Trip Crew</h2>
-        <form className="new-crew-form" onSubmit={handleSubmit}>
+        <form className="newCrewForm" onSubmit={handleSubmit}>
           <label>
             제목
             <input type="text" name="crewName" value={formData.crewName} onChange={handleChange} />
           </label>
           <label>
-            일자
-            <input type="date" name="date" value={formData.date} onChange={handleChange} />
+            일정
+            <select name="schedule" value={formData.schedule} onChange={handleChange}>
+              <option value="">--- 선택하세요 ---</option>
+              {tripPlans.map(plan => (
+                <option key={plan.planId} value={plan.planId}>
+                  {plan.date} {plan.time} - {plan.title}
+                </option>
+              ))}
+            </select>
           </label>
           <label>
             연락처
@@ -72,10 +98,10 @@ const NewTripCrewPop = ({ onClose, onSave }) => {
           </label>
           <label>
             이미지
-            <input type="file" name="banner" accept="banner/*" onChange={handleBannerChange} />
+            <input type="file" name="banner" accept="image/*" onChange={handleBannerChange} />
           </label>
           {formData.bannerPreview && (
-            <div className="banner-preview">
+            <div className="bannerPreview">
               <img src={formData.bannerPreview} alt="배너 이미지 미리보기" />
             </div>
           )}

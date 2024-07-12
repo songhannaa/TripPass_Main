@@ -2,15 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import NewTripCrewPop from './NewTripCrewPop';
 import '../../styles/MyCrewList.css';
-import { API_URL } from "../../config";
+import { API_URL } from '../../config'; // config.js에서 API_URL 가져오기
 
-/* 크루 카드, 안에 들어가는 내용 설정 */
 const CrewCard = ({ banner, date, time, title }) => {
   return (
-    <div className="crew-card">
-      <div className="crew-card-image-wrapper">
-        <img src={banner} alt="Crew Banner" className="crew-card-image" />
-        <div className="crew-card-overlay">
+    <div className="crewCard">
+      <div className="crewCardImageWrapper">
+        <img src={banner} alt="Crew Banner" className="crewCardImage" />
+        <div className="crewCardOverlay">
           <h3>{title}</h3>
           <p>{date}</p>
           <p>{time}</p>
@@ -26,10 +25,14 @@ const MyCrewList = ({ userId, tripId }) => {
 
   useEffect(() => {
     const fetchCrewData = async () => {
+      if (!tripId) {
+        return;
+      }
+
       try {
         console.log(`Fetching data for userId: ${userId}, tripId: ${tripId}`);
 
-        const response = await axios.get(`${ API_URL }/getMyCrew`, {
+        const response = await axios.get(`${API_URL}/getMyCrew`, {
           params: { userId, tripId }
         });
 
@@ -50,9 +53,7 @@ const MyCrewList = ({ userId, tripId }) => {
       }
     };
 
-    if (userId && tripId) {
-      fetchCrewData();
-    }
+    fetchCrewData();
   }, [userId, tripId]);
 
   const handleSave = (newCrew) => {
@@ -64,10 +65,8 @@ const MyCrewList = ({ userId, tripId }) => {
     };
     setCrews([...crews, newCrewData]);
 
-    // Save new crew to the database
     const data = new FormData();
     data.append('planId', newCrew.planId);
-    data.append('date', newCrew.date);
     data.append('title', newCrew.crewName);
     data.append('contact', newCrew.contact);
     data.append('note', newCrew.note);
@@ -75,9 +74,8 @@ const MyCrewList = ({ userId, tripId }) => {
     if (newCrew.banner) {
       data.append('banner', newCrew.banner);
     }
-    data.append('sincheongIn', '');
 
-    axios.post(`${process.env.REACT_APP_API_URL}/insertCrew`, data, {
+    axios.post(`${API_URL}/insertCrew`, data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -103,21 +101,21 @@ const MyCrewList = ({ userId, tripId }) => {
   };
 
   return (
-    <div className="crew-section">
+    <div className="crewSection">
       <h2>마이 크루</h2>
-      <div className="slider-container">
-        <div className="slider-wrapper">
+      <div className="sliderContainer">
+        <div className="sliderWrapper">
           <div className="slider">
             {crews.map((crew, index) => (
               <CrewCard key={index} {...crew} />
             ))}
-            <div className="crew-card create-crew-card" onClick={openPopup}>
-              <button className="create-crew-button">+<br />새로운 크루 만들기</button>
+            <div className="crewCard createCrewCard" onClick={openPopup}>
+              <button className="createCrewButton">+<br />새로운 크루 만들기</button>
             </div>
           </div>
         </div>
       </div>
-      {isPopupOpen && <NewTripCrewPop onClose={closePopup} onSave={handleSave} />}
+      {isPopupOpen && <NewTripCrewPop onClose={closePopup} onSave={handleSave} tripId={tripId} />}
     </div>
   );
 };
