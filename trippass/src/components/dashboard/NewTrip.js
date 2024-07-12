@@ -3,20 +3,40 @@ import { useSelector } from 'react-redux';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/newtrip.css";
+import countries from '../../data/countryCity.json';
 
 const NewTrip = ({ onClose }) => {
   const { isAuthenticated, user } = useSelector(state => state.user);
-	const [startDate, setStartDate] = useState(null);
-	const [endDate, setEndDate] = useState(null);
-	const [preview, setPreview] = useState(null);
-  
-	const handleFileChange = (event) => {
-	  const file = event.target.files[0];
-	  if (file) {
-		const previewURL = URL.createObjectURL(file);
-		setPreview(previewURL);
-	  }
-	};
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const previewURL = URL.createObjectURL(file);
+      setPreview(previewURL);
+    }
+  };
+
+  const handleCountryChange = (event) => {
+    const country = event.target.value;
+    setSelectedCountry(country);
+
+    // Find the selected country object from JSON data
+    const selectedCountryObj = countries.data.find(c => c.country === country);
+    if (selectedCountryObj) {
+      // Set the first city as default
+      setSelectedCity(selectedCountryObj.city[0].english_name);
+    }
+  };
+
+  const handleCityChange = (event) => {
+    const city = event.target.value;
+    setSelectedCity(city);
+  };
 
   return (
     <div className="popup-overlay">
@@ -30,13 +50,18 @@ const NewTrip = ({ onClose }) => {
           <div className="form-group">
             <label>지역</label>
             <div className="region-select">
-              <select>
-                <option>국가</option>
-                {/* 국가 옵션 추가 */}
+              <select onChange={handleCountryChange} value={selectedCountry || ''}>
+                <option disabled>국가</option>
+                {countries.data.map((country, index) => (
+                  <option key={index} value={country.country}>{country.country}</option>
+                ))}
               </select>
-              <select>
-                <option>도시</option>
-                {/* 도시 옵션 추가 */}
+              <select onChange={handleCityChange} value={selectedCity || ''}>
+                <option disabled>도시</option>
+                {selectedCountry &&
+                  countries.data.find(c => c.country === selectedCountry)?.city.map((city, index) => (
+                    <option key={index} value={city.city_name}>{city.city_name}</option>
+                  ))}
               </select>
             </div>
           </div>
