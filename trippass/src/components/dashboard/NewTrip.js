@@ -6,7 +6,7 @@ import "../../styles/newtrip.css";
 import countries from '../../data/countryCity.json';
 
 const NewTrip = ({ onClose }) => {
-  const { isAuthenticated, user } = useSelector(state => state.user);
+  const { user } = useSelector(state => state.user);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -25,11 +25,10 @@ const NewTrip = ({ onClose }) => {
     const country = event.target.value;
     setSelectedCountry(country);
 
-    // Find the selected country object from JSON data
+    
     const selectedCountryObj = countries.data.find(c => c.country === country);
     if (selectedCountryObj) {
-      // Set the first city as default
-      setSelectedCity(selectedCountryObj.city[0].english_name);
+      setSelectedCity(selectedCountryObj.city[0].city_name);
     }
   };
 
