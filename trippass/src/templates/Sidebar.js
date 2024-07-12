@@ -49,7 +49,7 @@ const Sidebar = () => {
           </li>
           <li>
             <NavLink
-              to="/tripPlan"
+              to="/MyTrip"
               style={({ isActive }) => ({
                 backgroundColor: isActive ? '#F3F5F8' : '',
                 padding: isActive ? '' : '',
@@ -58,7 +58,7 @@ const Sidebar = () => {
               })}
             >
               <img src={dashboardIcon} alt="Dashboard Icon" />
-              TripPlan
+              MyTrip
             </NavLink>
           </li>
           <li>
