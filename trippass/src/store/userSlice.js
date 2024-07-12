@@ -36,11 +36,17 @@ const userSlice = createSlice({
     updateUserData(state, action) {
       state.user = action.payload;
       localStorage.setItem('user', JSON.stringify(action.payload));
+    },
+    updateUserMainTrip(state, action) {
+      if (state.user) {
+        state.user.mainTrip = action.payload;
+        localStorage.setItem('user', JSON.stringify(state.user));
+      }
     }
   }
 });
 
-export const { loginSuccess, loginFailure, logout, updateProfileImage, updateUserData } = userSlice.actions;
+export const { loginSuccess, loginFailure, logout, updateProfileImage, updateUserData, updateUserMainTrip } = userSlice.actions;
 
 export const fetchUserData = (userId) => async (dispatch) => {
   try {
@@ -72,6 +78,27 @@ export const updateProfileImageAsync = (userId, file) => async dispatch => {
     }
   } catch (error) {
     console.error('Error updating profile image:', error);
+  }
+};
+
+export const updateMainTripAsync = (userId, tripId) => async dispatch => {
+  try {
+    const response = await axios.post(`${API_URL}/updateUserMainTrip`, {
+      userId,
+      mainTrip: tripId
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.data['result code'] === 200) {
+      dispatch(updateUserMainTrip(tripId));
+    } else {
+      console.error('Failed to update main trip:', response.data);
+    }
+  } catch (error) {
+    console.error('Error updating main trip:', error);
   }
 };
 

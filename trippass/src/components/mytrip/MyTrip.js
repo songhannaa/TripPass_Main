@@ -3,17 +3,18 @@ import axios from 'axios';
 import TripCard from './TripCard';
 import '../../styles/mytrip.css';
 import { API_URL } from "../../config";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateUserMainTrip } from '../../store/userSlice';
 
 const MyTrip = () => {
   const { user } = useSelector(state => state.user);
+  const dispatch = useDispatch();
   const [tripPlans, setTripPlans] = useState([]);
-  const [highlightedTripId, setHighlightedTripId] = useState('487cbc12-b24a-4c1f-b6e7-bba46315be93');
+  const [highlightedTripId, setHighlightedTripId] = useState(user.mainTrip || null);
 
   useEffect(() => {
     const fetchTripPlans = async () => {
       try {
-
         const response = await axios.get(`${API_URL}/getMyTrips?userId=${user.userId}`);
         if (response.data['result code'] === 200) {
           const plans = response.data.response;
@@ -37,8 +38,33 @@ const MyTrip = () => {
     fetchTripPlans();
   }, [highlightedTripId]);
 
-  const handleCardClick = (tripId) => {
+  const handleCardClick = async (tripId) => {
+    // 옵티미스틱 UI 업데이트
     setHighlightedTripId(tripId);
+    dispatch(updateUserMainTrip(tripId));
+
+    try {
+      const response = await axios.post(`${API_URL}/updateUserMainTrip`, {
+        userId: user.userId,
+        mainTrip: tripId
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.data['result code'] !== 200) {
+        console.error('Failed to update main trip:', response.data);
+        // 서버 응답 실패 시 상태 되돌리기
+        setHighlightedTripId(user.mainTrip);
+        dispatch(updateUserMainTrip(user.mainTrip));
+      }
+    } catch (error) {
+      console.error('Error updating main trip:', error);
+      // 서버 요청 실패 시 상태 되돌리기
+      setHighlightedTripId(user.mainTrip);
+      dispatch(updateUserMainTrip(user.mainTrip));
+    }
   };
 
   return (
