@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import '../../styles/signup.css';
 import { loginSuccess, loginFailure } from '../../store/userSlice';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { API_URL } from "../../config";
+import axios from 'axios';
 
 
 const Login = () => {

@@ -120,3 +120,9 @@
 	width: 15%;
 	margin: 0 auto;
 }
+
+.password-button:hover{
+	background-color: #718EBF;
+	color: #fff;
+	border: 1.5px solid #718EBF;
+}

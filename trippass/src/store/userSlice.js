@@ -1,6 +1,7 @@
+// src/store/userSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { API_URL } from "../config";
+import { API_URL } from '../config';
 
 const initialState = {
   user: JSON.parse(localStorage.getItem('user')) || null,
@@ -29,17 +30,27 @@ const userSlice = createSlice({
       localStorage.removeItem('user');
     },
     updateProfileImage(state, action) {
-      if (state.user) {
-        state.user.profileImage = action.payload;
-        localStorage.setItem('user', JSON.stringify(state.user));
-      }
+        state.user = action.payload;
+        localStorage.setItem('user', JSON.stringify(action.payload));
+    },
+    updateUserData(state, action) {
+      state.user = action.payload;
+      localStorage.setItem('user', JSON.stringify(action.payload));
     }
   }
 });
 
-export const { loginSuccess, loginFailure, logout, updateProfileImage } = userSlice.actions;
+export const { loginSuccess, loginFailure, logout, updateProfileImage, updateUserData } = userSlice.actions;
 
-// 수정된 부분: 이미지 업데이트 후 사용자 데이터 다시 가져오기
+export const fetchUserData = (userId) => async (dispatch) => {
+  try {
+    const response = await axios.get(`${API_URL}/getUser?=${userId}`);
+    dispatch(updateUserData(response.data));
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+  }
+};
+
 export const updateProfileImageAsync = (userId, file) => async dispatch => {
   const formData = new FormData();
   formData.append('userId', userId);
@@ -51,10 +62,11 @@ export const updateProfileImageAsync = (userId, file) => async dispatch => {
         'Content-Type': 'multipart/form-data'
       }
     });
-    if (response.data.result_code === 200) {
-      // 이미지 업데이트 성공 시 새로운 사용자 데이터 가져오기
-      const userDataResponse = await axios.get(`${API_URL}/getUserData/${userId}`);
-      dispatch(updateProfileImage(userDataResponse.data.profileImage)); // 예시: 실제로는 사용자 데이터 전체를 업데이트해야 함
+
+    // Adjust the condition based on actual response structure
+    if (response.data['result code'] === 200) {
+      const userDataResponse = await axios.get(`${API_URL}/getUser?=${userId}`);
+      dispatch(updateProfileImage(userDataResponse.data)); 
     } else {
       console.error('Error updating profile image:', response.data.response);
     }
