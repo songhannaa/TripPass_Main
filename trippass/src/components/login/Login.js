@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import '../../styles/signup.css';
@@ -14,7 +14,6 @@ const Login = () => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
-  const error = useSelector((state) => state.user.error);
   const navigate = useNavigate();
 
   const onSubmit = async (event) => {
@@ -34,10 +33,7 @@ const Login = () => {
 
       const response = await axios.post('/login', formData.toString(), config);
 
-
-      // 로그인 성공 처리
       dispatch(loginSuccess(response.data));
-      // 로컬 스토리지에 사용자 정보 저장
       localStorage.setItem('user', JSON.stringify(response.data));
 
       navigate('/dashboard');
@@ -63,7 +59,6 @@ const Login = () => {
       <ToastContainer /> 
       <form className="login-form" onSubmit={onSubmit}>
         <div className="formTitle">로그인</div>
-
         <div className="formbox">
           <label>아이디</label>
           <input
@@ -83,20 +78,15 @@ const Login = () => {
             required
           />
         </div>
-
         <button type="submit">로그인</button>
-
         <div className="signup">
           <Link to="/signup">회원가입</Link>
         </div>
-
         <ul className="loginList">
           <li>──────&nbsp;&nbsp;<span>간편 로그인</span>&nbsp;&nbsp;──────</li>
           <li className="googleLogin">구글 계정으로 로그인</li>
           <li className="kakaoLogin">카카오 계정으로 로그인</li>
         </ul>
-
-
       </form>
     </>
   );

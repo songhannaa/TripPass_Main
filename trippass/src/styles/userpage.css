@@ -101,6 +101,9 @@
 	text-align: center;
 	margin: 10%;
 }
+.preferences-icons {
+	display: flex;
+}
 
 .preferences-icons p {
 	white-space: pre-line;
