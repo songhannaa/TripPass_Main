@@ -2,7 +2,10 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { updateProfileImageAsync } from '../../store/userSlice';
+import { updateProfileImage } from '../../store/userSlice';
+import axios from 'axios';
+import { API_URL } from "../../config";
+
 
 const PopupContainer = styled.div`
   position: fixed;
@@ -38,11 +41,21 @@ const ProfilePopup = ({ onClose }) => {
     }
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
-    if (file && user) {
-      dispatch(updateProfileImageAsync(user.userId, file));
-      onClose(); 
+    try {
+      const formData = new FormData();
+      formData.append('userId', user.userId);
+      formData.append('profileImage', file);
+      const response = await axios.post(`${API_URL}/updateUserProfileImage`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      dispatch(updateProfileImage(response.data));
+      onClose();
+    } catch (error) {
+      console.error('Error fetching user data:', error);
     }
   };
 
@@ -62,7 +75,7 @@ const ProfilePopup = ({ onClose }) => {
           )}
           <div className="form-group btnList">
             <button type="submit">저장</button>
-            <button type="button" onClick={onClose}>닫기</button>
+            <button type="reset" onClick={onClose}>닫기</button>
           </div>
         </form>
       </PopupContent>

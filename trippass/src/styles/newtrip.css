@@ -8,11 +8,11 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	z-index: 1000;
+	z-index: 8000;
   }
   
   .popup-content {
-	background: #FAF9FF;
+	background: #f9f9f9;
 	padding: 10px 25px;
 	border-radius: 20px;
 	position: relative;
