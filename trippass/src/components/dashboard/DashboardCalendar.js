@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import styled from 'styled-components';
 import "../../styles/schedule.css";
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { API_URL } from '../../config';
 
 const CalendarWrapper = styled.div`
   display: flex;
   background-color: #ffffff;
   margin-right: 20px;
   border-radius: 20px;
+  align-items: stretch; /* 높이를 자동으로 맞추기 위해 추가 */
 `;
 
 const StyledCalendar = styled(Calendar)`
@@ -16,6 +20,7 @@ const StyledCalendar = styled(Calendar)`
   padding: 30px;  
   border-radius: 20px;
   border: none;
+  flex-grow: 1; /* 높이를 자동으로 맞추기 위해 추가 */
 
   .react-calendar {
     border: none;
@@ -32,43 +37,151 @@ const StyledCalendar = styled(Calendar)`
   }
 
   .react-calendar__tile:not(.react-calendar__tile--active):hover {
-    background: none; /* 선택되지 않은 날짜에 hover 시 배경을 없앰 */
+    background: #DFE1FF; /* 선택되지 않은 날짜에 hover 시 배경을 없앰 */
   }
 
   .react-calendar__month-view__weekdays__weekday abbr {
     text-decoration: none;
     border-bottom: none;
   }
+
   .react-calendar__navigation {
     display: block;
     height: 5px;
     margin: 0 1px 30px 10px;
   }
-  .react-calendar__navigation__label > span{
+
+  .react-calendar__navigation__label > span {
     font-weight: bold;
     color: #474747;
     font-size: 17px;
   }
+
   .react-calendar__tile--active:enabled:hover, .react-calendar__tile--active:enabled:focus {
     background: #DFE1FF;
   }
+
   .react-calendar__tile--now {
     background: #DFE1FF;
   }
 
+  .react-calendar__tile--highlighted {
+    background-color: #EAEAEA; /* 여행 날짜의 배경색 설정 */
+  }
 `;
 
 const ScheduleContainer = styled.div`
   padding: 40px 40px 20px 10px;
   width: 70%;
+  flex-grow: 1; /* 높이를 자동으로 맞추기 위해 추가 */
+  overflow-y: auto;
+`;
+
+const ScheduleTitle = styled.div`
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 20px 0 10px;
+`;
+
+const ScheduleItem = styled.div`
+  margin-bottom: 10px; /* 일정 항목 간의 여백 추가 */
 `;
 
 const DashboardCalendar = () => {
+  const { user } = useSelector(state => state.user);
   const [date, setDate] = useState(new Date());
+  const [highlightedDates, setHighlightedDates] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [tripPlans, setTripPlans] = useState([]);
+  const scheduleRefs = useRef({});
+
+  useEffect(() => {
+    const fetchTripData = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/getMyTrips?tripId=${user.mainTrip}`);
+        if (response.data['result code'] === 200) {
+          const tripData = response.data.response[0];
+          const startDate = new Date(tripData.startDate);
+          const endDate = new Date(tripData.endDate);
+
+          const dates = [];
+          let currentDate = new Date(startDate);
+          while (currentDate <= endDate) {
+            dates.push(new Date(currentDate));
+            currentDate.setDate(currentDate.getDate() + 1);
+          }
+          setHighlightedDates(dates);
+          setDate(startDate); // 여행 시작 날짜로 초기화
+        } else {
+          console.error('Failed to fetch trip data:', response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch trip data:', error);
+      }
+    };
+
+    if (user.mainTrip) {
+      fetchTripData();
+    }
+  }, [user.mainTrip]);
+
+  useEffect(() => {
+    const fetchTripPlans = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/getTripPlans?tripId=${user.mainTrip}`);
+        if (response.data['result code'] === 200) {
+          const plans = response.data.response;
+          // 날짜와 시간별로 정렬
+          plans.sort((a, b) => {
+            const dateA = new Date(`${a.date}T${new Date(a.time * 1000).toISOString().substr(11, 8)}`);
+            const dateB = new Date(`${b.date}T${new Date(b.time * 1000).toISOString().substr(11, 8)}`);
+            return dateA - dateB;
+          });
+          setTripPlans(plans);
+        } else {
+          console.error('Failed to fetch trip plans:', response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching trip plans:', error);
+      }
+    };
+
+    if (user.mainTrip) {
+      fetchTripPlans();
+    }
+  }, [user.mainTrip]);
 
   const onChange = (date) => {
     setDate(date);
+    setSelectedDate(date); // 선택된 날짜 업데이트
+    // 선택된 날짜로 스크롤 이동
+    const nextDay = new Date(date);
+    nextDay.setDate(nextDay.getDate() + 1); // 선택된 날짜에 하루를 더함
+    const dateKey = nextDay.toISOString().split('T')[0];
+    if (scheduleRefs.current[dateKey]) {
+      scheduleRefs.current[dateKey].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
+
+  const tileClassName = ({ date, view }) => {
+    if (view === 'month') {
+      if (highlightedDates.some(d => d.toDateString() === date.toDateString())) {
+        return 'react-calendar__tile--highlighted';
+      }
+      if (selectedDate && selectedDate.toDateString() === date.toDateString()) {
+        return 'react-calendar__tile--active';
+      }
+    }
+    return null;
+  };
+
+  const groupedPlans = tripPlans.reduce((acc, plan) => {
+    if (!acc[plan.date]) {
+      acc[plan.date] = [];
+    }
+    acc[plan.date].push(plan);
+    return acc;
+  }, {});
 
   return (
     <CalendarWrapper>
@@ -79,65 +192,32 @@ const DashboardCalendar = () => {
         prev2Label={null}
         nextLabel={null}
         next2Label={null}
-        calendarType="gregory" 
+        calendarType="gregory"
         view="month"
-        showNeighboringMonth={false} 
+        showNeighboringMonth={false}
         formatDay={(locale, date) => date.toLocaleString("en", {day: "numeric"})}
+        tileClassName={tileClassName}
       />
       <ScheduleContainer>
         <div className="schedule">
-          <div className="scheduleDay">
-            7월 7일 계획
-          </div>      
           <ul>
-            <li>
-              <div className="scheduleTitle">
-                🚍 Bus transfer
-              </div>
-              <div className="scheduleContent">
-                9월 16일 (월), 9:30 - 10:00
-              </div>
-            </li>
-            <li>
-              <div className="scheduleTitle">
-                🚍 Bus transfer
-              </div>
-              <div className="scheduleContent">
-                9월 16일 (월), 9:30 - 10:00
-              </div>
-            </li>
-            <li>
-              <div className="scheduleTitle">
-                🚍 Bus transfer
-              </div>
-              <div className="scheduleContent">
-                9월 16일 (월), 9:30 - 10:00
-              </div>
-            </li>
-            <li>
-              <div className="scheduleTitle">
-                🚍 Bus transfer
-              </div>
-              <div className="scheduleContent">
-                9월 16일 (월), 9:30 - 10:00
-              </div>
-            </li>
-            <li>
-              <div className="scheduleTitle">
-                🚍 Bus transfer
-              </div>
-              <div className="scheduleContent">
-                9월 16일 (월), 9:30 - 10:00
-              </div>
-            </li>
-            <li>
-              <div className="scheduleTitle">
-                🚍 Bus transfer
-              </div>
-              <div className="scheduleContent">
-                9월 16일 (월), 9:30 - 10:00
-              </div>
-            </li>
+            {Object.keys(groupedPlans).map(date => (
+              <li key={date} ref={el => scheduleRefs.current[date] = el}>
+                <ScheduleTitle>
+                  {new Date(date).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' })}
+                </ScheduleTitle>
+                {groupedPlans[date].map(plan => (
+                  <ScheduleItem key={plan.planId}>
+                    <div className="scheduleTitle">
+                      {plan.title}
+                    </div>
+                    <div className="scheduleContent">
+                      {new Date(plan.date + 'T' + new Date(plan.time * 1000).toISOString().substr(11, 8)).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })} - {plan.place}
+                    </div>
+                  </ScheduleItem>
+                ))}
+              </li>
+            ))}
           </ul>
         </div>
       </ScheduleContainer>
