@@ -20,8 +20,8 @@ const Container = styled.div`
 `;
 
 const Pointer = styled.img`
-  width: 50px; /* 이미지의 크기를 조정할 수 있습니다 */
-  height: 50px; /* 이미지의 크기를 조정할 수 있습니다 */
+  width: 50px;
+  height: 50px;
   position: absolute;
   pointer-events: none;
   transform: ${({ x, y }) => `translate(${x}px, ${y}px)`};
