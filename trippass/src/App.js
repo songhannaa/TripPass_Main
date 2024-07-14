@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
 import DashboardPage from "./pages/DashboardPage.js";
 import LoginPage from "./pages/LoginPage.js";
+import Redirect from "./components/login/Redirect.js";
 import MyTripPage from "./pages/MyTripPage.js";
 import TripCrewPage from "./pages/TripCrewPage.js";
 import ChatPage from "./pages/ChatPage.js"
@@ -47,6 +48,7 @@ function App() {
         <Routes>
           <Route path="/" element={isAuthenticated ? <DashboardPage /> : <LoginPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/login/kakao" element={<Redirect />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/dashboard" element={<AuthRoute><DashboardPage /></AuthRoute>} />
           <Route path="/myTrip" element={<AuthRoute><MyTripPage /></AuthRoute>} />
