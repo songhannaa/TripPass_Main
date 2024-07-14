@@ -136,6 +136,9 @@
   border-radius: 13px;
   color: #5F6165;
 }
+.sidebar-user{
+  margin: 0;
+}
 
 .sidebar-user a{
   display: flex;
@@ -143,9 +146,11 @@
   padding: 10px;
 }
 
-.sidebar-user:hover {
-  background-color: #F3F5F8;
-  border-radius: 13px;
+.sidebar-user {
+  color: #5F6165;
+}
+.sidebar-user a:hover{
+  color: #2c2c2c;
 }
 
 .userProfile img{
