@@ -1,4 +1,3 @@
-// src/store/userSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { API_URL } from '../config';
@@ -40,11 +39,18 @@ const userSlice = createSlice({
         state.user.mainTrip = action.payload;
         localStorage.setItem('user', JSON.stringify(state.user));
       }
+    },
+    setUserPersonality(state, action) {
+      if (state.user) {
+        state.user.personality = action.payload;
+        localStorage.setItem('user', JSON.stringify(state.user));
+      }
     }
   }
 });
 export const { loginSuccess, loginFailure, logout, updateProfileImage, updateUserData, updateUserMainTrip } = userSlice.actions;
 
+export const { loginSuccess, loginFailure, logout, updateProfileImage, updateUserMainTrip, setUserPersonality } = userSlice.actions;
 
 export const updateMainTripAsync = (userId, tripId) => async dispatch => {
   try {
@@ -64,6 +70,28 @@ export const updateMainTripAsync = (userId, tripId) => async dispatch => {
     }
   } catch (error) {
     console.error('Error updating main trip:', error);
+  }
+};
+
+export const updatePersonality = (userId, personality) => async dispatch => {
+  try {
+    const formData = new FormData();
+    formData.append('userId', userId);
+    formData.append('personality', personality);
+
+    const response = await axios.post(`${API_URL}/updateUserPersonality`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+
+    if (response.data['result code'] === 200) {
+      dispatch(setUserPersonality(personality));
+    } else {
+      console.error('Failed to update personality:', response.data);
+    }
+  } catch (error) {
+    console.error('Error updating personality:', error);
   }
 };
 
