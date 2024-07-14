@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "../../styles/memo.css";
 import { FaPencilAlt } from "react-icons/fa"; 
+// import { useSelector } from 'react-redux';
 
 const Memo = () => {
+  // const { isAuthenticated, user } = useSelector(state => state.user);
   const [memo, setMemo] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 

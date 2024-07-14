@@ -1,5 +1,7 @@
 // src/store/userSlice.js
 import { createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
+import { API_URL } from '../config';
 
 const initialState = {
   user: JSON.parse(localStorage.getItem('user')) || null,
@@ -28,8 +30,10 @@ const userSlice = createSlice({
       localStorage.removeItem('user');
     },
     updateProfileImage(state, action) {
-      state.user = action.payload;
-      localStorage.setItem('user', JSON.stringify(action.payload));
+      if (state.user) {
+        state.user.profileImage = action.payload;
+        localStorage.setItem('user', JSON.stringify(state.user));
+      }
     },
     updateUserMainTrip(state, action) {
       if (state.user) {
@@ -39,6 +43,7 @@ const userSlice = createSlice({
     }
   }
 });
+export const { loginSuccess, loginFailure, logout, updateProfileImage, updateUserData, updateUserMainTrip } = userSlice.actions;
 
 
 export const updateMainTripAsync = (userId, tripId) => async dispatch => {

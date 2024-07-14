@@ -52,7 +52,14 @@ const ProfilePopup = ({ onClose }) => {
           'Content-Type': 'multipart/form-data'
         }
       });
-      dispatch(updateProfileImage(response.data));
+      if (response.data["result code"] === 200) {
+        alert('사진이 변경되었습니다!');
+        const profileImage = response.data.response;
+        dispatch(updateProfileImage(profileImage));
+        onClose();
+      } else {
+        alert('프로필 사진 업데이트에 실패하였습니다');
+      }
       onClose();
     } catch (error) {
       console.error('Error fetching user data:', error);
