@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import NewTripCrewPop from './NewTripCrewPop';
 import '../../styles/MyCrewList.css';
-import { API_URL } from '../../config'; // config.js에서 API_URL 가져오기
+import { API_URL } from '../../config';
 
 const CrewCard = ({ banner, date, time, title }) => {
   return (
@@ -23,48 +23,44 @@ const MyCrewList = ({ userId, tripId }) => {
   const [crews, setCrews] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchCrewData = async () => {
-      if (!tripId) {
-        return;
-      }
+  const fetchCrewData = useCallback(async () => {
+    if (!tripId) {
+      return;
+    }
 
-      try {
-        console.log(`Fetching data for userId: ${userId}, tripId: ${tripId}`);
+    try {
+      const response = await axios.get(`${API_URL}/getMyCrew`, {
+        params: { userId, tripId }
+      });
 
-        const response = await axios.get(`${API_URL}/getMyCrew`, {
-          params: { userId, tripId }
-        });
-
-        console.log('getMyCrew response:', response);
-
-        const data = response.data.response.map(crew => ({
+      const data = response.data.response.map(crew => {
+        const seconds = parseInt(crew.time, 10);
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+        
+        return {
           banner: crew.banner ? `data:image/jpeg;base64,${crew.banner}` : 'https://via.placeholder.com/150',
           date: crew.date,
-          time: crew.time,
+          time: formattedTime,
           title: crew.title,
-        }));
+        };
+      });
 
-        console.log('Formatted crew data:', data);
+      // 날짜 순서로 정렬
+      data.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        setCrews(data);
-      } catch (error) {
-        console.error('Error fetching crew data:', error);
-      }
-    };
-
-    fetchCrewData();
+      setCrews(data);
+    } catch (error) {
+      console.error('Error fetching crew data:', error);
+    }
   }, [userId, tripId]);
 
-  const handleSave = (newCrew) => {
-    const newCrewData = {
-      banner: newCrew.bannerPreview,
-      date: newCrew.date,
-      time: newCrew.time,
-      title: newCrew.crewName,
-    };
-    setCrews([...crews, newCrewData]);
+  useEffect(() => {
+    fetchCrewData();
+  }, [userId, tripId, fetchCrewData]);
 
+  const handleSave = (newCrew) => {
     const data = new FormData();
     data.append('planId', newCrew.planId);
     data.append('title', newCrew.crewName);
@@ -83,6 +79,7 @@ const MyCrewList = ({ userId, tripId }) => {
     .then(response => {
       if (response.status === 200) {
         console.log('Crew saved successfully');
+        fetchCrewData();
       } else {
         console.error('Error saving crew:', response.data);
       }
@@ -110,12 +107,12 @@ const MyCrewList = ({ userId, tripId }) => {
               <CrewCard key={index} {...crew} />
             ))}
             <div className="crewCard createCrewCard" onClick={openPopup}>
-              <button className="createCrewButton">+<br />새로운 크루 만들기</button>
+              <button className="createCrewButton">+<br />New Crew</button>
             </div>
           </div>
         </div>
       </div>
-      {isPopupOpen && <NewTripCrewPop onClose={closePopup} onSave={handleSave} tripId={tripId} />}
+      {isPopupOpen && <NewTripCrewPop onClose={closePopup} onSave={handleSave} tripId={tripId} userId={userId} />}
     </div>
   );
 };
