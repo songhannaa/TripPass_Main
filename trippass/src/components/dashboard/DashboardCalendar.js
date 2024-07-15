@@ -6,6 +6,19 @@ import "../../styles/schedule.css";
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { API_URL } from '../../config';
+import { FaMapMarkerAlt } from "react-icons/fa"; // 아이콘 임포트
+
+const colors = [
+  '#4177A6', // Blue
+  '#D9D0C1', // Beige
+  '#FBAFC5', // Pink
+  '#DFACF6', // Lavender
+  '#BBD6FD', // Light Blue
+  '#BDD9F5',  // Pale Blue
+  '#BFADBF', // Light Grey
+  '#F2EEAD', // Pale Yellow
+  '#FDD5DA', // Light Pink
+];
 
 const CalendarWrapper = styled.div`
   display: flex;
@@ -81,7 +94,10 @@ const ScheduleTitle = styled.div`
   font-size: 1.5em;
   font-weight: bold;
   margin: 20px 0 10px;
+  display: flex;
+  align-items: center;
 `;
+
 
 const ScheduleItem = styled.div`
   margin-bottom: 10px; /* 일정 항목 간의 여백 추가 */
@@ -201,23 +217,24 @@ const DashboardCalendar = () => {
       <ScheduleContainer>
         <div className="schedule">
           <ul>
-            {Object.keys(groupedPlans).map(date => (
-              <li key={date} ref={el => scheduleRefs.current[date] = el}>
-                <ScheduleTitle>
-                  {new Date(date).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' })}
-                </ScheduleTitle>
-                {groupedPlans[date].map(plan => (
-                  <ScheduleItem key={plan.planId}>
-                    <div className="scheduleTitle">
-                      {plan.title}
-                    </div>
-                    <div className="scheduleContent">
-                      {new Date(plan.date + 'T' + new Date(plan.time * 1000).toISOString().substr(11, 8)).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })} - {plan.place}
-                    </div>
-                  </ScheduleItem>
-                ))}
-              </li>
-            ))}
+            {Object.keys(groupedPlans).map((date, index) => (
+  <li key={date} ref={el => scheduleRefs.current[date] = el}>
+    <ScheduleTitle>
+      <FaMapMarkerAlt style={{ color: colors[index % colors.length], marginRight: '10px' }} />
+      {new Date(date).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' })}
+    </ScheduleTitle>
+    {groupedPlans[date].map(plan => (
+      <ScheduleItem key={plan.planId}>
+        <div className="scheduleTitle">
+          {plan.title}
+        </div>
+        <div className="scheduleContent">
+          {new Date(plan.date + 'T' + new Date(plan.time * 1000).toISOString().substr(11, 8)).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })} - {plan.place}
+        </div>
+      </ScheduleItem>
+    ))}
+  </li>
+))}
           </ul>
         </div>
       </ScheduleContainer>
