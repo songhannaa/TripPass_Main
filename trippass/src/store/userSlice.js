@@ -48,9 +48,8 @@ const userSlice = createSlice({
     }
   }
 });
-export const { loginSuccess, loginFailure, logout, updateProfileImage, updateUserData, updateUserMainTrip } = userSlice.actions;
 
-export const { loginSuccess, loginFailure, logout, updateProfileImage, updateUserMainTrip, setUserPersonality } = userSlice.actions;
+export const { loginSuccess, loginFailure, logout, updateProfileImage, updateUserMainTrip, setUserPersonality,updateUserData } = userSlice.actions;
 
 export const updateMainTripAsync = (userId, tripId) => async dispatch => {
   try {
