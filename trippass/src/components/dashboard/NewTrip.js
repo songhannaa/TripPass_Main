@@ -17,6 +17,7 @@ const NewTrip = ({ onClose }) => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
+  
   const [selectedCity, setSelectedCity] = useState(null);
   const navigate = useNavigate();
 
