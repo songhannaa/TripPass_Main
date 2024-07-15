@@ -3,7 +3,7 @@ import axios from 'axios';
 import '../../styles/SearchCrew.css'; // 스타일 파일을 가져오기
 import { API_URL } from '../../config';
 
-const CrewCard = ({ banner, date, time, title, address, note, members }) => {
+const CrewCard = ({ banner, date, time, title, address, note, members, crewId, userId, handleJoinRequest }) => {
   return (
     <div className="searchCrewCard">
       <img src={banner} alt="Crew Banner" className="searchCrewCardImage" />
@@ -24,7 +24,7 @@ const CrewCard = ({ banner, date, time, title, address, note, members }) => {
             </div>
           ))}
         </div>
-        <button className="searchCrewCardButton">신청하기</button>
+        <button className="searchCrewCardButton" onClick={() => handleJoinRequest(crewId, userId)}>신청하기</button>
       </div>
     </div>
   );
@@ -92,7 +92,9 @@ const SearchCrew = ({ userId }) => {
             title: crew.title,
             address: crew.address,
             note: crew.note,
-            members: members
+            members: members,
+            crewId: crew.crewId,
+            userId: crew.userId
           };
         }));
 
@@ -114,6 +116,20 @@ const SearchCrew = ({ userId }) => {
     return `${hours}:${minutes}`;
   };
 
+  const handleJoinRequest = async (crewId, userId) => {
+    try {
+      const response = await axios.post(`${API_URL}/insertJoinRequests`, { userId, crewId });
+      if (response.data['result code'] === 200) {
+        alert("크루 신청이 완료되었습니다.");
+      } else {
+        alert(response.data.response);
+      }
+    } catch (error) {
+      console.error('Error joining crew:', error);
+      alert('크루 신청 중 오류가 발생했습니다.');
+    }
+  };
+
   return (
     <div className="searchCrew">
       <div className="searchCrewHeader">
@@ -131,7 +147,7 @@ const SearchCrew = ({ userId }) => {
       </div>
       <div>
         {crews.map((crew, index) => (
-          <CrewCard key={index} {...crew} />
+          <CrewCard key={index} {...crew} handleJoinRequest={handleJoinRequest} />
         ))}
       </div>
     </div>
