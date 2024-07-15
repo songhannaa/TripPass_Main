@@ -1,8 +1,11 @@
+// src/pages/TripCrewPage.js
+
 import React, { useEffect, useState } from 'react';
 import Layout from '../templates/Layout';
 import MyCrewList from '../components/tripcrew/MyCrewList';
+import SearchCrew from '../components/tripcrew/SearchCrew'; // SearchCrew 컴포넌트 추가
 import axios from 'axios';
-import { API_URL } from '../config'; // config.js에서 API_URL 가져오기
+import { API_URL } from '../config';
 
 const TripCrewPage = () => {
   const [userId, setUserId] = useState(null);
@@ -42,6 +45,7 @@ const TripCrewPage = () => {
   return (
     <Layout>
       <MyCrewList userId={userId} tripId={tripId} />
+      <SearchCrew userId={userId} /> {/* SearchCrew 컴포넌트 추가 */}
     </Layout>
   );
 };

@@ -3,10 +3,11 @@ import '../../styles/NewTripCrewPop.css';
 import axios from 'axios';
 import { API_URL } from "../../config";
 
-const NewTripCrewPop = ({ onClose, onSave, tripId }) => {
+const NewTripCrewPop = ({ onClose, onSave, tripId, userId }) => {
   const [formData, setFormData] = useState({
     crewName: '',
-    schedule: '',
+    scheduleDate: '',
+    scheduleTime: '',
     contact: '',
     numOfMate: '',
     note: '',
@@ -14,20 +15,32 @@ const NewTripCrewPop = ({ onClose, onSave, tripId }) => {
     bannerPreview: null,
   });
 
-  const [tripPlans, setTripPlans] = useState([]);
+  const [dates, setDates] = useState([]);
+  const [times, setTimes] = useState([]);
 
   useEffect(() => {
-    const fetchTripPlans = async () => {
+    const fetchTripDates = async () => {
       try {
         const response = await axios.get(`${API_URL}/getTripPlans`, { params: { tripId } });
-        setTripPlans(response.data.response);
+        const uniqueDates = [...new Set(response.data.response.map(plan => plan.date))].sort();
+        setDates(uniqueDates);
       } catch (error) {
-        console.error('Error fetching trip plans:', error);
+        console.error('Error fetching trip dates:', error);
       }
     };
 
-    fetchTripPlans();
+    fetchTripDates();
   }, [tripId]);
+
+  const fetchTimes = async (date) => {
+    try {
+      const response = await axios.get(`${API_URL}/getTripPlansDate`, { params: { date, userId } });
+      const sortedPlans = response.data.response.sort((a, b) => a.time - b.time);
+      setTimes(sortedPlans.map(plan => ({ time: plan.time, title: plan.title, planId: plan.planId })));
+    } catch (error) {
+      console.error('Error fetching times for date:', error);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,6 +48,16 @@ const NewTripCrewPop = ({ onClose, onSave, tripId }) => {
       ...formData,
       [name]: value,
     });
+  };
+
+  const handleDateChange = (e) => {
+    const { value } = e.target;
+    setFormData({
+      ...formData,
+      scheduleDate: value,
+      scheduleTime: '', // Reset time when date changes
+    });
+    fetchTimes(value);
   };
 
   const handleBannerChange = (e) => {
@@ -49,18 +72,51 @@ const NewTripCrewPop = ({ onClose, onSave, tripId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const selectedPlan = tripPlans.find(plan => plan.planId === formData.schedule);
+    const selectedPlan = times.find(time => time.time === formData.scheduleTime);
+
+    if (!selectedPlan) {
+      alert("일정과 시간을 올바르게 선택하세요.");
+      return;
+    }
+
     const newCrew = {
-      ...formData,
-      date: selectedPlan.date,
-      time: selectedPlan.time,
-      place: selectedPlan.place,
       planId: selectedPlan.planId,
-      bannerPreview: formData.bannerPreview,
+      title: formData.crewName,
+      contact: formData.contact,
+      numOfMate: formData.numOfMate,
+      note: formData.note,
+      banner: formData.banner,
     };
 
-    onSave(newCrew);
-    onClose();
+    const data = new FormData();
+    data.append('planId', newCrew.planId);
+    data.append('title', newCrew.title);
+    data.append('contact', newCrew.contact);
+    data.append('note', newCrew.note);
+    data.append('numOfMate', newCrew.numOfMate);
+    if (newCrew.banner) {
+      data.append('banner', newCrew.banner);
+    }
+
+    try {
+      const response = await axios.post(`${API_URL}/insertCrew`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.status === 200) {
+        console.log('Crew saved successfully');
+        onSave(newCrew);
+        onClose();
+      } else {
+        console.error('Error saving crew:', response.data);
+        alert('크루를 저장하는데 오류가 발생했습니다.');
+      }
+    } catch (error) {
+      console.error('Error saving crew:', error);
+      alert('크루를 저장하는데 오류가 발생했습니다.');
+    }
   };
 
   return (
@@ -75,11 +131,22 @@ const NewTripCrewPop = ({ onClose, onSave, tripId }) => {
           </label>
           <label>
             일정
-            <select name="schedule" value={formData.schedule} onChange={handleChange}>
+            <select name="scheduleDate" value={formData.scheduleDate} onChange={handleDateChange}>
               <option value="">--- 선택하세요 ---</option>
-              {tripPlans.map(plan => (
-                <option key={plan.planId} value={plan.planId}>
-                  {plan.date} {plan.time} - {plan.title}
+              {dates.map(date => (
+                <option key={date} value={date}>
+                  {date}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            시간
+            <select name="scheduleTime" value={formData.scheduleTime} onChange={handleChange}>
+              <option value="">--- 선택하세요 ---</option>
+              {times.map(time => (
+                <option key={time.planId} value={time.time}>
+                  {time.time}, {time.title}
                 </option>
               ))}
             </select>
@@ -101,7 +168,7 @@ const NewTripCrewPop = ({ onClose, onSave, tripId }) => {
             <input type="file" name="banner" accept="image/*" onChange={handleBannerChange} />
           </label>
           {formData.bannerPreview && (
-            <div className="bannerPreview">
+            <div className="imagePreview">
               <img src={formData.bannerPreview} alt="배너 이미지 미리보기" />
             </div>
           )}
