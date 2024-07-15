@@ -1,60 +1,132 @@
 /* src/styles/SearchCrew.css */
-.search-crew {
-    padding: 20px;
-  }
-  
-  .search-crew h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  /* SearchCrewCard styles */
-  .search-crew-card {
-    display: flex;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    position: relative;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-  }
-  
-  .search-crew-card-image {
-    width: 286px;
-    height: 172px;
-    object-fit: cover;
-    margin-right: 20px;
-  }
-  
-  .search-crew-card-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    flex-grow: 1;
-  }
-  
-  .search-crew-card-date,
-  .search-crew-card-location,
-  .search-crew-card-description,
-  .search-crew-card-participants {
-    margin: 0 0 10px 0;
-  }
-  
-  .search-crew-card-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-  }
-  
-  .search-crew-card-button:hover {
-    background-color: #0056b3;
-  }
+.searchCrew {
+  padding: 20px;
+}
+
+.searchCrewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.searchCrewHeader h2 {
+  font-size: 24px;
+  margin: 0;
+}
+
+.crewFilterWrapper {
+  margin-left: auto;
+}
+
+.searchCrewFilter {
+  padding: 10px;
+  font-size: 16px;
+}
+
+.searchCrewCard {
+  display: flex;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.searchCrewCardImage {
+  width: 286px;
+  height: 172px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 20px;
+}
+
+.searchCrewCardContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.searchCrewCardDate,
+.searchCrewCardTime,
+.searchCrewCardAddress,
+.searchCrewCardNote {
+  margin: 0 0 10px 0;
+}
+
+.searchCrewCardMembers {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.searchCrewCardMember {
+  display: flex;
+  align-items: center;
+}
+
+.searchCrewCardMember img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.searchCrewCardMemberInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.searchCrewCardMemberInfo p {
+  margin: 0;
+}
+
+.viewPersonalityButton {
+  padding: 5px 10px;
+  font-size: 12px;
+  color: #007bff;
+  background: #f0f0f0;
+  border: 1px solid #007bff;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+.viewPersonalityButton:hover::after {
+  content: attr(data-personality);
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.searchCrewCardButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.searchCrewCardButton:hover {
+  background-color: #0056b3;
+}

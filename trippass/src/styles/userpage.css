@@ -87,13 +87,16 @@
 }
 
 
+/* 성향 선택 부분 */
+
 .section-travel-preferences {
 	background-color: #ffffff;
-	padding: 50px;
+	padding: 5vh;
 	border-radius: 0px 0px 10px 10px;
 	display: flex;
 	flex-direction: column;
 }
+
 .no-preferences {
 	color: #718EBF;
 	font-weight: bold;
@@ -102,17 +105,60 @@
 	text-align: center;
 	margin: 10%;
 }
+
+.preferences-grid {
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	margin-bottom: 5vh;
+  }
+
 .preferences-icons {
-	display: flex;
-}
-
-.preferences-icons p {
+	display: grid;
+    grid-template-columns: repeat(5, 1fr);
+	flex-wrap: wrap;
+	gap: 3vh;
+	justify-content: center;
+	margin-bottom: 5vh;
 	white-space: pre-line;
-	color: #5F6165;
-	font-size: 13px;
-}
+	text-align: center;
+  }
 
-.edit-button {
+  .preference-group {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+  }
+
+  .preference-image {
+	width: 200px;
+	height: auto;
+	margin-bottom: 10px;
+  }
+
+  .preference-label {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-width: 150px;
+	max-width: 150px;
+	background-color: #F3F3F3;
+	padding: 10px;
+	border-radius: 10px;
+	text-align: center;
+	cursor: pointer;
+	margin: 0.5vh 0;
+	color: #BFBFBF;
+	font-size: 15px;
+  }
+
+  .preference-label.selected, .preference-label:hover {
+	background-color: #9FA6FF;
+	color: white;
+	font-weight: bold;
+  }
+
+  .edit-button {
 	background-color: #ffffff;
 	color: #718EBF;
 	font-size: 12px;
@@ -123,10 +169,4 @@
 	text-align: center;
 	width: 15%;
 	margin: 0 auto;
-}
-
-.password-button:hover{
-	background-color: #718EBF;
-	color: #fff;
-	border: 1.5px solid #718EBF;
-}
+  }

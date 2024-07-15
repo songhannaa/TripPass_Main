@@ -24,7 +24,13 @@ const User = () => {
         {isAuthenticated && (
           <div className="profile-content">
             <div className="profile-image-container">
-              <img src={`data:image/jpeg;base64,${user.profileImage}`} alt="user profile" className="profile-image" />
+            {user.profileImage ? (
+                <img src={`data:image/jpeg;base64,${user.profileImage}`} alt="user profile" className="profile-image" />
+              ) : (
+                user.socialProfileImage && (
+                  <img src={user.socialProfileImage} alt="user profile" className="profile-image" />
+                )
+              )}
               <div className="profile-update" onClick={handlePopupOpen}><FaPencilAlt /></div>
               <div className="user-name">{user.nickname} 님</div>
             </div>

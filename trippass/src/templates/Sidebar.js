@@ -96,13 +96,17 @@ const Sidebar = () => {
           <NavLink
             to="/user"
             style={({ isActive }) => ({
-              backgroundColor: isActive ? '#F3F5F8' : '',
-              padding: isActive ? '' : '',
-              borderRadius: isActive ? '13px' : ''
+              color: isActive ? '#2c2c2c' : '',
             })}
           >
             <div className="userProfile">
-              <img src={user.profileImage ? `data:image/jpeg;base64,${user.profileImage}` : null} alt="user profile" />
+            {user.profileImage ? (
+                <img src={`data:image/jpeg;base64,${user.profileImage}`} alt="user profile" className="profile-image" />
+              ) : (
+                user.socialProfileImage && (
+                  <img src={user.socialProfileImage} alt="user profile" className="profile-image" />
+                )
+              )}
             </div>
             <div className="userName">
               {user.nickname}님
