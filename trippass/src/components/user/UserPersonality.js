@@ -43,11 +43,9 @@ const UserPersonality = () => {
   const { user } = useSelector(state => state.user);
 
   useEffect(() => {
-    console.log("Current user object:", user); // 디버깅을 위한 현재 사용자 객체 확인
     if (user && user.personality && user.personality !== "none") {
       try {
         const parsedPersonality = JSON.parse(user.personality);
-        console.log("Parsed personality:", parsedPersonality); // 파싱된 성향 데이터 확인
         setPreferences(parsedPersonality);
       } catch (error) {
         console.error("Error parsing JSON:", error);

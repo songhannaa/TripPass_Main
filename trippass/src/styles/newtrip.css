@@ -46,6 +46,10 @@
 	text-align: left;
 	font-weight: bold;
   }
+  .passwordGroup label{
+	margin-right: 30px;
+	width: 40%;
+  }
   
   .form-group input,
   .form-group select,
@@ -96,6 +100,12 @@
 	color: #757575;
   }
 
+  .form-group input[type="password"] {
+	background: white;
+	color: #757575;
+	width: 60%;
+  }
+
   .new-trip-form button[type="submit"] {
 	background: #525ACE;
 	color: white;
@@ -105,11 +115,11 @@
 	cursor: pointer;
 	width: 25%;
 	text-align: center;
-	margin: 0 10px;
+	margin: 0 20px 0 0;
   }
 
   .new-trip-form button[type="reset"] {
-	background: #ffaaaa;
+	background: #cccccc;
 	color: #ffffff;
 	padding: 10px;
 	border: none;
@@ -117,11 +127,14 @@
 	cursor: pointer;
 	width: 25%;
 	text-align: center;
-	margin: 0 10px;
+
   }
   
   .btnList{
 	justify-content: center;
   }
 
-  
+  .react-datepicker__month-container {
+    float: left;
+    width: 344px;
+}

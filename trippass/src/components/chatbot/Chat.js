@@ -36,7 +36,11 @@ const Chat = () => {
           >
             <div className="messageText">{message.text}</div>
             <img
-              src={message.sender === user.id ? `data:image/png;base64,${user.profileImage}` : botProfileImage}
+              src={
+                message.sender === user.id 
+                  ? `data:image/png;base64,${user.profileImage || user.socialProfileImage}` 
+                  : botProfileImage
+              }
               alt="Profile"
               className="profileImage"
             />

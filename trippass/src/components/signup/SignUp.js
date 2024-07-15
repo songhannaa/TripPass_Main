@@ -51,9 +51,6 @@ const Signup = () => {
 
       formData.append('profileImage', imageFile);
 
-      formData.forEach((value, key) => {
-        console.log(key, value);
-      });
 
       const response = await axios.post(`${API_URL}/insertUser`, formData, {
         headers: {

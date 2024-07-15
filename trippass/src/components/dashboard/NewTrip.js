@@ -17,6 +17,7 @@ const NewTrip = ({ onClose }) => {
   const [endDate, setEndDate] = useState(null);
   const [preview, setPreview] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
+  
   const [selectedCity, setSelectedCity] = useState(null);
   const [file, setFile] = useState(null);
   const navigate = useNavigate();
