@@ -1,5 +1,4 @@
 .MyTrip_Container {
-  padding: 5%;
 }
 
 .MyTrip_CardSection {
@@ -11,8 +10,8 @@
 .MyTrip_Container h1 {
   margin-bottom: 50px;
   margin-left: 20px;
-  font-size: 2rem;
-  font-weight: bold;
+  margin-top: 20px;
+  font-size: 24px;
 }
 
 .TripCard_Card {
