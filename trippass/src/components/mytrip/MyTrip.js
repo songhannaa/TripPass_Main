@@ -36,7 +36,7 @@ const MyTrip = () => {
     };
 
     fetchTripPlans();
-  }, [highlightedTripId]);
+  }, [highlightedTripId, user.userId]);
 
   const handleCardClick = async (tripId) => {
     // 옵티미스틱 UI 업데이트
