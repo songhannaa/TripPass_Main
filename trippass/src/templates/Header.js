@@ -14,7 +14,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const [weather, setWeather] = useState(null);
 
-  useEffect (() => {
+  useEffect(() => {
     const fetchTripData = async () => {
       try {
         const response = await axios.get(`${API_URL}/getMyTrips?tripId=${user.mainTrip}`);
@@ -32,10 +32,10 @@ const Header = () => {
       }
     };
 
-    if (isAuthenticated && user.mainTrip) {
+    if (isAuthenticated && user && user.mainTrip) {
       fetchTripData();
     }
-  }, [isAuthenticated, user.mainTrip, user.userId]);
+  }, [isAuthenticated, user]);
 
   const handleLogout = () => {
     alert("로그아웃 되었습니다");
@@ -52,7 +52,7 @@ const Header = () => {
             <li className="weather-info">
               <span>{weather.city}&nbsp;</span>
               <span>{weather.weather}&nbsp;</span>
-              <span>{weather.temperature}</span>
+              <span>{weather.temperature}°C</span>
             </li>
           )}
           <li><MdOutlineNotificationsNone size={22} /></li>
