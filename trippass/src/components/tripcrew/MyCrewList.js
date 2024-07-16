@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import NewTripCrewPop from './NewTripCrewPop';
-import '../../styles/MyCrewList.css';
+import '../../styles/mycrewList.css';
 import { API_URL } from '../../config';
 
 const CrewCard = ({ banner, date, time, title, crewId, userId, tripmate, handleDelete }) => {
