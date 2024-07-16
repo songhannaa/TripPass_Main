@@ -114,11 +114,7 @@ const NewTrip = ({ onClose }) => {
           </div>
           <div className="form-group">
             <label>배너</label>
-            <div className="container">
-              <div className="image">
-                <img src={지영이} alt="지영이" />
-              </div>
-            </div>
+                <img src={지영이} alt="지영이" className="bannerBot"/>
           </div>
           <div className="form-group btnList">
             <button type="submit">저장</button>
