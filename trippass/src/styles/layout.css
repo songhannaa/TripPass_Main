@@ -47,6 +47,9 @@
 
 .header-links li {
   margin-left: 30px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.5px;
 }
 .logout-button {
   background-color: transparent;

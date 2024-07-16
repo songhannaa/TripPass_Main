@@ -1,6 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { API_URL } from '../config';
 
 const initialState = {
   user: JSON.parse(localStorage.getItem('user')) || null,
@@ -49,49 +47,14 @@ const userSlice = createSlice({
   }
 });
 
-export const { loginSuccess, loginFailure, logout, updateProfileImage, updateUserMainTrip, setUserPersonality,updateUserData } = userSlice.actions;
+export const {
+  loginSuccess,
+  loginFailure,
+  logout,
+  updateProfileImage,
+  updateUserMainTrip,
+  setUserPersonality
+} = userSlice.actions;
 
-export const updateMainTripAsync = (userId, tripId) => async dispatch => {
-  try {
-    const response = await axios.post(`${API_URL}/updateUserMainTrip`, {
-      userId,
-      mainTrip: tripId
-    }, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (response.data['result code'] === 200) {
-      dispatch(updateUserMainTrip(tripId));
-    } else {
-      console.error('Failed to update main trip:', response.data);
-    }
-  } catch (error) {
-    console.error('Error updating main trip:', error);
-  }
-};
-
-export const updatePersonality = (userId, personality) => async dispatch => {
-  try {
-    const formData = new FormData();
-    formData.append('userId', userId);
-    formData.append('personality', personality);
-
-    const response = await axios.post(`${API_URL}/updateUserPersonality`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
-
-    if (response.data['result code'] === 200) {
-      dispatch(setUserPersonality(personality));
-    } else {
-      console.error('Failed to update personality:', response.data);
-    }
-  } catch (error) {
-    console.error('Error updating personality:', error);
-  }
-};
 
 export default userSlice.reducer;

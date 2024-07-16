@@ -1,21 +1,18 @@
-.MyTrip_Container {
-}
-
 .MyTrip_CardSection {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   flex-wrap: wrap;
 }
 
 .MyTrip_Container h1 {
-  margin-bottom: 50px;
+  margin-bottom: 30px;
   margin-left: 20px;
   margin-top: 20px;
   font-size: 24px;
 }
 
 .TripCard_Card {
-  width: 23.5%; /* 카드 크기 증가 */
+  width: 23.5%; 
   height: 50%;
   border-radius: 10px;
   overflow: hidden;
@@ -54,11 +51,26 @@
   position: absolute;
   top: 5%;
   left: 5%;
-  right: 30%;
+  right: 5%;
   margin: 0;
-  font-size: 1.5em;
+  font-size: 1.2em;
   text-align: left;
   color: white;
+}
+
+.TripCard_DeleteButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.TripCard_Delete {
+  color: white;
+  font-size: 1.5em; /* 아이콘 크기 조정 */
 }
 
 .TripCard_Date {
@@ -66,7 +78,7 @@
   bottom: 5%;
   right: 5%;
   margin: 0;
-  font-size: 1.1em;
+  font-size: 0.9rem;
   text-align: right;
   color: white;
 }
@@ -83,4 +95,5 @@
 .TripCard_MainText {
   color: white;
   font-size: 1em;
+  cursor: pointer;
 }
