@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import '../../styles/mytrip.css';
 
 const TripCard = ({ title, startDate, endDate, banner, isHighlighted, onClick }) => {
@@ -22,15 +21,6 @@ const TripCard = ({ title, startDate, endDate, banner, isHighlighted, onClick })
       </div>
     </div>
   );
-};
-
-TripCard.propTypes = {
-  title: PropTypes.string.isRequired,
-  startDate: PropTypes.string.isRequired,
-  endDate: PropTypes.string.isRequired,
-  banner: PropTypes.string.isRequired,
-  isHighlighted: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired,
 };
 
 export default TripCard;
