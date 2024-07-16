@@ -4,7 +4,9 @@ import NewTripCrewPop from './NewTripCrewPop';
 import '../../styles/MyCrewList.css';
 import { API_URL } from '../../config';
 
-const CrewCard = ({ banner, date, time, title }) => {
+const CrewCard = ({ banner, date, time, title, crewId, userId, tripmate, handleDelete }) => {
+  const isOwner = userId === tripmate; // 현재 사용자가 크루의 소유자인지 확인합니다.
+
   return (
     <div className="crewCard">
       <div className="crewCardImageWrapper">
@@ -13,6 +15,9 @@ const CrewCard = ({ banner, date, time, title }) => {
           <h3>{title}</h3>
           <p>{date}</p>
           <p>{time}</p>
+          {isOwner && (
+            <button className="deleteCrewButton" onClick={() => handleDelete(crewId)}>삭제</button>
+          )}
         </div>
       </div>
     </div>
@@ -44,6 +49,8 @@ const MyCrewList = ({ userId, tripId }) => {
           date: crew.date,
           time: formattedTime,
           title: crew.title,
+          crewId: crew.crewId,
+          tripmate: crew.tripmate
         };
       });
 
@@ -61,32 +68,30 @@ const MyCrewList = ({ userId, tripId }) => {
   }, [userId, tripId, fetchCrewData]);
 
   const handleSave = (newCrew) => {
-    const data = new FormData();
-    data.append('planId', newCrew.planId);
-    data.append('title', newCrew.crewName);
-    data.append('contact', newCrew.contact);
-    data.append('note', newCrew.note);
-    data.append('numOfMate', newCrew.numOfMate);
-    if (newCrew.banner) {
-      data.append('banner', newCrew.banner);
-    }
+    fetchCrewData();
+  };
 
-    axios.post(`${API_URL}/insertCrew`, data, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-    .then(response => {
+  const handleDelete = async (crewId) => {
+    try {
+      const response = await axios.delete(`${API_URL}/deleteCrew`, {
+        data: {
+          crewId,
+          userId
+        },
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
       if (response.status === 200) {
-        console.log('Crew saved successfully');
+        console.log('Crew deleted successfully');
         fetchCrewData();
       } else {
-        console.error('Error saving crew:', response.data);
+        console.error('Error deleting crew:', response.data);
       }
-    })
-    .catch(error => {
-      console.error('Error saving crew:', error);
-    });
+    } catch (error) {
+      console.error('Error deleting crew:', error);
+    }
   };
 
   const openPopup = () => {
@@ -104,7 +109,7 @@ const MyCrewList = ({ userId, tripId }) => {
         <div className="sliderWrapper">
           <div className="slider">
             {crews.map((crew, index) => (
-              <CrewCard key={index} {...crew} />
+              <CrewCard key={index} {...crew} userId={userId} handleDelete={handleDelete} />
             ))}
             <div className="crewCard createCrewCard" onClick={openPopup}>
               <button className="createCrewButton">+<br />New Crew</button>

@@ -132,3 +132,19 @@
   font-weight: bold;
   font-size: 17px;
 }
+
+.deleteCrewButton {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background-color: #8d94ff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.deleteCrewButton:hover {
+  background-color: #ff7875;
+}
