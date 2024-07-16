@@ -1,0 +1,202 @@
+.DashboardTripCrew_memo {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 400px;
+  box-sizing: border-box;
+}
+
+.DashboardTripCrew_memoTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
+
+.DashboardTripCrew_memoTitle span {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.DashboardTripCrew_editButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.DashboardTripCrew_crewItem {
+  overflow: hidden;
+  
+}
+
+.DashboardTripCrew_bannerContainer {
+  position: relative;
+  width: 100%;
+  
+}
+
+.DashboardTripCrew_crewBanner {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.DashboardTripCrew_overlay {
+  position: absolute;
+  top: 0;
+  justify-content: space-between;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+  border-radius: 10px;
+}
+
+
+.DashboardTripCrew_crewName{
+    font-size: 19px;
+     font-weight: bold;
+}
+
+.DashboardTripCrew_crewTitle,
+.DashboardTripCrew_navigation{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 13px;
+}
+
+.DashboardTripCrew_navigationButtons button {
+  color: #fff;
+  border: none;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+
+.DashboardTripCrew_crewDescription {
+  margin-top: 20px;
+}
+
+.DashboardTripCrew_crewDescription h3 {
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.DashboardTripCrew_crewDescription p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.DashboardTripCrew_crewMates {
+  margin-top: 20px;
+}
+
+.DashboardTripCrew_crewMates h3 {
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+
+.DashboardTripCrew_matesList {
+  display: flex;
+  gap: 20px;
+  position: relative;
+}
+
+.DashboardTripCrew_mateItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.DashboardTripCrew_mateImage {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.DashboardTripCrew_mateInfo{    
+  position: absolute; 
+  bottom: 50%;
+  left: 5%;
+  z-index: 9999;
+  background-color: #ffffffe6;
+  padding: 15px;
+  border-radius: 10px;
+  width: 200px;
+  box-sizing: border-box;
+  height: 180px;
+  box-shadow: 9px 9px 30px rgba(126, 123, 160, 0.2);
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.5s linear;
+}
+
+.DashboardTripCrew_mateImage:hover + .DashboardTripCrew_mateInfo {
+  visibility: visible;
+  opacity: 1;
+}
+
+.DashboardTripCrew_mateInfo ul{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+
+.DashboardTripCrew_mateInfo ul li{
+    margin-bottom: 5px;
+}
+
+.DashboardTripCrew_navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.DashboardTripCrew_navigation button {
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+  background-color: #fff0;
+  border: none;
+  font-weight: bold;
+}
+
+.DashboardTripCrew_navigation button:first-child{
+  margin-right: 15px;
+}
+
+
+.DashboardTripCrew_mateName{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.DashboardTripCrew_matePersonalityKey {
+  font-weight: bold;
+}
+
+.DashboardTripCrew_mateAge{
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+.DashboardTripCrew_matePersonalityList ul li{
+    margin-bottom: 7px;
+}
