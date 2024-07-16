@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updatePersonality } from "../../store/userSlice";
+import { updatePersonality } from "../../store/userActions";
 import moneyImg from '../../assets/profile/money.png';
 import foodImg from '../../assets/profile/food.png';
 import transportImg from '../../assets/profile/transport.png';
