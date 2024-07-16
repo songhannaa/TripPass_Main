@@ -29,7 +29,7 @@
   margin-bottom: 20px;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
   position: relative;
   justify-content: space-between;
   align-items: center;
@@ -69,9 +69,10 @@
   align-items: center;
 }
 
+/* 참여중인 크루 프사 */
 .searchCrewCardMember img {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   object-fit: cover;
   margin-right: 10px;
@@ -84,7 +85,9 @@
   position: relative;
 }
 
+/* 참여 크루 닉네임표기 */
 .searchCrewCardMemberInfo p {
+  font-size: 14px;
   margin: 0;
 }
 
@@ -92,9 +95,9 @@
   padding: 5px 10px;
   font-size: 12px;
   color: #007bff;
-  background: #f0f0f0;
-  border: 1px solid #007bff;
-  border-radius: 5px;
+  background: #ffffff;
+  border: 1px solid #000000;
+  border-radius: 15px;
   cursor: pointer;
   margin-top: 5px;
 }
@@ -117,7 +120,7 @@
 .searchCrewCardButton {
   padding: 10px 20px;
   font-size: 16px;
-  color: #fff;
+  color: #ffffff;
   background-color: #007bff;
   border: none;
   border-radius: 5px;

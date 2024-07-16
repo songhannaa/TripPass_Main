@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import '../../styles/SearchCrew.css'; // 스타일 파일을 가져오기
+import '../../styles/searchcrew.css'; // 스타일 파일을 가져오기
 import { API_URL } from '../../config';
 
 const CrewCard = ({ banner, date, time, title, address, note, members, crewId, userId, handleJoinRequest }) => {
@@ -13,7 +13,21 @@ const CrewCard = ({ banner, date, time, title, address, note, members, crewId, u
         <p className="searchCrewCardTime">{time}</p>
         <p className="searchCrewCardAddress">{address}</p>
         <p className="searchCrewCardNote">{note}</p>
-        <div className="searchCrewCardMembers">
+        {/* <div className="searchCrewCardMembers">
+          {members.map((member, index) => (
+            <div key={index} className="searchCrewCardMember">
+              <img src={member.profileImage ? `data:image/jpeg;base64,${member.profileImage}` : 'https://via.placeholder.com/40'} alt={member.nickname} />
+              <div className="searchCrewCardMemberInfo">
+                <p>{member.nickname}</p>
+                <button className="viewPersonalityButton" data-personality={Array.isArray(member.personality) ? member.personality.join(', ') : member.personality}>성향 보기</button>
+              </div>
+            </div>
+          ))}
+        </div> */}
+        {/* <button className="searchCrewCardButton" onClick={() => handleJoinRequest(crewId, userId)}>신청하기</button> */}
+      </div>
+      <div>
+      <div className="searchCrewCardMembers">
           {members.map((member, index) => (
             <div key={index} className="searchCrewCardMember">
               <img src={member.profileImage ? `data:image/jpeg;base64,${member.profileImage}` : 'https://via.placeholder.com/40'} alt={member.nickname} />
@@ -56,7 +70,9 @@ const SearchCrew = ({ userId }) => {
       try {
         let response;
         if (filter === '전체') {
-          response = await axios.get(`${API_URL}/getCrew`);
+          response = await axios.get(`${API_URL}/getCrewCalc`, {
+            params: { mainTrip: userInfo.mainTrip }
+          });
         } else if (filter === '추천순' && userInfo.mainTrip) {
           const mainTripResponse = await axios.get(`${API_URL}/getMyTrips`, {
             params: { tripId: userInfo.mainTrip }
@@ -65,9 +81,7 @@ const SearchCrew = ({ userId }) => {
 
           response = await axios.get(`${API_URL}/getCrewCalc`, {
             params: {
-              date: mainTrip.startDate,
-              contry: mainTrip.contry,
-              city: mainTrip.city
+              mainTrip: mainTrip.tripId
             }
           });
         }
@@ -118,7 +132,17 @@ const SearchCrew = ({ userId }) => {
 
   const handleJoinRequest = async (crewId, userId) => {
     try {
-      const response = await axios.post(`${API_URL}/insertJoinRequests`, { userId, crewId });
+      const formData = new FormData();
+      formData.append('userId', userId);
+      formData.append('crewId', crewId);
+      formData.append('tripId', userInfo.mainTrip);
+
+      const response = await axios.post(`${API_URL}/insertJoinRequests`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
       if (response.data['result code'] === 200) {
         alert("크루 신청이 완료되었습니다.");
       } else {

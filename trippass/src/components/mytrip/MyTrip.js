@@ -67,6 +67,43 @@ const MyTrip = () => {
     }
   };
 
+  const handleDelete = async (tripId) => {
+    try {
+      const response = await axios.delete(`${API_URL}/deleteTrip`, {
+        data: { userId: user.userId, tripId: tripId },
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.data['result code'] === 200) {
+        // 성공적으로 삭제된 경우, 상태를 업데이트하여 삭제된 항목을 제거
+        setTripPlans(prevPlans => prevPlans.filter(trip => trip.tripId !== tripId));
+        if (tripId === highlightedTripId) {
+          setHighlightedTripId(null);
+          dispatch(updateUserMainTrip(null));
+        }
+      } else {
+        console.error('Failed to delete trip:', response.data);
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 400) {
+          if (error.response.data.detail === "크루 참여가 있는 여행은 삭제할 수 없습니다.") {
+            alert("크루 참여가 있는 여행은 삭제할 수 없습니다.");
+          } else {
+            alert("요청에 문제가 있습니다.");
+          }
+        } else {
+          alert("트립 삭제를 할 수 없습니다.");
+        }
+      } else {
+        alert("서버와의 통신에 문제가 발생했습니다.");
+      }
+      console.error('Error deleting trip:', error);
+    }
+  };
+
   return (
     <div className="MyTrip_Container">
       <h1>마이 트립</h1>
@@ -80,6 +117,7 @@ const MyTrip = () => {
             banner={trip.banner}
             isHighlighted={trip.tripId === highlightedTripId}
             onClick={() => handleCardClick(trip.tripId)}
+            onDelete={() => handleDelete(trip.tripId)}  // onDelete 핸들러 추가
           />
         ))}
       </div>

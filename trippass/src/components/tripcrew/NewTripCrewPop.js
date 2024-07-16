@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../../styles/NewTripCrewPop.css';
+import '../../styles/newtripcrewpop.css';
 import axios from 'axios';
 import { API_URL } from "../../config";
 
@@ -36,7 +36,7 @@ const NewTripCrewPop = ({ onClose, onSave, tripId, userId }) => {
   //시간을 변환할 때 convertSecondsToTime 함수를 사용합니다. 이 함수는 초 단위 시간을 'HH' 형식의 문자열로 변환
   const fetchTimes = async (date) => {
     try {
-      const response = await axios.get(`${API_URL}/getTripPlansDate`, { params: { date, userId } });
+      const response = await axios.get(`${API_URL}/getTripPlansDate`, { params: { date, tripId } });
       const sortedPlans = response.data.response.sort((a, b) => a.time - b.time);
       setTimes(sortedPlans.map(plan => ({
         time: convertSecondsToTime(plan.time),
