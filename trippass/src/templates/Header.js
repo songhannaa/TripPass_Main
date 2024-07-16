@@ -50,9 +50,9 @@ const Header = () => {
         <ul className="header-links">
           {weather && (
             <li className="weather-info">
-              <span>{weather.city}&nbsp;</span>
-              <span>{weather.weather}&nbsp;</span>
-              <span>{weather.temperature}</span>
+              <span style={{ fontWeight: 'bold' }}>{weather.city}&nbsp;&nbsp;</span>
+              <span>{weather.temperature}°C&nbsp;</span>
+              <img src={`http://openweathermap.org/img/wn/${weather.icon}.png`} alt={weather.weather} />
             </li>
           )}
           <li><MdOutlineNotificationsNone size={22} /></li>
