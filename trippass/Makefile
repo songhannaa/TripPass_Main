@@ -1,2 +1,2 @@
 start:
-	PORT=3001 npm start
+	PORT=3000 npm start

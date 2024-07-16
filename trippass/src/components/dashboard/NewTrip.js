@@ -8,6 +8,7 @@ import axios from 'axios';
 import { API_URL } from "../../config";
 import { useNavigate } from 'react-router-dom';
 import { updateUserMainTrip } from '../../store/userSlice';
+import 지영이 from '../../assets/지영이.png';
 
 const NewTrip = ({ onClose }) => {
   const { user } = useSelector(state => state.user);
@@ -15,26 +16,14 @@ const NewTrip = ({ onClose }) => {
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [preview, setPreview] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
+  
   const [selectedCity, setSelectedCity] = useState(null);
-  const [file, setFile] = useState(null);
   const navigate = useNavigate();
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const previewURL = URL.createObjectURL(file);
-      setFile(file);
-      setPreview(previewURL);
-    }
-  };
-
 
   const handleCountryChange = (event) => {
     const country = event.target.value;
     setSelectedCountry(country);
-
     
     const selectedCountryObj = countries.data.find(c => c.country === country);
     if (selectedCountryObj) {
@@ -56,9 +45,6 @@ const NewTrip = ({ onClose }) => {
     formData.append('city', selectedCity);
     formData.append('startDate', startDate ? startDate.toISOString().split('T')[0] : '');
     formData.append('endDate', endDate ? endDate.toISOString().split('T')[0] : '');
-    if (file) {
-      formData.append('banner', file);
-    }
 
     try {
       const response = await axios.post(`${API_URL}/insertmyTrips`, formData, {
@@ -127,14 +113,13 @@ const NewTrip = ({ onClose }) => {
             </div>
           </div>
           <div className="form-group">
-            <label>이미지</label>
-            <input type="file" className='fileInput' accept="image/*" onChange={handleFileChange} />
-          </div>
-          {preview && (
-            <div className="image-preview">
-              <img src={preview} alt="미리보기" />
+            <label>배너</label>
+            <div className="container">
+              <div className="image">
+                <img src={지영이} alt="지영이" />
+              </div>
             </div>
-          )}
+          </div>
           <div className="form-group btnList">
             <button type="submit">저장</button>
             <button type="reset" onClick={onClose}>닫기</button>

@@ -48,10 +48,12 @@ textarea{
 
 .success {
   color: green;
+  font-size: 13px;
 }
 
 .error {
   color: red;
+  font-size: 13px;
 }
 
 .signup-form button,

@@ -32,14 +32,26 @@ const NewTripCrewPop = ({ onClose, onSave, tripId, userId }) => {
     fetchTripDates();
   }, [tripId]);
 
+  //특정 날짜와 사용자를 기준으로 여행 계획을 필터링
+  //시간을 변환할 때 convertSecondsToTime 함수를 사용합니다. 이 함수는 초 단위 시간을 'HH' 형식의 문자열로 변환
   const fetchTimes = async (date) => {
     try {
       const response = await axios.get(`${API_URL}/getTripPlansDate`, { params: { date, userId } });
       const sortedPlans = response.data.response.sort((a, b) => a.time - b.time);
-      setTimes(sortedPlans.map(plan => ({ time: plan.time, title: plan.title, planId: plan.planId })));
+      setTimes(sortedPlans.map(plan => ({
+        time: convertSecondsToTime(plan.time),
+        title: plan.title,
+        planId: plan.planId
+      })));
     } catch (error) {
       console.error('Error fetching times for date:', error);
     }
+  };
+
+  const convertSecondsToTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
   };
 
   const handleChange = (e) => {

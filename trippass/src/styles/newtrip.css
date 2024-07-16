@@ -19,7 +19,6 @@
 	width: 550px;
   }
   
-  
   .new-trip-title {
 	text-align: center;
 	font-size: 20px;
@@ -45,6 +44,10 @@
 	width: 20%;
 	text-align: left;
 	font-weight: bold;
+  }
+  .passwordGroup label{
+	margin-right: 30px;
+	width: 40%;
   }
   
   .form-group input,
@@ -73,27 +76,11 @@
 	box-sizing: border-box;
 	color: #757575;
   }
-  
-  .image-preview {
-	width: 100%;
-	height: 150px;
-	overflow: hidden;
-	border-radius: 10px;
-	margin-top: 15px;
-	position: relative;
-  }
-  
-  .image-preview img {
-	width: 100%;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
 
-  }
-  .form-group input[type="file"] {
+  .form-group input[type="password"] {
 	background: white;
 	color: #757575;
+	width: 60%;
   }
 
   .new-trip-form button[type="submit"] {
@@ -105,11 +92,21 @@
 	cursor: pointer;
 	width: 25%;
 	text-align: center;
-	margin: 0 10px;
+	margin: 0 20px 0 0;
+  }
+
+  .container {
+	display: flex;
+	align-items: center;
+  }
+
+  .image img {
+	width: 50vh;
+	height: auto;
   }
 
   .new-trip-form button[type="reset"] {
-	background: #ffaaaa;
+	background: #cccccc;
 	color: #ffffff;
 	padding: 10px;
 	border: none;
@@ -117,11 +114,14 @@
 	cursor: pointer;
 	width: 25%;
 	text-align: center;
-	margin: 0 10px;
+
   }
   
   .btnList{
 	justify-content: center;
   }
 
-  
+  .react-datepicker__month-container {
+    float: left;
+    width: 344px;
+}
