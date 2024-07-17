@@ -1,6 +1,6 @@
 // src/components/dashboard/JoinRequestPop.js
 import React, { useState, useEffect } from 'react';
-import '../../styles/JoinRequestPop.css';
+import '../../styles/joinrequestpop.css';
 
 
 const JoinRequestPop = ({ onClose, onAccept, onReject, request }) => {

@@ -17,8 +17,8 @@ const NewTrip = ({ onClose }) => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
-  
   const [selectedCity, setSelectedCity] = useState(null);
+  const [loading, setLoading] = useState(false); // 로딩 상태 추가
   const navigate = useNavigate();
 
   const handleCountryChange = (event) => {
@@ -38,6 +38,7 @@ const NewTrip = ({ onClose }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true); // 로딩 상태 시작
     const formData = new FormData();
     formData.append('userId', user.userId);
     formData.append('title', title);
@@ -64,28 +65,35 @@ const NewTrip = ({ onClose }) => {
     } catch (error) {
       console.error('Error adding trip:', error);
       alert('여행 정보 저장에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setLoading(false); // 로딩 상태 종료
     }
   };
 
   return (
     <div className="popup-overlay">
       <div className="popup-content">
+        {loading && ( // 로딩 오버레이와 스피너 추가
+          <div className="loading-overlay">
+            <div className="spinner"></div>
+          </div>
+        )}
         <div className="new-trip-title">New Trip</div>
         <form className="new-trip-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label>제목</label>
-            <input type="text" placeholder="제목을 입력하세요." value={title} onChange={(e) => setTitle(e.target.value)}/>
+            <input type="text" placeholder="제목을 입력하세요." value={title} onChange={(e) => setTitle(e.target.value)} disabled={loading}/>
           </div>
           <div className="form-group">
             <label>지역</label>
             <div className="region-select">
-              <select onChange={handleCountryChange} value={selectedCountry || ''}>
+              <select onChange={handleCountryChange} value={selectedCountry || ''} disabled={loading}>
                 <option value="" disabled>국가</option>
                 {countries.data.map((country, index) => (
                   <option key={index} value={country.country}>{country.country}</option>
                 ))}
               </select>
-              <select onChange={handleCityChange} value={selectedCity || ''}>
+              <select onChange={handleCityChange} value={selectedCity || ''} disabled={loading}>
                 <option value="" disabled>도시</option>
                 {selectedCountry &&
                   countries.data.find(c => c.country === selectedCountry)?.city.map((city, index) => (
@@ -110,6 +118,7 @@ const NewTrip = ({ onClose }) => {
                 inline
                 dateFormat="yyyy-MM-dd"
                 isClearable={true}
+                disabled={loading}
               />
             </div>
           </div>
@@ -118,8 +127,8 @@ const NewTrip = ({ onClose }) => {
                 <img src={지영이} alt="지영이" className="bannerBot"/>
           </div>
           <div className="form-group btnList">
-            <button type="submit">저장</button>
-            <button type="reset" onClick={onClose}>닫기</button>
+            <button type="submit" disabled={loading}>저장</button>
+            <button type="reset" onClick={onClose} disabled={loading}>닫기</button>
           </div>
         </form>
       </div>
