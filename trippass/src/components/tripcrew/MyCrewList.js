@@ -4,6 +4,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchTrips } from '../../store/tripSlice';
 import axios from 'axios';
+import { TiDelete } from "react-icons/ti";
 import '../../styles/mycrewlist.css';
 import { API_URL } from '../../config';
 
@@ -18,7 +19,9 @@ const CrewCard = ({ banner, date, time, title, crewId, userId, tripmate, handleD
           <p>{date}</p>
           <p>{time}</p>
           {isOwner && (
-            <button className="deleteCrewButton" onClick={() => handleDelete(crewId)}>삭제</button>
+            <button className="deleteCrewButton" onClick={() => handleDelete(crewId)}>
+              <TiDelete />
+            </button>
           )}
         </div>
       </div>
@@ -35,7 +38,7 @@ const MyCrewList = ({ openPopup }) => {
 
   const fetchCrewData = useCallback(async (tripId) => {
     if (!tripId) return;
-
+    
     try {
       const response = await axios.get(`${API_URL}/getMyCrew`, { params: { userId: user.userId, tripId: user.mainTrip } });
       const data = response.data.response.map(crew => {
