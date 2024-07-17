@@ -1,9 +1,13 @@
+// src/components/tripcrew/NewTripCrewPop.js
+
 import React, { useState, useEffect } from 'react';
-import '../../styles/newtripcrewpop.css';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
+import '../../styles/newtripcrewpop.css';
 import { API_URL } from "../../config";
 
-const NewTripCrewPop = ({ onClose, onSave, tripId, userId }) => {
+const NewTripCrewPop = ({ onClose }) => {
+  const tripId = useSelector((state) => state.trip.trips[0]?.tripId);
   const [formData, setFormData] = useState({
     crewName: '',
     scheduleDate: '',
@@ -29,11 +33,11 @@ const NewTripCrewPop = ({ onClose, onSave, tripId, userId }) => {
       }
     };
 
-    fetchTripDates();
+    if (tripId) {
+      fetchTripDates();
+    }
   }, [tripId]);
 
-  //특정 날짜와 사용자를 기준으로 여행 계획을 필터링
-  //시간을 변환할 때 convertSecondsToTime 함수를 사용합니다. 이 함수는 초 단위 시간을 'HH' 형식의 문자열로 변환
   const fetchTimes = async (date) => {
     try {
       const response = await axios.get(`${API_URL}/getTripPlansDate`, { params: { date, tripId } });
@@ -119,7 +123,6 @@ const NewTripCrewPop = ({ onClose, onSave, tripId, userId }) => {
 
       if (response.status === 200) {
         console.log('Crew saved successfully');
-        onSave(newCrew);
         onClose();
       } else {
         console.error('Error saving crew:', response.data);
@@ -142,7 +145,7 @@ const NewTripCrewPop = ({ onClose, onSave, tripId, userId }) => {
             <input type="text" name="crewName" value={formData.crewName} onChange={handleChange} />
           </label>
           <label>
-            일정
+            날짜
             <select name="scheduleDate" value={formData.scheduleDate} onChange={handleDateChange}>
               <option value="">--- 선택하세요 ---</option>
               {dates.map(date => (
@@ -153,7 +156,7 @@ const NewTripCrewPop = ({ onClose, onSave, tripId, userId }) => {
             </select>
           </label>
           <label>
-            시간
+            일정
             <select name="scheduleTime" value={formData.scheduleTime} onChange={handleChange}>
               <option value="">--- 선택하세요 ---</option>
               {times.map(time => (
