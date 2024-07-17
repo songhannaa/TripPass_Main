@@ -90,6 +90,12 @@
           {"city_name": "프랑크푸르트"},
           {"city_name": "쾰른"}
         ]
+      },
+      {
+        "country": "스페인",
+        "city": [
+          {"city_name": "바르셀로나"}
+        ]
       }
     ]
   }
