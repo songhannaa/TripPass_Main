@@ -23,7 +23,7 @@ const TripCard = ({ title, startDate, endDate, banner, isHighlighted, onClick, o
             </button>
           )}
           <h3 className="TripCard_Title">{title}</h3>
-          <p className="TripCard_Date">{`${startDate} - ${endDate}`}</p>
+          <p className="TripCard_Date">{`${startDate} ~ ${endDate}`}</p>
           {!isHighlighted && (
             <div className="TripCard_MainOverlay">
               <p className="TripCard_MainText" onClick={onClick}>메인으로 설정하기</p>
