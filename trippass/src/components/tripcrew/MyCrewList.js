@@ -35,7 +35,7 @@ const MyCrewList = ({ openPopup }) => {
 
   const fetchCrewData = useCallback(async (tripId) => {
     if (!tripId) return;
-
+    
     try {
       const response = await axios.get(`${API_URL}/getMyCrew`, { params: { userId: user.userId, tripId: user.mainTrip } });
       const data = response.data.response.map(crew => {
