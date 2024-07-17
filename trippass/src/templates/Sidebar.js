@@ -44,7 +44,7 @@ const Sidebar = () => {
               })}
             >
               <img src={dashboardIcon} alt="Dashboard Icon" />
-              Dashboard
+              TripPlan
             </NavLink>
           </li>
           <li>

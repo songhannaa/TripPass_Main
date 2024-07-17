@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import userReducer from './userSlice';
+import tripReducer from './tripSlice'; // 지영 - 추가
 
-export default configureStore({
+const store = configureStore({
   reducer: {
     user: userReducer,
-    // 다른 리듀서들 추가 가능
+    trip: tripReducer, // 지영 - 추가
   },
 });
