@@ -1,18 +1,13 @@
-// src/store/tripSlice.js
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { API_URL } from '../config';
 
-// 초기 상태 정의
 const initialState = {
   trips: [],
-  // crews: [],
   status: 'idle',
   error: null,
 };
 
-// 비동기 함수 예제 (필요에 따라 사용할 수 있습니다)
 export const fetchTrips = createAsyncThunk(
   'trip/fetchTrips',
   async (userId, thunkAPI) => {
@@ -21,7 +16,7 @@ export const fetchTrips = createAsyncThunk(
   }
 );
 
-// 슬라이스 정의
+
 const tripSlice = createSlice({
   name: 'trip',
   initialState,
