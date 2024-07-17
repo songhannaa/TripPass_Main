@@ -21,21 +21,38 @@
 }
 
 .DashboardTripCrew_editButton {
-  background-color: transparent;
+  position: relative;
+  background: none;
   border: none;
   cursor: pointer;
   font-size: 24px;
 }
 
+.DashboardTripCrew_editButton .tooltip {
+  visibility: visible;
+  width: 200px;
+  background-color: rgba(255, 255, 255, 0.5);
+  color: #000;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: -200%;
+  margin-left: -100px;
+  font-size: 15px;
+  transition: opacity 0.3s;
+  opacity: 1;
+}
+
 .DashboardTripCrew_crewItem {
   overflow: hidden;
-  
 }
 
 .DashboardTripCrew_bannerContainer {
   position: relative;
   width: 100%;
-  
 }
 
 .DashboardTripCrew_crewBanner {
@@ -59,18 +76,17 @@
   border-radius: 10px;
 }
 
-
-.DashboardTripCrew_crewName{
-    font-size: 19px;
-     font-weight: bold;
+.DashboardTripCrew_crewName {
+  font-size: 19px;
+  font-weight: bold;
 }
 
 .DashboardTripCrew_crewTitle,
-.DashboardTripCrew_navigation{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 13px;
+.DashboardTripCrew_navigation {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 13px;
 }
 
 .DashboardTripCrew_navigationButtons button {
@@ -81,7 +97,6 @@
   cursor: pointer;
   margin: 0 5px;
 }
-
 
 .DashboardTripCrew_crewDescription {
   margin-top: 20px;
@@ -109,7 +124,6 @@
   margin-bottom: 10px;
 }
 
-
 .DashboardTripCrew_matesList {
   display: flex;
   gap: 20px;
@@ -131,12 +145,12 @@
   margin-bottom: 10px;
 }
 
-.DashboardTripCrew_mateInfo{    
+.DashboardTripCrew_mateInfo {    
   position: absolute; 
   bottom: 50%;
   left: 5%;
   z-index: 9999;
-  background-color: #ffffffe6;
+  background-color: rgba(255, 255, 255, 0.9);
   padding: 15px;
   border-radius: 10px;
   width: 200px;
@@ -153,15 +167,14 @@
   opacity: 1;
 }
 
-.DashboardTripCrew_mateInfo ul{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+.DashboardTripCrew_mateInfo ul {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-
-.DashboardTripCrew_mateInfo ul li{
-    margin-bottom: 5px;
+.DashboardTripCrew_mateInfo ul li {
+  margin-bottom: 5px;
 }
 
 .DashboardTripCrew_navigation {
@@ -179,24 +192,108 @@
   font-weight: bold;
 }
 
-.DashboardTripCrew_navigation button:first-child{
+.DashboardTripCrew_navigation button:first-child {
   margin-right: 15px;
 }
 
-
-.DashboardTripCrew_mateName{
-    font-size: 18px;
-    font-weight: bold;
+.DashboardTripCrew_mateName {
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .DashboardTripCrew_matePersonalityKey {
   font-weight: bold;
 }
 
-.DashboardTripCrew_mateAge{
-    font-size: 15px;
-    margin-bottom: 5px;
+.DashboardTripCrew_mateAge {
+  font-size: 15px;
+  margin-bottom: 5px;
 }
-.DashboardTripCrew_matePersonalityList ul li{
-    margin-bottom: 7px;
+
+.DashboardTripCrew_matePersonalityList li {
+  margin-bottom: 7px;
+}
+.DashboardTripCrew_Notifications {
+  position: relative;
+  cursor: pointer;
+}
+
+.DashboardTripCrew_notificationDot {
+  position: absolute;
+  top: 2px; /* 상단에서 약간 아래로 */
+  right: 2px; /* 오른쪽에서 약간 왼쪽으로 */
+  width: 8px; /* 원의 크기를 줄임 */
+  height: 8px; /* 원의 크기를 줄임 */
+  background-color: red;
+  border-radius: 50%;
+}
+
+.DashboardTripCrew_modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.DashboardTripCrew_modalContent {
+  background-color: #fefefe;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 500px;
+  position: relative;
+  border-radius: 10px;
+}
+
+.DashboardTripCrew_close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.DashboardTripCrew_close:hover,
+.DashboardTripCrew_close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.DashboardTripCrew_sincheongInItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.DashboardTripCrew_sincheongInInfo {
+  margin-left: 10px;
+}
+
+.DashboardTripCrew_actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.DashboardTripCrew_acceptBtn, .DashboardTripCrew_rejectBtn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.DashboardTripCrew_acceptBtn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.DashboardTripCrew_rejectBtn {
+  background-color: #f44336;
+  color: white;
 }
