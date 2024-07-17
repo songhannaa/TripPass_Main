@@ -1,22 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import "../styles/layout.css"; 
 import bot from "../assets/bot1.png";
 import dashboardIcon from "../assets/dashboard.png";
-import NewTrip from "../components/dashboard/NewTrip";
 
 const Sidebar = () => {
   const { isAuthenticated, user } = useSelector(state => state.user);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-
-  const handleButtonClick = () => {
-    setIsPopupOpen(true);
-  };
-
-  const handleClosePopup = () => {
-    setIsPopupOpen(false);
-  };
 
   return (
     <div className="sidebar">
@@ -27,7 +17,7 @@ const Sidebar = () => {
           </div>
           <div className="planInsertText">
             <div className="description">어디로 여행을 가시나요?</div>
-            <div className="planInsertBtn" onClick={handleButtonClick}>
+            <div className="planInsertBtn">
               새로운 여행 계획하기
             </div>
           </div>
@@ -100,7 +90,7 @@ const Sidebar = () => {
             })}
           >
             <div className="userProfile">
-            {user.profileImage ? (
+              {user.profileImage ? (
                 <img src={`data:image/jpeg;base64,${user.profileImage}`} alt="user profile" className="profile-image" />
               ) : (
                 user.socialProfileImage && (
@@ -114,7 +104,6 @@ const Sidebar = () => {
           </NavLink>
         )}
       </div>
-      {isPopupOpen && <NewTrip onClose={handleClosePopup} />}
     </div>
   );
 };
