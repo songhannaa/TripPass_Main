@@ -96,7 +96,7 @@ const MyTrip = () => {
 
   return (
     <div className="MyTrip_Container">
-      <h1>마이 트립</h1>
+      <div className='section-title'>마이 트립</div>
       <div className="MyTrip_CardSection">
         <div className="NewTrip_Card">
           <button className='TripCard_InsertButton' onClick={() => setIsCreatingNewTrip(true)}>

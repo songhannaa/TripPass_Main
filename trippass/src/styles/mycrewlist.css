@@ -1,146 +1,241 @@
-/* src/styles/MyCrewList.css */
-
-/* CrewCard 스타일 */
-.crewCard {
-  width: 171px; /* 카드 너비 */
-  height: 121.78px; /* 카드 높이 */
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+.crewSection{
+  margin-bottom: 30px;
+}
+.crewListContainer{
+  height: 230px;
+}
+.section-title{
   display: flex;
-  flex-direction: column;
   justify-content: space-between;
-  margin: 0 10px; /* 카드 간격 조정 */
+  align-items: center;
+}
+
+.section-title span {
+  font-weight: bold;
+}
+
+.crewList {
+  display: flex;
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 10px;
+  height: 230px;
+}
+
+.crewCards {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+}
+
+.crewCard {
+  width: calc(20% - 20px);
+  margin: 10px;
+  box-sizing: border-box;
+  position: relative;
+  transition: transform 0.3s ease-in-out;
+}
+
+.crewCard:hover {
+  transform: scale(1.05); 
 }
 
 .crewCardImageWrapper {
   position: relative;
-  width: 100%;
-  height: 100%;
+  height: 180px; 
+  overflow: hidden;
+  border-radius: 10px;
 }
 
-.crewCardImage {
+.crewCardImageWrapper img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* 이미지가 박스에 맞게 조절되도록 설정 */
+  object-fit: cover;
+  display: block;
+  border-radius: 10px;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.crewCardImageWrapper:hover img {
+  opacity: 0.8; 
 }
 
 .crewCardOverlay {
   position: absolute;
-  top: 0; /* 상단에 위치시킴 */
+  top: 0;
   left: 0;
   width: 100%;
-  height: 100%; /* 높이를 100%로 설정 */
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
   color: #fff;
-  text-align: left;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* 좌측 상단으로 정렬 */
-}
-
-.crewCardOverlay h3 {
-  margin: 0;
-  font-size: 14px; /* 제목 크기에 맞춰 폰트 사이즈 조정 */
-}
-
-.crewCardOverlay p {
-  margin: 5px 0 0;
-  font-size: 12px; /* 날짜 크기에 맞춰 폰트 사이즈 조정 */
-}
-
-/* CrewSection 스타일 */
-.crewSection {
-  padding: 20px;
-}
-
-.crewSection h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.sliderContainer {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-}
-
-.sliderWrapper {
-  display: flex;
-  background-color: #fff;
-  border-radius: 10px;
-  padding: 20px;
-}
-
-.slider {
-  display: flex;
-}
-
-.sliderButton {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
+  justify-content: space-between;
   padding: 10px;
-  cursor: pointer;
+  border-radius: 10px;
+  transition: opacity 0.3s ease-in-out;
 }
 
-.sliderButtonLeft {
-  left: 10px;
+.crewCardInfo {
+  flex: 1;
 }
 
-.sliderButtonRight {
-  right: 10px;
+.crewCardInfo .crewDate {
+  font-size: 12px;
+  margin-bottom: 5px;
 }
 
-.createCrewCard {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f0f0f0;
-  border-radius: 5px;
-  height: 121.78px; /* 크루 카드와 동일한 높이로 설정 */
-  width: 171px; /* 크루 카드와 동일한 너비로 설정 */
-  margin: 0 10px; /* 카드 간격 조정 */
-}
-
-.createCrewImage {
-  width: 100%;
-  height: auto;
-}
-
-/* TripCrewPage 추가 스타일 */
-.tripCrewPageContent {
-  padding: 20px;
-}
-
-.tripCrewPageContent h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.createCrewButton {
-  color: #8d8d8d;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
+.crewCardInfo .crewTitle {
+  font-size: 16px;
   font-weight: bold;
-  font-size: 17px;
+  margin-bottom: 5px;
 }
 
 .deleteCrewButton {
   position: absolute;
-  bottom: 10px;
+  top: 10px;
   right: 10px;
-  background: none;
-  color: white;
-  border: none;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  font-size: 16px;
+  padding: 5px;
+  border-radius: 50%;
   cursor: pointer;
-  font-size: 1em;
-  padding: 0;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+.crewCard:hover .deleteCrewButton {
+  opacity: 1; 
+}
+
+.scrollButton{
+  border: none;
+  font-size: 20px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.scrollButton:hover{
+  background-color: #fff;
+}
+
+.newCrewButton{
+  position: fixed;
+  bottom: 30px; 
+  right: 30px;
+  background-color: #5d7cc0; 
+  color: #fff; 
+  font-size: 18px; 
+  padding: 15px 20px; 
+  border-radius: 50%; 
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  z-index: 1000; 
+}
+
+.newCrewButton:hover::before {
+  content: "새로운 크루 만들기"; 
+  position: absolute;
+  left: -120px;
+  bottom: 50%; 
+  background-color: #333; 
+  color: #fff; 
+  padding: 8px 16px; 
+  border-radius: 5px;
+  font-size: 14px;
+  opacity: 0; 
+  transition: opacity 0.3s ease;
+}
+
+.newCrewButton:hover {
+  background-color: #436aa7; 
+}
+
+.newCrewButton:hover::before {
+  opacity: 1;
+}
+
+/* 크루찾기 */
+
+.searchCrewCards{
+  display: flex;
+  flex-direction:column;
+}
+
+.searchCrewCards > li{
+  display: flex;
+  flex-direction: row;
+  background-color: #fff;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  padding: 2%;
+  height: 250px;
+}
+
+.searchCrewCardImg{
+  width: 30%;
+}
+
+.searchCrewCardImg img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+}
+.searchCrewCardInfo{
+  width: 30%;
+  padding: 0 2%;
+}
+.searchCrewCardMate{
+  width: 40%;
+  padding-top: 1%;
+}
+
+.searchCrewTitle{
+  font-size: 23px;
+  font-weight: bold;
+  margin-bottom: 4%;
+}
+
+.searchCrewDate{
+  font-size: 18px;
+  font-weight: bold;
+  color:#3f3f3f;
+  margin-bottom: 4%;
+}
+
+.searchCrewAddress{
+  margin-bottom: 4%;
+  line-height: 1.5rem;
+}
+
+.searchCrewNote{
+  margin-bottom: 10%;
+  color: #555555;
+}
+
+.searchCrewNum{
+  color: #555555;
+}
+
+.searchCrewCardMate{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.joinReqBtn {
+  align-self: flex-end; 
+  margin-top: auto; 
+  background-color: #8F97FC;
+  padding: 10px 30px; 
+  color: #fff;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; 
+}
+
+.joinReqBtn:hover {
+  background-color: #436aa7; 
 }
