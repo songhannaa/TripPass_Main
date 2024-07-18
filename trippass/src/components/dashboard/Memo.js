@@ -26,6 +26,7 @@ const Memo = () => {
       fetchMemo();
     }
   }, [user.mainTrip]); 
+  
   const handleSaveMemo = async () => {
     try {
       const formData = new URLSearchParams();
