@@ -1,196 +1,224 @@
-// src/components/tripcrew/NewTripCrewPop.js
-
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import '../../styles/newtripcrewpop.css';
+import styled from 'styled-components';
 import { API_URL } from "../../config";
 
-const NewTripCrewPop = ({ onClose }) => {
-  const tripId = useSelector((state) => state.trip.trips[0]?.tripId);
-  const [formData, setFormData] = useState({
-    crewName: '',
-    scheduleDate: '',
-    scheduleTime: '',
-    contact: '',
-    numOfMate: '',
-    note: '',
-    banner: null,
-    bannerPreview: null,
-  });
+const PopupContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
-  const [dates, setDates] = useState([]);
-  const [times, setTimes] = useState([]);
+const PopupContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  height: 80vh;
+  overflow-y: scroll;
+  width: 30vw;
+`;
+
+const NewTripCrewPop = ({ onClose }) => {
+  const { user } = useSelector(state => state.user);
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [scheduleData, setScheduleData] = useState({});
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedPlan, setSelectedPlan] = useState('');
+  const [crewName, setCrewName] = useState('');
+  const [crewContact, setCrewContact] = useState('');
+  const [crewNum, setCrewNum] = useState('');
+  const [crewNote, setCrewNote] = useState('');
 
   useEffect(() => {
-    const fetchTripDates = async () => {
+    const fetchTripPlans = async () => {
       try {
-        const response = await axios.get(`${API_URL}/getTripPlans`, { params: { tripId } });
-        const uniqueDates = [...new Set(response.data.response.map(plan => plan.date))].sort();
-        setDates(uniqueDates);
+        const response = await axios.get(`${API_URL}/getTripPlans?tripId=${user.mainTrip}`);
+        const plans = response.data.response;
+
+        // 날짜별로 그룹화 및 정렬
+        const groupedPlans = plans.reduce((acc, plan) => {
+          const date = new Date(plan.date).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          });
+
+          const time = new Date(plan.time * 1000).toISOString().substr(11, 5);
+
+          if (!acc[date]) {
+            acc[date] = [];
+          }
+
+          acc[date].push({
+            ...plan,
+            displayTime: time,
+          });
+
+          return acc;
+        }, {});
+
+        const sortedGroupedPlans = Object.keys(groupedPlans)
+          .sort((a, b) => new Date(a) - new Date(b))
+          .reduce((acc, date) => {
+            acc[date] = groupedPlans[date].sort((a, b) => a.time - b.time);
+            return acc;
+          }, {});
+
+        setScheduleData(sortedGroupedPlans);
       } catch (error) {
-        console.error('Error fetching trip dates:', error);
+        console.error('일정 가져오기 실패:', error.message);
       }
     };
 
-    if (tripId) {
-      fetchTripDates();
+    if (user.mainTrip) {
+      fetchTripPlans();
     }
-  }, [tripId]);
-
-  const fetchTimes = async (date) => {
-    try {
-      const response = await axios.get(`${API_URL}/getTripPlansDate`, { params: { date, tripId } });
-      const sortedPlans = response.data.response.sort((a, b) => a.time - b.time);
-      setTimes(sortedPlans.map(plan => ({
-        time: convertSecondsToTime(plan.time),
-        title: plan.title,
-        planId: plan.planId
-      })));
-    } catch (error) {
-      console.error('Error fetching times for date:', error);
-    }
-  };
-
-  const convertSecondsToTime = (seconds) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  }, [user.mainTrip]);
 
   const handleDateChange = (e) => {
-    const { value } = e.target;
-    setFormData({
-      ...formData,
-      scheduleDate: value,
-      scheduleTime: '', // Reset time when date changes
-    });
-    fetchTimes(value);
+    setSelectedDate(e.target.value);
+    setSelectedPlan('');
   };
 
-  const handleBannerChange = (e) => {
-    const file = e.target.files[0];
-    setFormData({
-      ...formData,
-      banner: file,
-      bannerPreview: URL.createObjectURL(file),
-    });
+  const handlePlanChange = (e) => {
+    setSelectedPlan(e.target.value);
   };
+
+  const handleCrewNameChange = (e) => {
+    setCrewName(e.target.value);
+  };
+
+  const handlecrewContactChange = (e) => {
+    setCrewContact(e.target.value);
+  };
+
+  const handlecrewNumChange = (e) => {
+    setCrewNum(e.target.value);
+  };
+
+  const handlecrewNoteChange = (e) => {
+    setCrewNote(e.target.value);
+  };
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      const previewURL = URL.createObjectURL(selectedFile);
+      setFile(selectedFile);
+      setPreview(previewURL);
+    }
+  };
+
+  const sortedDates = Object.keys(scheduleData);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const selectedPlan = times.find(time => time.time === formData.scheduleTime);
-
-    if (!selectedPlan) {
-      alert("일정과 시간을 올바르게 선택하세요.");
-      return;
-    }
-
-    const newCrew = {
-      planId: selectedPlan.planId,
-      title: formData.crewName,
-      contact: formData.contact,
-      numOfMate: formData.numOfMate,
-      note: formData.note,
-      banner: formData.banner,
-    };
-
-    const data = new FormData();
-    data.append('planId', newCrew.planId);
-    data.append('title', newCrew.title);
-    data.append('contact', newCrew.contact);
-    data.append('note', newCrew.note);
-    data.append('numOfMate', newCrew.numOfMate);
-    if (newCrew.banner) {
-      data.append('banner', newCrew.banner);
-    }
-
     try {
-      const response = await axios.post(`${API_URL}/insertCrew`, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      if (response.status === 200) {
-        console.log('Crew saved successfully');
-        onClose();
-      } else {
-        console.error('Error saving crew:', response.data);
-        alert('크루를 저장하는데 오류가 발생했습니다.');
+      const formData = new FormData();
+      formData.append('planId', selectedPlan);
+      formData.append('title', crewName);
+      formData.append('contact', crewContact);
+      formData.append('numOfMate', crewNum);
+      formData.append('note', crewNote);
+      if (file) {
+        formData.append('banner', file);
       }
+
+      await axios.post(`${API_URL}/insertCrew`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      onClose();
+      alert('크루가 추가되었습니다.');
+      window.location.reload();
     } catch (error) {
-      console.error('Error saving crew:', error);
-      alert('크루를 저장하는데 오류가 발생했습니다.');
+      console.error('크루 추가 실패:', error.message);
     }
   };
 
   return (
-    <div className="popupOverlay">
-      <div className="popupContent">
-        <button className="closeButton" onClick={onClose}>X</button>
-        <h2>New Trip Crew</h2>
-        <form className="newCrewForm" onSubmit={handleSubmit}>
-          <label>
-            제목
-            <input type="text" name="crewName" value={formData.crewName} onChange={handleChange} />
-          </label>
-          <label>
-            날짜
-            <select name="scheduleDate" value={formData.scheduleDate} onChange={handleDateChange}>
+    <PopupContainer>
+      <PopupContent>
+        <div className="new-trip-title">새로운 크루 만들기</div>
+        <form className="new-trip-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>
+              타이틀
+            </label>
+              <input type="text" name="crewName" value={crewName} onChange={handleCrewNameChange} maxLength={15} />
+          </div>
+          <div className="form-group">
+            <label>
+            </label>
+            <small>{crewName.length} / 15 자 이하 작성해주세요</small>
+          </div>
+          <div className="form-group">
+            <label>
+            날짜</label>
+            <select name="scheduleDate" value={selectedDate} onChange={handleDateChange}>
               <option value="">--- 선택하세요 ---</option>
-              {dates.map(date => (
-                <option key={date} value={date}>
-                  {date}
-                </option>
+              {sortedDates.map(date => (
+                <option key={date} value={date}>{date}</option>
               ))}
             </select>
-          </label>
+          </div>
+          <div className="form-group">
           <label>
-            일정
-            <select name="scheduleTime" value={formData.scheduleTime} onChange={handleChange}>
+            일정</label>
+            <select name="schedulePlan" value={selectedPlan} onChange={handlePlanChange} disabled={!selectedDate}>
               <option value="">--- 선택하세요 ---</option>
-              {times.map(time => (
-                <option key={time.planId} value={time.time}>
-                  {time.time}, {time.title}
-                </option>
+              {selectedDate && scheduleData[selectedDate].map(plan => (
+                <option key={plan.planId} value={plan.planId}>{`${plan.displayTime} ${plan.title}`}</option>
               ))}
             </select>
-          </label>
-          <label>
-            연락처
-            <input type="text" name="contact" value={formData.contact} onChange={handleChange} />
-          </label>
-          <label>
-            인원
-            <input type="text" name="numOfMate" value={formData.numOfMate} onChange={handleChange} />
-          </label>
-          <label>
-            소개
-            <textarea name="note" maxLength="200" value={formData.note} onChange={handleChange}></textarea>
-          </label>
-          <label>
-            이미지
-            <input type="file" name="banner" accept="image/*" onChange={handleBannerChange} />
-          </label>
-          {formData.bannerPreview && (
-            <div className="imagePreview">
-              <img src={formData.bannerPreview} alt="배너 이미지 미리보기" />
+          </div>
+          <div className="form-group">
+            <label>
+              연락처</label>
+              <input type="text" name="crewContact" value={crewContact} onChange={handlecrewContactChange} />
+          </div>
+          <div className="form-group">
+            <label>
+              인원</label>
+              <input type="number" name="crewNum" value={crewNum} onChange={handlecrewNumChange} />
+          </div>
+          <div className="form-group">
+            <label>
+              소개</label>
+              <textarea name="note" maxLength="200" value={crewNote} onChange={handlecrewNoteChange} />
+          </div>
+          <div className="form-group">
+            <label>
+            </label>
+            <small>{crewNote.length} / 200 자 이하 작성해주세요</small>
+          </div>
+          <div className="form-group">
+            <label>이미지</label>
+            <input type="file" className='fileInput' accept="image/*" onChange={handleFileChange} />
+          </div>
+          {preview && (
+            <div className="form-group">
+              <img src={preview} alt="미리보기" />
             </div>
           )}
-          <button type="submit">저장</button>
+            <div className="form-group btnList">
+            <button type="submit">저장</button>
+            <button type="reset" onClick={onClose}>닫기</button>
+          </div>
         </form>
-      </div>
-    </div>
+      </PopupContent>
+    </PopupContainer>
   );
 };
 

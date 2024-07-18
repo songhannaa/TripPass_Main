@@ -23,6 +23,8 @@ const PopupContent = styled.div`
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow-y: scroll;
+  width: 30vw;
 `;
 
 const ProfilePopup = ({ onClose }) => {
@@ -75,7 +77,7 @@ const ProfilePopup = ({ onClose }) => {
             <input type="file" className='fileInput' accept="image/*" onChange={handleFileChange} />
           </div>
           {preview && (
-            <div className="image-preview">
+            <div className="form-group">
               <img src={preview} alt="미리보기" />
             </div>
           )}

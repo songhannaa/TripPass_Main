@@ -39,6 +39,7 @@
 	display: flex;
 	width: 100%;
 	align-items: center;
+	justify-content: flex-end;
   }
   
   .form-group label {
@@ -84,6 +85,10 @@
 	width: 60%;
   }
 
+  .form-group small{
+	font-size: 12px;
+  }
+
   .new-trip-form button[type="submit"] {
 	background: #525ACE;
 	color: white;
@@ -101,9 +106,10 @@
 	align-items: center;
   }
 
-  .image img {
-	width: 50vh;
-	height: auto;
+  .form-group img {
+	width: 37vw;
+	height: 20vh;
+	object-fit: cover;
   }
 
   .new-trip-form button[type="reset"] {
@@ -115,8 +121,8 @@
 	cursor: pointer;
 	width: 25%;
 	text-align: center;
-
   }
+
   
   .btnList{
 	justify-content: center;
