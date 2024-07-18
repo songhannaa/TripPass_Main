@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { API_URL } from '../../config'; // 올바른 경로로 수정하세요
 import moment from "moment"; // 날짜 계산을 위한 라이브러리
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 const groupedPreferences = {
   money: [
@@ -46,19 +47,20 @@ const DashboardTripCrew = () => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [sincheongInData, setSincheongInData] = useState([]);
+  const [currentSincheongInIndex, setCurrentSincheongInIndex] = useState(0);
+
+  const fetchCrewData = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/getThisTripCrew`, {
+        params: { tripId: user.mainTrip }
+      });
+      setCrewData(response.data.response || []); // 데이터가 없을 경우 빈 배열로 초기화
+    } catch (error) {
+      console.error("Error fetching crew data:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchCrewData = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/getThisTripCrew`, {
-          params: { tripId: user.mainTrip }
-        });
-        setCrewData(response.data.response || []); // 데이터가 없을 경우 빈 배열로 초기화
-      } catch (error) {
-        console.error("Error fetching crew data:", error);
-      }
-    };
-
     if (user && user.mainTrip) {
       fetchCrewData();
     }
@@ -87,7 +89,7 @@ const DashboardTripCrew = () => {
         if (currentCrew && currentCrew.crewId) {
           try {
             const response = await axios.get(`${API_URL}/getCrewSincheongIn`, {
-              params: { crewId: currentCrew.crewId }
+              params: { crewId: currentCrew.crewId, userId: user.userId }
             });
             if (response.data['result code'] === 200) {
               setSincheongInData(response.data.response);
@@ -144,11 +146,47 @@ const DashboardTripCrew = () => {
   };
 
   const handleNotificationClick = () => {
-    setShowModal(true);
+    if (sincheongInData.length > 0) {
+      setShowModal(true);
+    }
   };
 
   const closeModal = () => {
     setShowModal(false);
+  };
+
+  const currentSincheongIn = sincheongInData.length > 0 ? sincheongInData[currentSincheongInIndex] : null;
+
+  const handlePrevSincheongIn = () => {
+    setCurrentSincheongInIndex((prevIndex) => (prevIndex - 1 + sincheongInData.length) % sincheongInData.length);
+  };
+
+  const handleNextSincheongIn = () => {
+    setCurrentSincheongInIndex((prevIndex) => (prevIndex + 1) % sincheongInData.length);
+  };
+
+  const handleUpdateCrewTripMate = async (status, currentCrewId, userId) => {
+    try {
+      const formData = new FormData();
+      formData.append('crewId', currentCrewId);
+      formData.append('userId', userId);
+      formData.append('status', status);
+
+      const response = await axios.post(`${API_URL}/updateCrewTripMate`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      if (response.data['result code'] === 200) {
+        // 성공 시 처리
+        closeModal();
+        fetchCrewData(); // 컴포넌트 리로드
+      } else {
+        console.error(response.data.response);
+      }
+    } catch (error) {
+      console.error("Error updating crew trip mate:", error);
+    }
   };
 
   return (
@@ -217,37 +255,43 @@ const DashboardTripCrew = () => {
           <p>크루 데이터를 불러올 수 없습니다.</p>
         </div>
       )}
-      {showModal && (
+      {showModal && currentSincheongIn && (
         <div className="DashboardTripCrew_modal">
           <div className="DashboardTripCrew_modalContent">
             <span className="DashboardTripCrew_close" onClick={closeModal}>&times;</span>
             <h2>크루 가입 요청</h2>
-            <ul>
-              {sincheongInData.map((person, idx) => (
-                <li key={idx} className="DashboardTripCrew_sincheongInItem">
-                  <img src={getProfileImage(person)} alt={person.nickname} className="DashboardTripCrew_mateImage"/>
-                  <div className="DashboardTripCrew_sincheongInInfo">
-                    <ul>
-                      <li className="DashboardTripCrew_mateName">{person.nickname}</li>
-                      <li className="DashboardTripCrew_mateAge">{calculateAge(person.birthDate)}세 {person.sex}</li>
-                      <li className="DashboardTripCrew_matePersonality">
-                        <ul className="DashboardTripCrew_matePersonalityList">
-                          {Object.keys(JSON.parse(person.personality)).map((key, idx) => (
-                            <li key={idx}>
-                              <span className="DashboardTripCrew_matePersonalityKey">{keyTranslations[key]}</span>
-                              &nbsp;&nbsp;{getPersonalityLabel(key, JSON.parse(person.personality)[key])}
-                            </li>
-                          ))}
-                        </ul>
+            <div className="DashboardTripCrew_sincheongInItem">
+              <img src={getProfileImage(currentSincheongIn)} alt={currentSincheongIn.nickname} className="DashboardTripCrew_mateImage"/>
+              <div className="DashboardTripCrew_sincheongInDetails">
+                <div className="DashboardTripCrew_mateInfo">
+                  <ul>
+                    <li className="DashboardTripCrew_mateName">{currentSincheongIn.nickname}</li>
+                    <li className="DashboardTripCrew_mateAge">{calculateAge(currentSincheongIn.birthDate)}세 {currentSincheongIn.sex}</li>
+                  </ul>
+                </div>
+                <div className="DashboardTripCrew_sincheongInInfo">
+                  <ul className="DashboardTripCrew_matePersonalityList">
+                    {Object.keys(JSON.parse(currentSincheongIn.personality)).map((key, idx) => (
+                      <li key={idx}>
+                        <span className="DashboardTripCrew_matePersonalityKey">{keyTranslations[key]}</span>
+                        &nbsp;&nbsp;{getPersonalityLabel(key, JSON.parse(currentSincheongIn.personality)[key])}
                       </li>
-                    </ul>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
             <div className="DashboardTripCrew_actions">
-              <button className="DashboardTripCrew_acceptBtn">수락</button>
-              <button className="DashboardTripCrew_rejectBtn">거절</button>
+              <button className="DashboardTripCrew_acceptBtn" onClick={() => handleUpdateCrewTripMate(1, currentCrew.crewId, currentSincheongIn.userId)}>수락</button>
+              <button className="DashboardTripCrew_rejectBtn" onClick={() => handleUpdateCrewTripMate(2, currentCrew.crewId, currentSincheongIn.userId)}>거절</button>
+            </div>
+            <div className="DashboardTripCrew_navigationButtons">
+              <button className="DashboardTripCrew_beforeBtn" onClick={handlePrevSincheongIn}>
+                <IoIosArrowBack style={{ color: '#aaa' }} />
+              </button>
+              <button className="DashboardTripCrew_nextBtn" onClick={handleNextSincheongIn}>
+                <IoIosArrowForward style={{ color: '#aaa' }} />
+              </button>
             </div>
           </div>
         </div>
