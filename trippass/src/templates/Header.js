@@ -45,7 +45,7 @@ const Header = () => {
 
   return (
     <div className="header">
-      <div className="logo"><Link to="/dashboard"><img src={logo} alt="logo" /></Link></div>
+      <div className="logo"><Link to="/tripPlan"><img src={logo} alt="logo" /></Link></div>
       {isAuthenticated ? (
         <ul className="header-links">
           {weather && (

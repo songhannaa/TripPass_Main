@@ -2,9 +2,10 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import "../styles/layout.css"; 
-import bot from "../assets/bot1.png";
-import dashboardIcon from "../assets/dashboard.png";
-
+import { PiAirplaneTiltBold } from "react-icons/pi";
+import { PiAlienBold } from "react-icons/pi";
+import { RiRobot2Line } from "react-icons/ri";
+import { LuCalendarDays } from "react-icons/lu";
 const Sidebar = () => {
   const { isAuthenticated, user } = useSelector(state => state.user);
 
@@ -12,20 +13,17 @@ const Sidebar = () => {
     <div className="sidebar">
       <div className="sidebar-nav">
         <div className="planInsert">
-          <div className="botProfile">
-            <img src={bot} alt="trippass bot1" />
-          </div>
           <div className="planInsertText">
-            <div className="description">어디로 여행을 가시나요?</div>
+            <div className="description">2024.09.12 - 2024.09.14</div>
             <div className="planInsertBtn">
-              새로운 여행 계획하기
+              바르셀로나 뿌시기 
             </div>
           </div>
         </div>
         <ul>
-          <li>
+        <li>
             <NavLink
-              to="/dashboard"
+              to="/myTrip"
               style={({ isActive }) => ({
                 backgroundColor: isActive ? '#F3F5F8' : '',
                 padding: isActive ? '' : '',
@@ -33,13 +31,13 @@ const Sidebar = () => {
                 color: isActive ? '#5F6165' : ''
               })}
             >
-              <img src={dashboardIcon} alt="Dashboard Icon" />
-              TripPlan
+              <PiAirplaneTiltBold size={24}/>&nbsp;
+              MY TRIP
             </NavLink>
           </li>
           <li>
             <NavLink
-              to="/MyTrip"
+              to="/tripPlan"
               style={({ isActive }) => ({
                 backgroundColor: isActive ? '#F3F5F8' : '',
                 padding: isActive ? '' : '',
@@ -47,8 +45,8 @@ const Sidebar = () => {
                 color: isActive ? '#5F6165' : ''
               })}
             >
-              <img src={dashboardIcon} alt="Dashboard Icon" />
-              MyTrip
+              <LuCalendarDays size={22}/>&nbsp;
+              TRIP PLAN
             </NavLink>
           </li>
           <li>
@@ -61,8 +59,8 @@ const Sidebar = () => {
                 color: isActive ? '#5F6165' : ''
               })}
             >
-              <img src={dashboardIcon} alt="Dashboard Icon" />
-              TripCrew
+              <PiAlienBold size={24} />&nbsp;
+              TRIP CREW
             </NavLink>
           </li>
           <li>
@@ -75,8 +73,8 @@ const Sidebar = () => {
                 color: isActive ? '#5F6165' : ''
               })}
             >
-              <img src={dashboardIcon} alt="Dashboard Icon" />
-              Chat
+              <RiRobot2Line size={24}/>&nbsp;
+              CHATBOT
             </NavLink>
           </li>
         </ul>
