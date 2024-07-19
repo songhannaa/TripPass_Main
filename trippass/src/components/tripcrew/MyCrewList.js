@@ -1,14 +1,13 @@
-// src/components/tripcrew/MyCrewList.js
-
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchTrips } from '../../store/tripSlice';
 import axios from 'axios';
 import { TiDelete } from "react-icons/ti";
 import '../../styles/mycrewlist.css';
 import { API_URL } from '../../config';
+import { fetchTrips, fetchCrews } from '../../store/tripSlice';
 
-const CrewCard = ({ banner, date, time, title, crewId, userId, tripmate, handleDelete }) => {
+const CrewCard = ({ banner, date, time, title, crewId, tripmate, handleDelete }) => {
+  const userId = useSelector((state) => state.user.user?.userId);
   const isOwner = userId === tripmate;
   return (
     <div className="crewCard">
@@ -31,14 +30,13 @@ const CrewCard = ({ banner, date, time, title, crewId, userId, tripmate, handleD
 
 const MyCrewList = ({ openPopup }) => {
   const user = useSelector((state) => state.user.user);
-  const tripsState = useSelector((state) => state.trip);
-  const { trips = [], status } = tripsState;
-  const [crews, setCrews] = useState([]);
+  const trips = useSelector((state) => state.trip.trips);
   const dispatch = useDispatch();
+  const [crews, setCrews] = useState([]);
 
   const fetchCrewData = useCallback(async (tripId) => {
     if (!tripId) return;
-    
+
     try {
       const response = await axios.get(`${API_URL}/getMyCrew`, { params: { userId: user.userId, tripId: user.mainTrip } });
       const data = response.data.response.map(crew => {
@@ -62,13 +60,13 @@ const MyCrewList = ({ openPopup }) => {
     } catch (error) {
       console.error('Error fetching crew data:', error);
     }
-  }, [user.userId]);
+  }, [user.userId, user.mainTrip]);
 
   useEffect(() => {
-    if (user && status === 'idle') {
+    if (user && trips.length === 0) {
       dispatch(fetchTrips(user.userId));
     }
-  }, [dispatch, user, status]);
+  }, [dispatch, user, trips]);
 
   useEffect(() => {
     if (trips.length > 0) {
@@ -104,9 +102,9 @@ const MyCrewList = ({ openPopup }) => {
         <div className="sliderWrapper">
           <div className="slider">
             {crews.map((crew, index) => (
-              <CrewCard key={index} {...crew} userId={user.userId} handleDelete={handleDelete} />
+              <CrewCard key={index} {...crew} handleDelete={handleDelete} />
             ))}
-            <div className="crewCard createCrewCard" onClick={openPopup}>
+            <div className="crewCard createCrewCard" onClick={() => openPopup(() => fetchCrewData(trips[0].tripId))}>
               <button className="createCrewButton">+<br />New Crew</button>
             </div>
           </div>

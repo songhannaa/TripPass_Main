@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import '../../styles/searchcrew.css';
 import { API_URL } from '../../config';
+import { fetchCrews } from '../../store/tripSlice';
 
-const CrewCard = ({ banner, date, time, title, address, note, members, crewId, userId, tripId }) => {
+const CrewCard = ({ banner, date, time, title, address, note, members, crewId, userId, tripId, tripmate, numOfMate }) => {
   const handleJoinRequestClick = async () => {
     try {
       const formData = new FormData();
@@ -29,9 +30,11 @@ const CrewCard = ({ banner, date, time, title, address, note, members, crewId, u
     }
   };
 
+  const bannerSrc = banner ? `data:image/jpeg;base64,${banner}` : 'https://via.placeholder.com/150';
+
   return (
     <div className="searchCrewCard">
-      <img src={banner} alt="Crew Banner" className="searchCrewCardImage" />
+      <img src={bannerSrc} alt="Crew Banner" className="searchCrewCardImage" />
       <div className="searchCrewCardContent">
         <p className="searchCrewCardDate">{date}</p>
         <h3>{title}</h3>
@@ -39,7 +42,7 @@ const CrewCard = ({ banner, date, time, title, address, note, members, crewId, u
         <p className="searchCrewCardAddress">{address}</p>
         <p className="searchCrewCardNote">{note}</p>
         <div className="searchCrewCardMembers">
-          {members.map((member, index) => (
+          {members && members.map((member, index) => (
             <div key={index} className="searchCrewCardMember">
               <img src={member.profileImage ? `data:image/jpeg;base64,${member.profileImage}` : 'https://via.placeholder.com/40'} alt={member.nickname} />
               <div className="searchCrewCardMemberInfo">
@@ -49,68 +52,37 @@ const CrewCard = ({ banner, date, time, title, address, note, members, crewId, u
             </div>
           ))}
         </div>
-        <button className="searchCrewCardButton" onClick={handleJoinRequestClick}>신청하기</button>
+        <p className="searchCrewCardMembersCount">{tripmate.split(',').length}/{numOfMate}</p>
+        <button className="searchCrewCardButton" onClick={handleJoinRequestClick} disabled={tripmate.split(',').length >= numOfMate}>신청하기</button>
       </div>
     </div>
   );
 };
 
 const SearchCrew = () => {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
-  const [crews, setCrews] = useState([]);
+  const { crews = [], status } = useSelector((state) => state.trip);
   const [filter, setFilter] = useState('전체');
 
   useEffect(() => {
-    const fetchCrewData = async () => {
-      try {
-        let response;
-        if (filter === '전체') {
-          response = await axios.get(`${API_URL}/getCrewCalc`, { params: { mainTrip: user.mainTrip } });
-        } else if (filter === '추천순') {
-          response = await axios.get(`${API_URL}/getCrewCalc`, { params: { mainTrip: user.mainTrip } });
-        }
-
-        const data = await Promise.all(response.data.response.map(async (crew) => {
-          const date = crew.date || 'N/A';
-          const time = crew.time ? formatTime(crew.time) : 'N/A';
-
-          const memberIds = crew.tripmate.split(',');
-          const members = await Promise.all(memberIds.map(async (id) => {
-            const memberResponse = await axios.get(`${API_URL}/getUser`, { params: { userId: id } });
-            return memberResponse.data.response[0];
-          }));
-
-          return {
-            banner: crew.banner ? `data:image/jpeg;base64,${crew.banner}` : 'https://via.placeholder.com/150',
-            date,
-            time,
-            title: crew.title,
-            address: crew.address,
-            note: crew.note,
-            members,
-            crewId: crew.crewId,
-            userId: crew.userId,
-            tripId: crew.tripId
-          };
-        }));
-
-        setCrews(data);
-      } catch (error) {
-        console.error('Error fetching crew data:', error);
-      }
-    };
-
-    if (user?.userId) {
-      fetchCrewData();
+    if (user?.mainTrip) {
+      dispatch(fetchCrews(user.mainTrip));
     }
-  }, [filter, user]);
+  }, [dispatch, user]);
 
-  const formatTime = (seconds) => {
-    const date = new Date(seconds * 1000);
-    const hours = String(date.getUTCHours()).padStart(2, '0');
-    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-    return `${hours}:${minutes}`;
-  };
+  useEffect(() => {
+    console.log('User:', user);
+    console.log('Crews:', crews);
+    console.log('Status:', status);
+  }, [user, crews, status]);
+
+  const filteredCrews = crews.filter(crew => {
+    if (filter === '전체') {
+      return crew.tripmate.split(',').length < crew.numOfMate; // 인원이 다 찬 크루는 제외
+    }
+    return true;
+  });
 
   return (
     <div className="searchCrew">
@@ -128,7 +100,7 @@ const SearchCrew = () => {
         </div>
       </div>
       <div>
-        {crews.map((crew, index) => (
+        {filteredCrews.map((crew, index) => (
           <CrewCard key={index} {...crew} userId={user.userId} />
         ))}
       </div>

@@ -13,6 +13,8 @@ const Header = () => {
   const { isAuthenticated, user } = useSelector(state => state.user);
   const dispatch = useDispatch();
   const [weather, setWeather] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   useEffect(() => {
     const fetchTripData = async () => {
@@ -37,10 +39,31 @@ const Header = () => {
     }
   }, [isAuthenticated, user]);
 
+  // 알림용
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const fetchNotifications = async () => {
+        try {
+          const response = await axios.get(`${API_URL}/getJoinRequests?userId=${user.userId}`);
+          if (response.data['result code'] === 200) {
+            setNotifications(response.data.response);
+          }
+        } catch (error) {
+          console.error('Error fetching notifications:', error);
+        }
+      };
+      fetchNotifications();
+    }
+  }, [isAuthenticated, user]);
+
   const handleLogout = () => {
     alert("로그아웃 되었습니다");
     dispatch(logout());
     window.location.reload();
+  };
+
+  const handleNotificationClick = () => {
+    setShowNotifications(!showNotifications);
   };
 
   return (
@@ -55,7 +78,21 @@ const Header = () => {
               <img src={`http://openweathermap.org/img/wn/${weather.icon}.png`} alt={weather.weather} />
             </li>
           )}
-          <li><MdOutlineNotificationsNone size={22} /></li>
+          <li className="notification-icon-wrapper" onClick={handleNotificationClick}>
+            <MdOutlineNotificationsNone size={22} />
+            {notifications.length > 0 && (
+              <span className="notification-count">{notifications.length}</span>
+            )}
+            {showNotifications && (
+              <div className="notification-popup">
+                {notifications.length > 0 ? (
+                  <p>새로운 크루 신청이 있습니다!</p>
+                ) : (
+                  <p>새로운 가입 신청이 없습니다.</p>
+                )}
+              </div>
+            )}
+          </li>
           <li>
             <button className="logout-button" onClick={handleLogout}><FiLogOut size={18}/></button>
           </li>

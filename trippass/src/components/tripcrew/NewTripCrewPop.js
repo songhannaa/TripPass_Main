@@ -1,13 +1,13 @@
-// src/components/tripcrew/NewTripCrewPop.js
-
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import '../../styles/newtripcrewpop.css';
 import { API_URL } from "../../config";
+import { fetchCrews } from '../../store/tripSlice';
 
 const NewTripCrewPop = ({ onClose }) => {
-  const tripId = useSelector((state) => state.trip.trips[0]?.tripId);
+  const user = useSelector((state) => state.user.user);
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     crewName: '',
     scheduleDate: '',
@@ -25,7 +25,7 @@ const NewTripCrewPop = ({ onClose }) => {
   useEffect(() => {
     const fetchTripDates = async () => {
       try {
-        const response = await axios.get(`${API_URL}/getTripPlans`, { params: { tripId } });
+        const response = await axios.get(`${API_URL}/getTripPlans`, { params: { tripId: user.mainTrip } });
         const uniqueDates = [...new Set(response.data.response.map(plan => plan.date))].sort();
         setDates(uniqueDates);
       } catch (error) {
@@ -33,14 +33,14 @@ const NewTripCrewPop = ({ onClose }) => {
       }
     };
 
-    if (tripId) {
+    if (user.mainTrip) {
       fetchTripDates();
     }
-  }, [tripId]);
+  }, [user.mainTrip]);
 
   const fetchTimes = async (date) => {
     try {
-      const response = await axios.get(`${API_URL}/getTripPlansDate`, { params: { date, tripId } });
+      const response = await axios.get(`${API_URL}/getTripPlansDate`, { params: { date, tripId: user.mainTrip } });
       const sortedPlans = response.data.response.sort((a, b) => a.time - b.time);
       setTimes(sortedPlans.map(plan => ({
         time: convertSecondsToTime(plan.time),
@@ -53,9 +53,9 @@ const NewTripCrewPop = ({ onClose }) => {
   };
 
   const convertSecondsToTime = (seconds) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    const hours = String(Math.floor(seconds / 3600)).padStart(2, '0');
+    const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+    return `${hours}:${minutes}`;
   };
 
   const handleChange = (e) => {
@@ -71,7 +71,7 @@ const NewTripCrewPop = ({ onClose }) => {
     setFormData({
       ...formData,
       scheduleDate: value,
-      scheduleTime: '', // Reset time when date changes
+      scheduleTime: '',
     });
     fetchTimes(value);
   };
@@ -92,6 +92,11 @@ const NewTripCrewPop = ({ onClose }) => {
 
     if (!selectedPlan) {
       alert("일정과 시간을 올바르게 선택하세요.");
+      return;
+    }
+
+    if (parseInt(formData.numOfMate, 10) > 4) {
+      alert("최대 인원수는 4명입니다.");
       return;
     }
 
@@ -123,6 +128,7 @@ const NewTripCrewPop = ({ onClose }) => {
 
       if (response.status === 200) {
         console.log('Crew saved successfully');
+        dispatch(fetchCrews(user.mainTrip));
         onClose();
       } else {
         console.error('Error saving crew:', response.data);
@@ -171,8 +177,8 @@ const NewTripCrewPop = ({ onClose }) => {
             <input type="text" name="contact" value={formData.contact} onChange={handleChange} />
           </label>
           <label>
-            인원
-            <input type="text" name="numOfMate" value={formData.numOfMate} onChange={handleChange} />
+            인원 (최대 4명)
+            <input type="number" name="numOfMate" value={formData.numOfMate} onChange={handleChange} max="4" min="1" />
           </label>
           <label>
             소개
