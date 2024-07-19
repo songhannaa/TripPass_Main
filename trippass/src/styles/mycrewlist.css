@@ -158,12 +158,12 @@
 
 /* 크루찾기 */
 
-.searchCrewCards{
+.searchCrewCards {
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
 }
 
-.searchCrewCards > li{
+.searchCrewCards > li {
   display: flex;
   flex-direction: row;
   background-color: #fff;
@@ -171,6 +171,16 @@
   border-radius: 15px;
   padding: 2%;
   height: 250px;
+}
+
+.profileImage {
+  margin-right: 15px;
+}
+
+.userDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .searchCrewCardImg{

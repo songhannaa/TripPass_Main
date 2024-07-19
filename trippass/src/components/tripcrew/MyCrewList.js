@@ -14,16 +14,18 @@ const MyCrewList = () => {
 
   const fetchMyCrew = async () => {
     setLoading(true); // 로딩 상태 시작
-    try {
-      const response = await axios.get(`${API_URL}/getThisTripCrew?tripId=${user.mainTrip}`);
-      const crewData = response.data.response;
-      setCrewData(crewData);
-      setLoading(false); // 로딩 상태 종료
-    } catch (error) {
-      console.error('MyCrew 가져오기 실패:', error.message);
-      setLoading(false); // 로딩 상태 종료
-    }
-  };
+
+    const fetchMyCrew = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/getThisTripCrew?tripId=${user.mainTrip}`);
+        const crewData = response.data.response;
+        setCrewData(crewData);
+        setLoading(false); // 로딩 상태 종료
+      } catch (error) {
+        console.error('MyCrew 가져오기 실패:', error.message);
+      }
+    };
+
 
   useEffect(() => {
     if (user.mainTrip && user.userId) {
@@ -99,7 +101,7 @@ const MyCrewList = () => {
         )}
         <div className="crewList">
           <ul className="crewCards">
-            {crewData.slice(startIndex, startIndex + maxCards).map((crew, index) => (
+            {crewData && crewData.slice(startIndex, startIndex + maxCards).map((crew, index) => (
               <li key={index} className="crewCard">
                 <div className="crewCardImageWrapper">
                   <img src={`data:image/jpeg;base64,${crew.banner}`} alt={crew.title} />
