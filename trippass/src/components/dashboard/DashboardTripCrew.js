@@ -256,46 +256,49 @@ const DashboardTripCrew = () => {
         </div>
       )}
       {showModal && currentSincheongIn && (
-        <div className="DashboardTripCrew_modal">
-          <div className="DashboardTripCrew_modalContent">
-            <span className="DashboardTripCrew_close" onClick={closeModal}>&times;</span>
-            <h2>크루 가입 요청</h2>
-            <div className="DashboardTripCrew_sincheongInItem">
-              <img src={getProfileImage(currentSincheongIn)} alt={currentSincheongIn.nickname} className="DashboardTripCrew_mateImage"/>
-              <div className="DashboardTripCrew_sincheongInDetails">
-                <div className="DashboardTripCrew_mateInfo">
-                  <ul>
-                    <li className="DashboardTripCrew_mateName">{currentSincheongIn.nickname}</li>
-                    <li className="DashboardTripCrew_mateAge">{calculateAge(currentSincheongIn.birthDate)}세 {currentSincheongIn.sex}</li>
-                  </ul>
-                </div>
-                <div className="DashboardTripCrew_sincheongInInfo">
-                  <ul className="DashboardTripCrew_matePersonalityList">
-                    {Object.keys(JSON.parse(currentSincheongIn.personality)).map((key, idx) => (
-                      <li key={idx}>
-                        <span className="DashboardTripCrew_matePersonalityKey">{keyTranslations[key]}</span>
-                        &nbsp;&nbsp;{getPersonalityLabel(key, JSON.parse(currentSincheongIn.personality)[key])}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div className="DashboardTripCrew_actions">
-              <button className="DashboardTripCrew_acceptBtn" onClick={() => handleUpdateCrewTripMate(1, currentCrew.crewId, currentSincheongIn.userId)}>수락</button>
-              <button className="DashboardTripCrew_rejectBtn" onClick={() => handleUpdateCrewTripMate(2, currentCrew.crewId, currentSincheongIn.userId)}>거절</button>
-            </div>
-            <div className="DashboardTripCrew_navigationButtons">
-              <button className="DashboardTripCrew_beforeBtn" onClick={handlePrevSincheongIn}>
-                <IoIosArrowBack style={{ color: '#aaa' }} />
-              </button>
-              <button className="DashboardTripCrew_nextBtn" onClick={handleNextSincheongIn}>
-                <IoIosArrowForward style={{ color: '#aaa' }} />
-              </button>
-            </div>
+  <div className="DashboardTripCrew_modal">
+    <div className="DashboardTripCrew_modalContent">
+      <span className="DashboardTripCrew_close" onClick={closeModal}>&times;</span>
+      <h2>크루 가입 요청</h2>
+      <div className="DashboardTripCrew_sincheongInContainer">
+        <div className="DashboardTripCrew_sincheongInItem">
+          <img src={getProfileImage(currentSincheongIn)} alt={currentSincheongIn.nickname} className="DashboardTripCrew_mateImage"/>
+          <div className="DashboardTripCrew_sincheongInfo">
+            <ul>
+              <li className="DashboardTripCrew_sincheongName">{currentSincheongIn.nickname}</li>
+              <li className="DashboardTripCrew_sincheongAge">{calculateAge(currentSincheongIn.birthDate)}세 {currentSincheongIn.sex}</li>
+            </ul>
           </div>
         </div>
-      )}
+        <div className="DashboardTripCrew_sincheongInDetails">
+          <div className="DashboardTripCrew_sincheongInInfo">
+            <ul className="DashboardTripCrew_matePersonalityList">
+              {Object.keys(JSON.parse(currentSincheongIn.personality)).map((key, idx) => (
+                <li key={idx}>
+                  <span className="DashboardTripCrew_matePersonalityKey">{keyTranslations[key]}</span>
+                  &nbsp;&nbsp;{getPersonalityLabel(key, JSON.parse(currentSincheongIn.personality)[key])}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div className="DashboardTripCrew_actions">
+        <button className="DashboardTripCrew_acceptBtn" onClick={() => handleUpdateCrewTripMate(1, currentCrew.crewId, currentSincheongIn.userId)}>수락</button>
+        <button className="DashboardTripCrew_rejectBtn" onClick={() => handleUpdateCrewTripMate(2, currentCrew.crewId, currentSincheongIn.userId)}>거절</button>
+      </div>
+      <div className="DashboardTripCrew_navigationButtons">
+        <button className="DashboardTripCrew_beforeBtn" onClick={handlePrevSincheongIn}>
+          <IoIosArrowBack style={{ color: '#aaa' }} />
+        </button>
+        <button className="DashboardTripCrew_nextBtn" onClick={handleNextSincheongIn}>
+          <IoIosArrowForward style={{ color: '#aaa' }} />
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
