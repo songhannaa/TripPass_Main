@@ -18,7 +18,7 @@ const MyCrewList = () => {
     setLoading(true); // 로딩 상태 시작
     const fetchMyCrew = async () => {
       try {
-        const response = await axios.get(`${API_URL}/getMyCrew?tripId=${user.mainTrip}&userId=${user.userId}`);
+        const response = await axios.get(`${API_URL}/getThisTripCrew?tripId=${user.mainTrip}`);
         const crewData = response.data.response;
         setCrewData(crewData);
         setLoading(false); // 로딩 상태 종료
@@ -61,7 +61,7 @@ const MyCrewList = () => {
         )}
         <div className="crewList">
           <ul className="crewCards">
-            {crewData.slice(startIndex, startIndex + maxCards).map((crew, index) => (
+            {crewData && crewData.slice(startIndex, startIndex + maxCards).map((crew, index) => (
               <li key={index} className="crewCard">
                 <div className="crewCardImageWrapper">
                   <img src={`data:image/jpeg;base64,${crew.banner}`} alt={crew.title} />
