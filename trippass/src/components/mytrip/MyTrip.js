@@ -4,16 +4,19 @@ import TripCard from './TripCard';
 import { MdOutlineAddCircleOutline } from "react-icons/md";
 import '../../styles/mytrip.css';
 import { API_URL } from "../../config";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch} from 'react-redux';
 import { updateUserMainTrip } from '../../store/userSlice';
+import { useNavigate } from 'react-router-dom';
 import NewTrip from './NewTrip';
 
 const MyTrip = () => {
   const { user } = useSelector(state => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate(); 
   const [tripPlans, setTripPlans] = useState([]);
   const [highlightedTripId, setHighlightedTripId] = useState(user.mainTrip || null);
   const [isCreatingNewTrip, setIsCreatingNewTrip] = useState(false);
+
 
   useEffect(() => {
     const fetchTripPlans = async () => {
@@ -94,12 +97,22 @@ const MyTrip = () => {
     }
   };
 
+  const handleCreateNewTrip = () => {
+    const userPersonality = user.personality;
+    if (userPersonality == null) {
+      alert("여행을 시작하시기 전에 성향을 먼저 만들어볼까요?");
+      navigate('/user')
+    }else{
+      setIsCreatingNewTrip(true);
+    }
+  };
+
   return (
     <div className="MyTrip_Container">
       <div className='section-title'>마이 트립</div>
       <div className="MyTrip_CardSection">
         <div className="NewTrip_Card">
-          <button className='TripCard_InsertButton' onClick={() => setIsCreatingNewTrip(true)}>
+          <button className='TripCard_InsertButton' onClick={handleCreateNewTrip} >
                 <MdOutlineAddCircleOutline className='TripCard_Insert' />
           </button>
           <h3>새 여행 만들기</h3>

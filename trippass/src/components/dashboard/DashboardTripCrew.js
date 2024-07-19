@@ -80,7 +80,7 @@ const DashboardTripCrew = () => {
             console.error("Error fetching mate data:", error);
           }
         }
-      }
+      } 
     };
 
     const fetchSincheongInData = async () => {

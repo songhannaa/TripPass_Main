@@ -52,7 +52,7 @@ function App() {
           <Route path="/login/kakao" element={<Redirect />} />
           <Route path="/logout/kakao" element={<Logout />} />
           <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/dashboard" element={<AuthRoute><DashboardPage /></AuthRoute>} />
+          <Route path="/tripPlan" element={<AuthRoute><DashboardPage /></AuthRoute>} />
           <Route path="/myTrip" element={<AuthRoute><MyTripPage /></AuthRoute>} />
           <Route path="/tripCrew" element={<AuthRoute><TripCrewPage /></AuthRoute>} />
           <Route path="/chat" element={<AuthRoute><ChatPage /></AuthRoute>} />
