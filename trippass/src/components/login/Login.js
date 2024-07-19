@@ -36,8 +36,7 @@ const Login = () => {
       dispatch(loginSuccess(response.data));
       localStorage.setItem('user', JSON.stringify(response.data));
 
-      navigate('/dashboard');
-
+      navigate('/myTrip');
 
     } catch (error) {
       // 로그인 실패 시 오류 메시지 처리

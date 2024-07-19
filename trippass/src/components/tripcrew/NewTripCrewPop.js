@@ -130,6 +130,7 @@ const NewTripCrewPop = ({ onClose }) => {
       formData.append('contact', crewContact);
       formData.append('numOfMate', crewNum);
       formData.append('note', crewNote);
+      formData.append('crewLeader', user.userId);
       if (file) {
         formData.append('banner', file);
       }
@@ -191,7 +192,7 @@ const NewTripCrewPop = ({ onClose }) => {
           <div className="form-group">
             <label>
               인원</label>
-              <input type="number" name="crewNum" value={crewNum} onChange={handlecrewNumChange} />
+              <input type="number" name="crewNum" value={crewNum} min ="2" max = "4" onChange={handlecrewNumChange} />
           </div>
           <div className="form-group">
             <label>
