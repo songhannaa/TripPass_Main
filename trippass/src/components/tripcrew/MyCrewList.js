@@ -1,113 +1,81 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
-import { TiDelete } from "react-icons/ti";
-import '../../styles/mycrewlist.css';
+import { TiDelete } from 'react-icons/ti';
 import { API_URL } from '../../config';
-import { fetchTrips, fetchCrews } from '../../store/tripSlice';
+import '../../styles/mycrewlist.css';
 
-const CrewCard = ({ banner, date, time, title, crewId, tripmate, handleDelete }) => {
-  const userId = useSelector((state) => state.user.user?.userId);
-  const isOwner = userId === tripmate;
-  return (
-    <div className="crewCard">
-      <div className="crewCardImageWrapper">
-        <img src={banner} alt="Crew Banner" className="crewCardImage" />
-        <div className="crewCardOverlay">
-          <h3>{title}</h3>
-          <p>{date}</p>
-          <p>{time}</p>
-          {isOwner && (
-            <button className="deleteCrewButton" onClick={() => handleDelete(crewId)}>
-              <TiDelete />
-            </button>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
+const MyCrewList = () => {
+  const { user } = useSelector(state => state.user);
+  const [crewData, setCrewData] = useState([]);
+  const [startIndex, setStartIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const maxCards = 5; 
 
-const MyCrewList = ({ openPopup }) => {
-  const user = useSelector((state) => state.user.user);
-  const trips = useSelector((state) => state.trip.trips);
-  const dispatch = useDispatch();
-  const [crews, setCrews] = useState([]);
 
-  const fetchCrewData = useCallback(async (tripId) => {
-    if (!tripId) return;
-
-    try {
-      const response = await axios.get(`${API_URL}/getMyCrew`, { params: { userId: user.userId, tripId: user.mainTrip } });
-      const data = response.data.response.map(crew => {
-        const seconds = parseInt(crew.time, 10);
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-
-        return {
-          banner: crew.banner ? `data:image/jpeg;base64,${crew.banner}` : 'https://via.placeholder.com/150',
-          date: crew.date,
-          time: formattedTime,
-          title: crew.title,
-          crewId: crew.crewId,
-          tripmate: crew.tripmate
-        };
-      });
-
-      data.sort((a, b) => new Date(a.date) - new Date(b.date));
-      setCrews(data);
-    } catch (error) {
-      console.error('Error fetching crew data:', error);
-    }
-  }, [user.userId, user.mainTrip]);
 
   useEffect(() => {
-    if (user && trips.length === 0) {
-      dispatch(fetchTrips(user.userId));
-    }
-  }, [dispatch, user, trips]);
-
-  useEffect(() => {
-    if (trips.length > 0) {
-      fetchCrewData(trips[0].tripId);
-    }
-  }, [trips, fetchCrewData]);
-
-  const handleDelete = async (crewId) => {
-    try {
-      const response = await axios.delete(`${API_URL}/deleteCrew`, {
-        data: { crewId, userId: user.userId },
-        headers: { 'Content-Type': 'application/json' }
-      });
-
-      if (response.status === 200) {
-        fetchCrewData(trips[0].tripId);
-      } else {
-        console.error('Error deleting crew:', response.data);
+    setLoading(true); // 로딩 상태 시작
+    const fetchMyCrew = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/getMyCrew?tripId=${user.mainTrip}&userId=${user.userId}`);
+        const crewData = response.data.response;
+        setCrewData(crewData);
+        setLoading(false); // 로딩 상태 종료
+      } catch (error) {
+        console.error('MyCrew 가져오기 실패:', error.message);
       }
-    } catch (error) {
-      console.error('Error deleting crew:', error);
+    };
+
+    if (user.mainTrip && user.userId) {
+      fetchMyCrew();
     }
+  }, [user.mainTrip, user.userId]);
+
+  const scrollLeft = () => {
+    setStartIndex(Math.max(startIndex - maxCards, 0)); 
   };
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
+  const scrollRight = () => {
+    setStartIndex(startIndex + maxCards); 
+  };
 
   return (
     <div className="crewSection">
-      <h2>마이 크루</h2>
-      <div className="sliderContainer">
-        <div className="sliderWrapper">
-          <div className="slider">
-            {crews.map((crew, index) => (
-              <CrewCard key={index} {...crew} handleDelete={handleDelete} />
-            ))}
-            <div className="crewCard createCrewCard" onClick={() => openPopup(() => fetchCrewData(trips[0].tripId))}>
-              <button className="createCrewButton">+<br />New Crew</button>
-            </div>
+      <div className="section-title">
+        <span>마이 크루</span>
+        <div>
+        <button className="scrollButton" onClick={scrollLeft}>
+          &lt;
+        </button>
+        <button className="scrollButton" onClick={scrollRight}>
+          &gt;
+        </button>
+        </div>
+      </div>
+      <div className="crewListContainer">
+      {loading && ( 
+          <div className="loading-overlay">
+            <div className="spinner"></div>
           </div>
+        )}
+        <div className="crewList">
+          <ul className="crewCards">
+            {crewData.slice(startIndex, startIndex + maxCards).map((crew, index) => (
+              <li key={index} className="crewCard">
+                <div className="crewCardImageWrapper">
+                  <img src={`data:image/jpeg;base64,${crew.banner}`} alt={crew.title} />
+                  <div className="crewCardOverlay">
+                    <div className="crewCardInfo">
+                      <div className="crewDate">{crew.date}</div>
+                      <div className="crewTitle">{crew.title}</div>
+                    </div>
+                    <div className="deleteCrewButton"><TiDelete size={20} /></div>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

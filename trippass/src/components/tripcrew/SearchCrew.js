@@ -1,110 +1,125 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
-import '../../styles/searchcrew.css';
 import { API_URL } from '../../config';
-import { fetchCrews } from '../../store/tripSlice';
+import NewTripCrewPop from './NewTripCrewPop';
+import { LuMapPin } from "react-icons/lu";
+import { RiTeamLine } from "react-icons/ri";
 
-const CrewCard = ({ banner, date, time, title, address, note, members, crewId, userId, tripId, tripmate, numOfMate }) => {
-  const handleJoinRequestClick = async () => {
+const SearchCrew = () => {
+  const { user } = useSelector(state => state.user);
+  const [showPopup, setShowPopup] = useState(false);
+  const [searchCrewData, setSearchCrewData] = useState([]);
+
+
+  const handlePopupOpen = () => {
+    setShowPopup(true);
+  };
+
+  const handlePopupClose = () => {
+    setShowPopup(false);
+  };
+
+  useEffect(() => {
+    const fetchCrewData = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/getCrewCalc?mainTrip=${user.mainTrip}`);
+        const crewData = response.data.response;
+        const updatedCrewData = await Promise.all(crewData.map(async (crew) => {
+          const tripMateList = crew.tripmate.split(',');
+          const tripMateInfo = await Promise.all(tripMateList.map(async (userId) => {
+            try {
+              const userDataResponse = await axios.get(`${API_URL}/getUser`, {
+                params: { userId }
+              });
+              return userDataResponse.data.response[0]; 
+            } catch (error) {
+              console.error(`유저 정보 가져오기 실패 (${userId}):`, error.message);
+              return null;
+            }
+          }));
+          return { ...crew, tripMateInfo: tripMateInfo.filter(info => info !== null) }; 
+        }));
+        setSearchCrewData(updatedCrewData);
+      } catch (error) {
+        console.error('크루 정보 및 트립메이트 정보 가져오기 실패:', error.message);
+      }
+    };
+
+    if (user && user.mainTrip) {
+      fetchCrewData();
+    } 
+  }, [user]);
+
+  const handleJoinRequest = async (crewId) => {
     try {
       const formData = new FormData();
-      formData.append('userId', userId);
+      formData.append('userId', user.userId);
+      formData.append('tripId', user.mainTrip);
       formData.append('crewId', crewId);
-      formData.append('tripId', tripId);
-
       const response = await axios.post(`${API_URL}/insertJoinRequests`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-
-      if (response.data['result code'] === 200) {
-        alert("크루 신청이 완료되었습니다.");
-      } else {
-        alert(response.data.response);
-      }
+      console.log('신청하기 결과:', response.data);
+      alert('크루 가입 신청이 완료되었습니다');
     } catch (error) {
-      console.error('Error joining crew:', error);
-      alert('크루 신청 중 오류가 발생했습니다.');
+      alert('크루 가입 신청에 실패하였습니다.');
+      console.error('신청하기 실패:', error.message);
     }
   };
 
-  const bannerSrc = banner ? `data:image/jpeg;base64,${banner}` : 'https://via.placeholder.com/150';
 
   return (
-    <div className="searchCrewCard">
-      <img src={bannerSrc} alt="Crew Banner" className="searchCrewCardImage" />
-      <div className="searchCrewCardContent">
-        <p className="searchCrewCardDate">{date}</p>
-        <h3>{title}</h3>
-        <p className="searchCrewCardTime">{time}</p>
-        <p className="searchCrewCardAddress">{address}</p>
-        <p className="searchCrewCardNote">{note}</p>
-        <div className="searchCrewCardMembers">
-          {members && members.map((member, index) => (
-            <div key={index} className="searchCrewCardMember">
-              <img src={member.profileImage ? `data:image/jpeg;base64,${member.profileImage}` : 'https://via.placeholder.com/40'} alt={member.nickname} />
-              <div className="searchCrewCardMemberInfo">
-                <p>{member.nickname}</p>
-                <button className="viewPersonalityButton" data-personality={Array.isArray(member.personality) ? member.personality.join(', ') : member.personality}>성향 보기</button>
-              </div>
-            </div>
-          ))}
+    <>
+      <div className='searchCrewSection'>
+        <div className='section-title'>
+          <span>크루 찾기</span>
+          <div>
+            <select>
+              <option value="전체">전체</option>
+              <option value="추천순">추천순</option>
+            </select>
+          </div>
         </div>
-        <p className="searchCrewCardMembersCount">{tripmate.split(',').length}/{numOfMate}</p>
-        <button className="searchCrewCardButton" onClick={handleJoinRequestClick} disabled={tripmate.split(',').length >= numOfMate}>신청하기</button>
-      </div>
-    </div>
-  );
-};
-
-const SearchCrew = () => {
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
-  const { crews = [], status } = useSelector((state) => state.trip);
-  const [filter, setFilter] = useState('전체');
-
-  useEffect(() => {
-    if (user?.mainTrip) {
-      dispatch(fetchCrews(user.mainTrip));
-    }
-  }, [dispatch, user]);
-
-  useEffect(() => {
-    console.log('User:', user);
-    console.log('Crews:', crews);
-    console.log('Status:', status);
-  }, [user, crews, status]);
-
-  const filteredCrews = crews.filter(crew => {
-    if (filter === '전체') {
-      return crew.tripmate.split(',').length < crew.numOfMate; // 인원이 다 찬 크루는 제외
-    }
-    return true;
-  });
-
-  return (
-    <div className="searchCrew">
-      <div className="searchCrewHeader">
-        <h2>크루 찾기</h2>
-        <div className="crewFilterWrapper">
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="searchCrewFilter"
-          >
-            <option value="전체">전체</option>
-            <option value="추천순">추천순</option>
-          </select>
+        <div className='searchCrewListContainer'>
+          <div className="searchCrewList">
+            <ul className="searchCrewCards">
+              {searchCrewData.map((crew, index) => (
+                <li key={index} className="searchCrewCard">
+                  <div className="searchCrewCardImg">
+                    <img src={`data:image/jpeg;base64,${crew.banner}`} alt={crew.title} />
+                  </div>
+                  <div className="searchCrewCardInfo">
+                    <div className="searchCrewTitle">{crew.title}</div>
+                    <div className="searchCrewDate">{crew.date} | {crew.time}</div>
+                    <div className="searchCrewAddress"><LuMapPin />&nbsp;{crew.address}</div>
+                    <div className="searchCrewNote">{crew.note}</div>
+                    <div className="searchCrewNum"><RiTeamLine /> {crew.numOfMate}</div>
+                  </div>
+                  <div className="searchCrewCardMate">
+                    <ul>
+                      {crew.tripMateInfo && crew.tripMateInfo.map((userData, idx) => (
+                        <li key={idx}>
+                          <img src={`data:image/jpeg;base64,${userData.profileImage}`} alt={userData.nickname} className="profileImage" />
+                          {userData.nickname}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="joinReqBtn" onClick={() => handleJoinRequest(crew.crewId)}>신청하기</div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
-      <div>
-        {filteredCrews.map((crew, index) => (
-          <CrewCard key={index} {...crew} userId={user.userId} />
-        ))}
+      <div className="newCrewButton" onClick={handlePopupOpen}>
+        +
       </div>
-    </div>
+      {showPopup && <NewTripCrewPop onClose={handlePopupClose} />}
+    </>
   );
 };
 
