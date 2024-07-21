@@ -75,7 +75,7 @@ const SearchCrew = () => {
       }
     });
   
-    return matchCount * 20; // 한 개 일치할 때마다 20%
+    return matchCount * 20; 
   };
 
   useEffect(() => {
@@ -115,10 +115,6 @@ const SearchCrew = () => {
         const sortedData = [...searchCrewData].sort((a, b) => {
           const aSimilarity = a.tripMateInfo.reduce((sum, mate) => sum + calculateSimilarity(mate.personality, user.personality), 0) / a.tripMateInfo.length;
           const bSimilarity = b.tripMateInfo.reduce((sum, mate) => sum + calculateSimilarity(mate.personality, user.personality), 0) / b.tripMateInfo.length;
-
-          // 각 크루의 유사성 콘솔에 출력
-          console.log(`Crew ${a.crewId} similarity: ${aSimilarity}`);
-          console.log(`Crew ${b.crewId} similarity: ${bSimilarity}`);
           
           return bSimilarity - aSimilarity;
         });
@@ -154,6 +150,15 @@ const SearchCrew = () => {
     setSortOption(e.target.value);
   };
 
+  const formatTime = (seconds) => {
+    const date = new Date(seconds * 1000);
+    const hours = date.getUTCHours();
+    const minutes = date.getUTCMinutes();
+    const ampm = hours >= 12 ? '오후' : '오전';
+    const formattedHours = hours % 12 || 12;
+    return `${ampm} ${String(formattedHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+  };
+
   return (
     <>
       <div className='searchCrewSection'>
@@ -176,7 +181,7 @@ const SearchCrew = () => {
                   </div>
                   <div className="searchCrewCardInfo">
                     <div className="searchCrewTitle">{crew.title}</div>
-                    <div className="searchCrewDate">{crew.date} | {crew.time}</div>
+                    <div className="searchCrewDate">{crew.date}  {formatTime(crew.time)}</div>
                     <div className="searchCrewAddress"><LuMapPin />&nbsp;{crew.address}</div>
                     <div className="searchCrewNote">{crew.note}</div>
                     <div className="searchCrewNum"><RiTeamLine /> {crew.numOfMate}</div>
@@ -186,24 +191,29 @@ const SearchCrew = () => {
                       {crew.tripMateInfo && crew.tripMateInfo.map((userData, idx) => {
                         const personalities = Array.isArray(userData.personality) ? userData.personality : [userData.personality];
                         return (
-                          <li key={idx}>
-                            <img src={`data:image/jpeg;base64,${userData.profileImage}`} alt={userData.nickname} className="profileImage" />
-                            <div className="userDetails">
-                              <p>{userData.nickname}</p>
+                          <li className="searchCrewCardMates"key={idx}>
+                            <div className="searchCrewCardMateImg">
+                            <img src={`data:image/jpeg;base64,${userData.profileImage}`} alt={userData.nickname}/>
+                            </div>
+                            <div className="crewDetails">
+                              <div className='crewNickname'>{userData.nickname}</div>
                               {personalities.map((personality, i) => {
                                 const similarity = calculateSimilarity(personality, user.personality);
-                                return <p key={i}>성향이 {similarity}% 일치합니다.</p>;
+                                return <div className='crewSimilarity' key={i}>성향이 {similarity}% 일치합니다.</div>;
                               })}
                             </div>
                             <div className="personalityDetails">
+                              <div className='personalityTitle'>성향보기</div>
+                              <ul className='personalityList'>
                               {Object.entries(JSON.parse(userData.personality)).map(([key, value]) => (
-                                <p key={key}>
+                                <li key={key}>
                                   {keyTranslations[key]}: {
                                     groupedPreferences[key] ?
                                     groupedPreferences[key].find(preference => preference.id === value).label : value
                                   }
-                                </p>
+                                </li>
                               ))}
+                              </ul>
                             </div>
                           </li>
                         );

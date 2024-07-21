@@ -12,6 +12,11 @@ const GlobalStyle = createGlobalStyle`
     font-family: Arial, sans-serif;
   }
 
+  ::-webkit-scrollbar {
+  width: 0px; /* 스크롤바 너비 */
+}
+
+
   a {
     color: inherit;
     text-decoration: none;
@@ -40,13 +45,9 @@ const GlobalStyle = createGlobalStyle`
     outline: none;
   }
 
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
 
   ::-webkit-scrollbar-thumb {
     background-color: #ccc;
-    border-radius: 5px;
   } 
 
   ::-webkit-scrollbar-track {
