@@ -15,7 +15,6 @@ const MyCrewList = () => {
   const fetchMyCrew = async () => {
     setLoading(true); // 로딩 상태 시작
 
-    const fetchMyCrew = async () => {
       try {
         const response = await axios.get(`${API_URL}/getThisTripCrew?tripId=${user.mainTrip}`);
         const crewData = response.data.response;
