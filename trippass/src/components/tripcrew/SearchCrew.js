@@ -104,6 +104,7 @@ const SearchCrew = () => {
           return { ...crew, tripMateInfo: tripMateInfo.filter(info => info !== null) };
         }));
         setSearchCrewData(updatedCrewData);
+        setSortedCrewData(updatedCrewData);
       } catch (error) {
         console.error('크루 정보 및 트립메이트 정보 가져오기 실패:', error.message);
       }
@@ -116,23 +117,26 @@ const SearchCrew = () => {
 
   useEffect(() => {
     const getSortedCrewData = () => {
-      let filteredData = searchCrewData;
-      if (!showClosed) {
+      let filteredData = [...searchCrewData];
+  
+      // '마감 제외' 토글 적용
+      if (showClosed) {
         filteredData = filteredData.filter(crew => crew.tripmate.split(',').length < crew.numOfMate);
       }
-
+  
+      // 정렬 옵션 적용
       if (sortOption === '추천순') {
-        filteredData = filteredData.sort((a, b) => {
+        filteredData.sort((a, b) => {
           const aSimilarity = a.tripMateInfo.reduce((sum, mate) => sum + calculateSimilarity(mate.personality, user.personality), 0) / a.tripMateInfo.length;
           const bSimilarity = b.tripMateInfo.reduce((sum, mate) => sum + calculateSimilarity(mate.personality, user.personality), 0) / b.tripMateInfo.length;
           
           return bSimilarity - aSimilarity;
         });
       }
-
+  
       setSortedCrewData(filteredData);
     };
-
+  
     getSortedCrewData();
   }, [sortOption, searchCrewData, user.personality, showClosed]);
 
