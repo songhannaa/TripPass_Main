@@ -65,7 +65,7 @@
 
 .DashboardTripCrew_overlay {
   position: absolute;
-  top: 0;
+  top: -3px;
   justify-content: space-between;
   left: 0;
   width: 100%;

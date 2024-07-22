@@ -252,7 +252,7 @@
   border-radius: 15px;
   cursor: pointer;
   transition: background-color 0.3s ease; 
-  height: 20%;
+  height: 18%;
 }
 
 .joinReqBtn:hover {
