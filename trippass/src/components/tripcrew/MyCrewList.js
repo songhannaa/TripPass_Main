@@ -10,22 +10,19 @@ const MyCrewList = () => {
   const [crewData, setCrewData] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
   const [loading, setLoading] = useState(false);
-  const maxCards = 5; 
+  const maxCards = 5;
 
   const fetchMyCrew = async () => {
     setLoading(true); // 로딩 상태 시작
-
-    const fetchMyCrew = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/getThisTripCrew?tripId=${user.mainTrip}`);
-        const crewData = response.data.response;
-        setCrewData(crewData);
-        setLoading(false); // 로딩 상태 종료
-      } catch (error) {
-        console.error('MyCrew 가져오기 실패:', error.message);
-      }
-    };
-
+    try {
+      const response = await axios.get(`${API_URL}/getThisTripCrew?tripId=${user.mainTrip}`);
+      const crewData = response.data.response;
+      setCrewData(crewData);
+      setLoading(false); // 로딩 상태 종료
+    } catch (error) {
+      console.error('MyCrew 가져오기 실패:', error.message);
+    }
+  };
 
   useEffect(() => {
     if (user.mainTrip && user.userId) {
@@ -34,11 +31,11 @@ const MyCrewList = () => {
   }, [user.mainTrip, user.userId]);
 
   const scrollLeft = () => {
-    setStartIndex(Math.max(startIndex - maxCards, 0)); 
+    setStartIndex(Math.max(startIndex - maxCards, 0));
   };
 
   const scrollRight = () => {
-    setStartIndex(startIndex + maxCards); 
+    setStartIndex(startIndex + maxCards);
   };
 
   const handleCrewDelete = async (crewId) => {
@@ -62,7 +59,7 @@ const MyCrewList = () => {
         if (error.response.status === 400) {
           if (error.response.data['result code'] === 402) {
             alert("메이트가 있는 여행은 삭제할 수 없습니다.");
-          } 
+          }
         } else {
           alert("트립 삭제를 할 수 없습니다.");
         }
@@ -94,7 +91,7 @@ const MyCrewList = () => {
         </div>
       </div>
       <div className="crewListContainer">
-        {loading && ( 
+        {loading && (
           <div className="loading-overlay">
             <div className="spinner"></div>
           </div>

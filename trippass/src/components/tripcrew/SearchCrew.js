@@ -107,7 +107,7 @@ const SearchCrew = () => {
     if (user && user.mainTrip) {
       fetchCrewData();
     }
-  }, [user]);
+  }, [user, user.mainTrip]); //[user]);
 
   useEffect(() => {
     const getSortedCrewData = () => {
@@ -129,7 +129,7 @@ const SearchCrew = () => {
     };
 
     getSortedCrewData();
-  }, [sortOption, searchCrewData]);
+  }, [sortOption, searchCrewData, user.personality]); //[sortOption, searchCrewData]); 
 
   const handleJoinRequest = async (crewId) => {
     try {
