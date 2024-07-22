@@ -7,37 +7,32 @@ import '../../styles/mycrewlist.css';
 
 const MyCrewList = () => {
   const { user } = useSelector(state => state.user);
-  const [crewData, setCrewData] = useState([]);
+  const [crewData, setCrewData] = useState([]); // 초기값을 빈 배열로 설정
   const [startIndex, setStartIndex] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const maxCards = 5; 
+  const maxCards = 5;
 
   const fetchMyCrew = async () => {
-    setLoading(true); // 로딩 상태 시작
-
-      try {
-        const response = await axios.get(`${API_URL}/getThisTripCrew?tripId=${user.mainTrip}`);
-        const crewData = response.data.response;
-        setCrewData(crewData);
-        setLoading(false); // 로딩 상태 종료
-      } catch (error) {
-        console.error('MyCrew 가져오기 실패:', error.message);
-      }
-    };
-
+    try {
+      const response = await axios.get(`${API_URL}/getThisTripCrew?tripId=${user.mainTrip}`);
+      const crewData = response.data.response || [];
+      setCrewData(crewData);
+    } catch (error) {
+      console.error('MyCrew 가져오기 실패:', error.message);
+    }
+  };
 
   useEffect(() => {
-    if (user.mainTrip && user.userId) {
+    if (user.mainTrip) {
       fetchMyCrew();
     }
-  }, [user.mainTrip, user.userId]);
+  }, [user.mainTrip]);
 
   const scrollLeft = () => {
-    setStartIndex(Math.max(startIndex - maxCards, 0)); 
+    setStartIndex(Math.max(startIndex - maxCards, 0));
   };
 
   const scrollRight = () => {
-    setStartIndex(startIndex + maxCards); 
+    setStartIndex(startIndex + maxCards);
   };
 
   const handleCrewDelete = async (crewId) => {
@@ -51,7 +46,7 @@ const MyCrewList = () => {
 
       if (response.data['result code'] === 200) {
         fetchMyCrew(); // 데이터를 다시 가져옵니다.
-      } else if(response.data['result code'] === 402){
+      } else if (response.data['result code'] === 402) {
         alert("메이트가 있는 여행은 삭제할 수 없습니다.");
       } else {
         console.error('Failed to delete trip:', response.data);
@@ -61,7 +56,7 @@ const MyCrewList = () => {
         if (error.response.status === 400) {
           if (error.response.data['result code'] === 402) {
             alert("메이트가 있는 여행은 삭제할 수 없습니다.");
-          } 
+          }
         } else {
           alert("트립 삭제를 할 수 없습니다.");
         }
@@ -93,31 +88,30 @@ const MyCrewList = () => {
         </div>
       </div>
       <div className="crewListContainer">
-        {loading && ( 
-          <div className="loading-overlay">
-            <div className="spinner"></div>
-          </div>
-        )}
-        <div className="crewList">
-          <ul className="crewCards">
-            {crewData && crewData.slice(startIndex, startIndex + maxCards).map((crew, index) => (
-              <li key={index} className="crewCard">
-                <div className="crewCardImageWrapper">
-                  <img src={`data:image/jpeg;base64,${crew.banner}`} alt={crew.title} />
-                  <div className="crewCardOverlay">
-                    <div className="crewCardInfo">
-                      <div className="crewDate">{crew.date}</div>
-                      <div className="crewTitle">{crew.title}</div>
-                    </div>
-                    <div className="deleteCrewButton" onClick={() => confirmAndDelete(crew.crewId)}>
-                      <TiDelete size={20} />
+        {crewData.length === 0 ? (
+          <div className="noCrewMessage">아직 크루가 없어요 함께 찾아볼까요?</div>
+        ) : (
+          <div className="crewList">
+            <ul className="crewCards">
+              {crewData.slice(startIndex, startIndex + maxCards).map((crew, index) => (
+                <li key={index} className="crewCard">
+                  <div className="crewCardImageWrapper">
+                    <img src={`data:image/jpeg;base64,${crew.banner}`} alt={crew.title} />
+                    <div className="crewCardOverlay">
+                      <div className="crewCardInfo">
+                        <div className="crewDate">{crew.date}</div>
+                        <div className="crewTitle">{crew.title}</div>
+                      </div>
+                      <div className="deleteCrewButton" onClick={() => confirmAndDelete(crew.crewId)}>
+                        <TiDelete size={20} />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );

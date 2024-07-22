@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../store/userSlice';
 import axios from 'axios';
@@ -12,6 +12,7 @@ import { API_URL } from '../config';
 const Header = () => {
   const { isAuthenticated, user } = useSelector(state => state.user);
   const dispatch = useDispatch();
+  const location = useLocation();
   const [weather, setWeather] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -40,28 +41,29 @@ const Header = () => {
   }, [isAuthenticated, user]);
 
   useEffect(() => {
-    if (isAuthenticated && user) {
-      const fetchNotifications = async () => {
-        try {
-          const response = await axios.get(`${API_URL}/getJoinRequests`, {
-            params: { userId: user.userId }
-          });
-          if (response.data['result code'] === 200) {
-            const newNotifications = response.data.response.filter(
-              request => request.status === 1 || request.status === 0 // 상태가 1인 경우 수락된 요청과 상태가 0인 경우 새로운 요청
-            );
-            setNotifications(newNotifications);
-          }
-        } catch (error) {
-          console.error('Error fetching notifications:', error);
+    const fetchNotifications = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/getJoinRequests`, {
+          params: { userId: user.userId }
+        });
+        if (response.data['result code'] === 200) {
+          const newNotifications = response.data.response.filter(
+            request => 
+              (request.crewLeader === user.userId && request.status === 0) || // crewLeader가 보는 새로운 가입 요청
+              (request.userId === user.userId && (request.status === 1 || request.status === 2)) // 신청자가 보는 가입 완료 또는 거절
+          );
+          setNotifications(newNotifications);
         }
-      };
-      fetchNotifications();
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    };
 
-      const intervalId = setInterval(fetchNotifications, 60000); // 1분마다 상태 조회
-      return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 정리
+    if (isAuthenticated && user) {
+      fetchNotifications();
     }
-  }, [isAuthenticated, user]);
+
+  }, [isAuthenticated, user, location]);
 
   const handleLogout = () => {
     alert("로그아웃 되었습니다");
@@ -73,20 +75,20 @@ const Header = () => {
     setShowNotifications(!showNotifications);
   };
 
-  const handleNotificationItemClick = async (crewId, userId) => {
+  const handleNotificationItemClick = async (notification) => {
     try {
-      // 알림을 확인 상태로 업데이트
-      const response = await axios.delete(`${API_URL}/deleteJoinRequest`, {
-        params: { crewId, userId }
+      await axios.post(`${API_URL}/updateNotificationStatus`, {
+        requestId: notification.requestId,
+        status: 3  // 상태를 3으로 업데이트
+      }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
       });
-      if (response.data['result code'] === 200) {
-        setNotifications(notifications.filter(notification => notification.crewId !== crewId || notification.userId !== userId));
-        alert("알림이 확인되었습니다.");
-      } else {
-        console.error(response.data.response);
-      }
+      // 알림 상태를 업데이트하여 화면에서 제거
+      setNotifications(notifications.filter(n => n.requestId !== notification.requestId));
     } catch (error) {
-      console.error('Error deleting notification:', error);
+      console.error('Error updating notification status:', error);
     }
   };
 
@@ -111,12 +113,16 @@ const Header = () => {
               <div className="notification-popup">
                 {notifications.length > 0 ? (
                   notifications.map(notification => (
-                    <div
-                      key={`${notification.crewId}-${notification.userId}`}
-                      className="notification-item"
-                      onClick={() => handleNotificationItemClick(notification.crewId, notification.userId)}
-                    >
-                      <p>{notification.status === 0 ? "새로운 가입 요청이 있습니다!" : "크루에 가입되었습니다!"}</p>
+                    <div key={notification.requestId} className="notification-item" onClick={() => handleNotificationItemClick(notification)}>
+                      <p>
+                        {notification.crewLeader === user.userId && notification.status === 0
+                          ? `${notification.nickname}님의 ${notification.crewTitle} 크루 가입 요청이 있습니다.`
+                          : notification.status === 1
+                          ? `${notification.crewTitle} 크루에 가입되었습니다!`
+                          : notification.status === 2
+                          ? `${notification.crewTitle} 크루 가입이 거절되었습니다.`
+                          : ''}
+                      </p>
                     </div>
                   ))
                 ) : (
