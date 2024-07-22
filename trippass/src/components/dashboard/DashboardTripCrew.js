@@ -180,7 +180,7 @@ const DashboardTripCrew = () => {
       if (response.data['result code'] === 200) {
         // 성공 시 처리
         closeModal();
-        fetchCrewData(); // 컴포넌트 리로드
+        window.location.reload();
       } else {
         console.error(response.data.response);
       }
