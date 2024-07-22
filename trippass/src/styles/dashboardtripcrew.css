@@ -3,7 +3,6 @@
   padding: 20px;
   background-color: #fff;
   border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   height: 400px;
   box-sizing: border-box;
 }
@@ -150,7 +149,7 @@
 .DashboardTripCrew_mateInfo {    
   position: absolute; 
   bottom: 50%;
-  left: 20%;
+  left: 10%;
   z-index: 9999;
   background-color: rgba(255, 255, 255, 0.9);
   padding: 15px;
@@ -161,7 +160,6 @@
   box-shadow: 9px 9px 30px rgba(126, 123, 160, 0.2);
   visibility: hidden;
   opacity: 1;
-  transition: visibility 0s, opacity 0.5s linear;
 }
 
 .DashboardTripCrew_mateImage:hover + .DashboardTripCrew_mateInfo {

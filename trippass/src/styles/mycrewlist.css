@@ -14,12 +14,21 @@
   font-weight: bold;
 }
 
-.crewList {
+.crewList, .noCrewMessage {
   display: flex;
   background-color: #fff;
   border-radius: 15px;
   padding: 10px;
   height: 230px;
+}
+
+.noCrewMessage{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  color: #6e6e6e;
 }
 
 .crewCards {
@@ -94,12 +103,9 @@
 .deleteCrewButton {
   position: absolute;
   top: 10px;
-  right: 10px;
-  background-color: rgba(255, 255, 255, 0.3);
+  right: 5px;
   color: #fff;
   font-size: 16px;
-  padding: 5px;
-  border-radius: 50%;
   cursor: pointer;
   transition: opacity 0.3s ease-in-out;
   opacity: 0;
@@ -177,10 +183,11 @@
   margin-right: 15px;
 }
 
-.userDetails {
+.crewDetails {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 50%;
 }
 
 .searchCrewCardImg{
@@ -194,12 +201,11 @@
   border-radius: 15px;
 }
 .searchCrewCardInfo{
-  width: 30%;
+  width: 40%;
   padding: 0 2%;
 }
 .searchCrewCardMate{
-  width: 40%;
-  padding-top: 1%;
+  width: 30%;
 }
 
 .searchCrewTitle{
@@ -221,11 +227,12 @@
 }
 
 .searchCrewNote{
-  margin-bottom: 10%;
+
   color: #555555;
 }
 
 .searchCrewNum{
+  margin-top: 5%;
   color: #555555;
 }
 
@@ -233,6 +240,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
 }
 
 .joinReqBtn {
@@ -244,8 +252,89 @@
   border-radius: 15px;
   cursor: pointer;
   transition: background-color 0.3s ease; 
+  height: 20%;
 }
 
 .joinReqBtn:hover {
   background-color: #436aa7; 
+}
+
+.searchCrewCardMate > ul{
+  height: 80%;
+}
+
+.searchCrewCardMate > ul > li{
+  margin-bottom: 2%;
+}
+
+.searchCrewCardMates {
+  display: flex;
+  align-items: center;
+}
+
+/* 성향보기 */
+.personalityList{
+  position: absolute;
+  top: 25px;
+  left: 30px;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 9px 9px 30px rgba(126, 123, 160, 0.2);
+  padding: 14px;
+  border-radius: 10px;
+  z-index: 9999;
+  visibility: hidden;
+  opacity: 1;
+}
+
+.personalityTitle:hover + .personalityList {
+  visibility: visible;
+  opacity: 1;
+}
+
+.personalityList > li{
+  margin: 5% 0;
+}
+
+.searchCrewCardMateImg{
+  width: 20%;
+}
+
+.searchCrewCardMateImg img{
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.crewNickname{
+  font-weight: bold;
+  font-size: 17px;
+  margin-bottom: 5px;
+}
+
+.crewSimilarity,
+.personalityTitle{
+  font-size: 14px;
+  color: #555555;
+}
+
+.personalityDetails{
+  width: 25%;
+}
+
+.personalityTitle{
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  padding: 5px 2px;
+  text-align: center;
+}
+
+
+.personalityTitle:hover{
+  background-color: #6e6e6e;
+  color: #fff;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }

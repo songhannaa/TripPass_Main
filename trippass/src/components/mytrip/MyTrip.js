@@ -18,6 +18,7 @@ const MyTrip = () => {
   const [isCreatingNewTrip, setIsCreatingNewTrip] = useState(false);
 
 
+
   useEffect(() => {
     const fetchTripPlans = async () => {
       try {
@@ -38,7 +39,8 @@ const MyTrip = () => {
   const handleCardClick = async (tripId) => {
     setHighlightedTripId(tripId);
     dispatch(updateUserMainTrip(tripId));
-
+    alert("메인으로 설정되었습니다.")
+    navigate('/tripPlan');
     try {
       const response = await axios.post(`${API_URL}/updateUserMainTrip`, {
         userId: user.userId,
