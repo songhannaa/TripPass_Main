@@ -48,10 +48,12 @@ const Header = () => {
         });
         if (response.data['result code'] === 200) {
           const newNotifications = response.data.response.filter(
-            request => 
-              (request.crewLeader === user.userId && request.status === 0) || // crewLeader가 보는 새로운 가입 요청
-              (request.userId === user.userId && (request.status === 1 || request.status === 2)) // 신청자가 보는 가입 완료 또는 거절
+            request => request.alert === 0 && (
+              (request.status === 0 && request.crewLeader === user.userId) || 
+              (request.userId === user.userId && (request.status === 1 || request.status === 2))
+            )
           );
+          console.log("Notifications: ", newNotifications);  // 로그 추가
           setNotifications(newNotifications);
         }
       } catch (error) {
@@ -79,7 +81,7 @@ const Header = () => {
     try {
       await axios.post(`${API_URL}/updateNotificationStatus`, {
         requestId: notification.requestId,
-        status: 3  // 상태를 3으로 업데이트
+        alert: 1  // 상태를 1으로 업데이트
       }, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -115,11 +117,11 @@ const Header = () => {
                   notifications.map(notification => (
                     <div key={notification.requestId} className="notification-item" onClick={() => handleNotificationItemClick(notification)}>
                       <p>
-                        {notification.crewLeader === user.userId && notification.status === 0
-                          ? `${notification.nickname}님의 ${notification.crewTitle} 크루 가입 요청이 있습니다.`
-                          : notification.status === 1
+                        {notification.status === 0 && notification.crewLeader === user.userId
+                          ? `${notification.crewTitle} 크루 가입 요청이 있습니다.`
+                          : notification.status === 1 && notification.userId === user.userId
                           ? `${notification.crewTitle} 크루에 가입되었습니다!`
-                          : notification.status === 2
+                          : notification.status === 2 && notification.userId === user.userId
                           ? `${notification.crewTitle} 크루 가입이 거절되었습니다.`
                           : ''}
                       </p>
