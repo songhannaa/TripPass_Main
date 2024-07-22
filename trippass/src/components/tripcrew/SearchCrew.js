@@ -43,6 +43,7 @@ const SearchCrew = () => {
   const [searchCrewData, setSearchCrewData] = useState([]);
   const [sortedCrewData, setSortedCrewData] = useState([]);
   const [sortOption, setSortOption] = useState('전체');
+  const [showClosed, setShowClosed] = useState(false);
 
   const handlePopupOpen = () => {
     setShowPopup(true);
@@ -78,6 +79,10 @@ const SearchCrew = () => {
     return matchCount * 20; 
   };
 
+  const handleToggleChange = () => {
+    setShowClosed(!showClosed);
+  };
+
   useEffect(() => {
     const fetchCrewData = async () => {
       try {
@@ -111,21 +116,25 @@ const SearchCrew = () => {
 
   useEffect(() => {
     const getSortedCrewData = () => {
+      let filteredData = searchCrewData;
+      if (!showClosed) {
+        filteredData = filteredData.filter(crew => crew.tripmate.split(',').length < crew.numOfMate);
+      }
+
       if (sortOption === '추천순') {
-        const sortedData = [...searchCrewData].sort((a, b) => {
+        filteredData = filteredData.sort((a, b) => {
           const aSimilarity = a.tripMateInfo.reduce((sum, mate) => sum + calculateSimilarity(mate.personality, user.personality), 0) / a.tripMateInfo.length;
           const bSimilarity = b.tripMateInfo.reduce((sum, mate) => sum + calculateSimilarity(mate.personality, user.personality), 0) / b.tripMateInfo.length;
           
           return bSimilarity - aSimilarity;
         });
-        setSortedCrewData(sortedData);
-      } else {
-        setSortedCrewData(searchCrewData);
       }
+
+      setSortedCrewData(filteredData);
     };
 
     getSortedCrewData();
-  }, [sortOption, searchCrewData, user.personality]); //[sortOption, searchCrewData]); 
+  }, [sortOption, searchCrewData, user.personality, showClosed]);
 
   const handleJoinRequest = async (crewId) => {
     try {
@@ -165,7 +174,12 @@ const SearchCrew = () => {
         <div className='section-title'>
           <span>크루 찾기</span>
           <div>
-            <select value={sortOption} onChange={handleSortChange}>
+            <span className="toggle-label">마감 제외</span>
+            <label className="switch">
+              <input className="toggleBtn" type="checkbox" checked={showClosed} onChange={handleToggleChange} />
+              <span className="slider round"></span>
+            </label>
+            <select className='selectSort' value={sortOption} onChange={handleSortChange}>
               <option value="전체">전체</option>
               <option value="추천순">추천순</option>
             </select>
@@ -191,9 +205,9 @@ const SearchCrew = () => {
                       {crew.tripMateInfo && crew.tripMateInfo.map((userData, idx) => {
                         const personalities = Array.isArray(userData.personality) ? userData.personality : [userData.personality];
                         return (
-                          <li className="searchCrewCardMates"key={idx}>
+                          <li className="searchCrewCardMates" key={idx}>
                             <div className="searchCrewCardMateImg">
-                            <img src={`data:image/jpeg;base64,${userData.profileImage}`} alt={userData.nickname}/>
+                              <img src={`data:image/jpeg;base64,${userData.profileImage}`} alt={userData.nickname}/>
                             </div>
                             <div className="crewDetails">
                               <div className='crewNickname'>{userData.nickname}</div>
@@ -205,21 +219,26 @@ const SearchCrew = () => {
                             <div className="personalityDetails">
                               <div className='personalityTitle'>성향보기</div>
                               <ul className='personalityList'>
-                              {Object.entries(JSON.parse(userData.personality)).map(([key, value]) => (
-                                <li key={key}>
-                                  {keyTranslations[key]}: {
-                                    groupedPreferences[key] ?
-                                    groupedPreferences[key].find(preference => preference.id === value).label : value
-                                  }
-                                </li>
-                              ))}
+                                {Object.entries(JSON.parse(userData.personality)).map(([key, value]) => (
+                                  <li key={key}>
+                                    {keyTranslations[key]}: {
+                                      groupedPreferences[key] ?
+                                      groupedPreferences[key].find(preference => preference.id === value).label : value
+                                    }
+                                  </li>
+                                ))}
                               </ul>
                             </div>
                           </li>
                         );
                       })}
                     </ul>
-                    <div className="joinReqBtn" onClick={() => handleJoinRequest(crew.crewId)}>신청하기</div>
+                    <div 
+                      className={`joinReqBtn ${crew.tripmate.split(',').length === crew.numOfMate ? 'closed' : ''}`} 
+                      onClick={() => handleJoinRequest(crew.crewId)}
+                    >
+                      {crew.tripmate.split(',').length === crew.numOfMate ? '신청마감' : '신청하기'}
+                    </div>
                   </div>
                 </li>
               ))}
