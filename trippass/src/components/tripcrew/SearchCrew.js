@@ -202,7 +202,10 @@ const SearchCrew = () => {
                     <div className="searchCrewDate">{crew.date}  {formatTime(crew.time)}</div>
                     <div className="searchCrewAddress"><LuMapPin />&nbsp;{crew.address}</div>
                     <div className="searchCrewNote">{crew.note}</div>
-                    <div className="searchCrewNum"><RiTeamLine /> {crew.tripmate.split(',').length} / {crew.numOfMate}</div>
+                    <div className="searchCrewNum">
+                      <RiTeamLine className="crewNumIcon" /> 
+                      <span className='crewNumText'> {crew.tripmate.split(',').length} / {crew.numOfMate}</span>
+                    </div>
                   </div>
                   <div className="searchCrewCardMate">
                     <ul>
