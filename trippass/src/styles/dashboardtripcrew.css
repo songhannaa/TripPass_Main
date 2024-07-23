@@ -1,6 +1,6 @@
 /* 기본 스타일 설정 */
 .DashboardTripCrew_memo {
-  padding: 20px;
+  padding: 20px 30px;
   background-color: #fff;
   border-radius: 10px;
   height: 400px;
@@ -154,7 +154,7 @@
   background-color: rgba(255, 255, 255, 0.9);
   padding: 15px;
   border-radius: 10px;
-  width: 200px;
+  width: 220px;
   box-sizing: border-box;
   height: 180px;
   box-shadow: 9px 9px 30px rgba(126, 123, 160, 0.2);
@@ -231,24 +231,24 @@
 }
 
 .DashboardTripCrew_modal {
-  position: fixed;
-  z-index: 1000;
-  right: 60px; /* 오른쪽에서 60px 떨어짐 */
-  bottom: 70px; /* 아래에서 60px 떨어짐 */
-  width: 25%; /* 내용에 맞춰서 크기 조정 */
-  height: 35%; /* 내용에 맞춰서 크기 조정 */
+  position: relative;
+  width: 70%; /* 내용에 맞춰서 크기 조정 */
+  height: 70%; /* 내용에 맞춰서 크기 조정 */
   max-width: 500px; /* 최대 너비 설정 */
   background-color: #fefefe; /* 배경색 설정 */
   border-radius: 10px; /* 테두리 둥글게 설정 */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
   padding: 10px; /* 내부 여백 설정 */
+  margin-top: -300px; /* 상단에서의 간격 조정 */
+  margin-left: 120px; /* 중앙 정렬을 위해 추가 */
+  margin-right: auto; /* 중앙 정렬을 위해 추가 */
 }
 
 .DashboardTripCrew_modalContent {
   background-color: #fefefe;
   padding: 20px;
   max-width: 400px;
-  position: relative;
+  position: absolute;
   border-radius: 10px;
 }
 
@@ -275,6 +275,7 @@
   top: 10px;
   left: 150px;
   width: 20%; /* 양쪽 여백을 고려한 너비 설정 */
+  margin-top: 15px;
 }
 
 .DashboardTripCrew_beforeBtn, .DashboardTripCrew_nextBtn {
@@ -324,7 +325,6 @@
 .DashboardTripCrew_actions {
   display: flex;
   justify-content: space-around;
-  margin-top: 20px;
 }
 
 .DashboardTripCrew_acceptBtn, .DashboardTripCrew_rejectBtn {
@@ -348,6 +348,7 @@
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 10px;
+  margin-top: 15px;
 }
 .DashboardTripCrew_matePersonalityList h2 {
   margin-bottom: 10px;
