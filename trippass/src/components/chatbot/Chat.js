@@ -27,7 +27,7 @@ const Chat = () => {
           if (tripResponse.data['result code'] === 200) {
             const tripInfo = tripResponse.data.response[0];
             const welcomeMessage = {
-              message: `안녕하세요, ${user.nickname}님! ${tripInfo.startDate || '시작 날짜'} ~ ${tripInfo.endDate || '종료 날짜'}에 ${tripInfo.city || '도시'}로 여행을 가시는군요! 추천 받길 원하시는 버튼을 눌러주세요.`,
+              message: `안녕하세요, ${user.nickname}님!${tripInfo.startDate || '시작 날짜'} ~ ${tripInfo.endDate || '종료 날짜'}에 ${tripInfo.city || '도시'}로 여행을 가시는군요! 추천 받길 원하시는 버튼을 눌러주세요.`,
               sender: 'bot'
             };
 
