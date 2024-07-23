@@ -17,18 +17,22 @@ const TripCard = ({ title, startDate, endDate, banner, isHighlighted, onClick, o
       <div className="TripCard_ImageContainer">
         <img src={imageUrl} alt={title} className={imageClass} />
         <div className="TripCard_Overlay">
-          {!isHighlighted && (
+          <div className="TripCard_OverlayTopContent">
+            <div className="TripCard_Title">{title}</div>
+            {!isHighlighted && (
             <button className='TripCard_DeleteButton' onClick={handleDeleteClick}>
               <TiDelete className='TripCard_Delete' />
             </button>
-          )}
-          <h3 className="TripCard_Title">{title}</h3>
-          <p className="TripCard_Date">{`${startDate} ~ ${endDate}`}</p>
+            )}
+          </div>
+          <div className="TripCard_OverlayMiddleContent">
           {!isHighlighted && (
-            <div className="TripCard_MainOverlay">
-              <p className="TripCard_MainText" onClick={onClick}>메인으로 설정하기</p>
-            </div>
+              <div className="TripCard_MainText" onClick={onClick}>메인으로 설정하기</div>
           )}
+          </div>
+          <div className="TripCard_OverlayBottomContent">
+              <div className="TripCard_Date">{`${startDate} ~ ${endDate}`}</div>
+          </div>
         </div>
       </div>
     </div>

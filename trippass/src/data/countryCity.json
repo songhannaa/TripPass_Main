@@ -96,6 +96,14 @@
         "city": [
           {"city_name": "바르셀로나"}
         ]
+      },
+      {
+        "country": "아랍에미리트",
+        "city": [
+          {"city_name": "두바이"},
+          {"city_name": "아부다비"},
+          {"city_name": "샤르자"}
+        ]
       }
     ]
   }

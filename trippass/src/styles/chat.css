@@ -38,6 +38,7 @@
     padding: 10px;
     border-radius: 10px;
     background-color: #f1f1f1;
+    line-height: 1.5rem;
   }
   
   .myMessage .messageText {
@@ -55,6 +56,26 @@
   
   .otherMessage .profileImage {
     order: 1; 
+  }
+
+  .buttonRow {
+    padding: 3px 10px;
+  }
+
+  .chatButton {
+    flex: 1;
+    margin: 0 5px;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    background-color: #b7cee7;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .chatButton:hover {
+    background-color: #6970D5;
+    color: white;
   }
   
   .messageInputContainer {
@@ -82,4 +103,45 @@
     background-color: #6970D5;
     color: white;
   }
-  
+  .tripPlaceSection,
+  .dailyPlanSection{
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+
+.tripPlaceTitle{
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8%;
+  height: 10%;
+  display: flex;
+  align-items: center;
+}
+.tripPlaceContent{
+  height: 90%;
+  overflow-y: scroll;
+}
+
+.tripPlaceContent >ul {
+  height: 110px;
+  margin-bottom: 15px;
+}
+
+.tripPlaceContent >ul li{
+  color: #525252;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 15px;
+  align-items: center
+}
+
+.tripPlaceName{
+  flex: 9;
+  line-height: 1.3rem;
+}
+
+.tripPlaceCalendar{
+  flex: 1;
+}
