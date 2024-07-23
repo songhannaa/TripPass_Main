@@ -4,6 +4,7 @@ import axios from 'axios';
 import { API_URL } from "../../config";
 import '../../styles/chat.css';
 import botProfileImage from '../../assets/bot1.png'; 
+import { IoIosSend } from "react-icons/io";
 
 const Chat = () => {
   const { user } = useSelector(state => state.user);
@@ -76,8 +77,10 @@ const Chat = () => {
     fetchChatData();
   }, [tripInfo, user.userId, user.mainTrip, user.nickname]);
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (event) => {
+    event.preventDefault();
     if (newMessage.trim()) {
+      
       const userMessage = { message: newMessage, sender: 'user' };
       setMessages(prevMessages => [...prevMessages, userMessage]);
       setNewMessage('');
@@ -135,6 +138,7 @@ const Chat = () => {
         <button className="chatButton">사용자 입력</button>
       </div>
       <div className="messageInputContainer">
+        <form onSubmit={handleSendMessage}>
         <input
           type="text"
           value={newMessage}
@@ -142,7 +146,10 @@ const Chat = () => {
           className="messageInput"
           placeholder="메시지를 입력하세요..."
         />
-        <button onClick={handleSendMessage} className="sendMessageButton">전송</button>
+        <button onClick={handleSendMessage} className="sendMessageButton">
+          <IoIosSend style={{ verticalAlign: 'middle', fontSize: '1.2em' }} />
+        </button>    
+        </form>
       </div>
     </div>
   );
