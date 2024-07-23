@@ -68,14 +68,14 @@
     padding: 10px;
     border: none;
     border-radius: 20px;
-    background-color: #b7cee7;
+    background-color: #6970D5;
     color: white;
     cursor: pointer;
     letter-spacing: -1px;
   }
   
   .chatButton:hover {
-    background-color: #6970D5;
+    background-color: #b7cee7;
     color: white;
   }
   
