@@ -294,13 +294,20 @@
 }
 
 .searchCrewNote{
-
   color: #555555;
 }
 
 .searchCrewNum{
   margin-top: 5%;
   color: #555555;
+}
+
+.searchCrewNum .crewNumIcon {
+  vertical-align: middle;
+}
+
+.searchCrewNum .crewNumText {
+  vertical-align: middle;
 }
 
 .searchCrewCardMate{
