@@ -1,76 +1,80 @@
-import React, { useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import React, { useState, useEffect } from "react";
+import { useSelector } from 'react-redux';
 import { FcCalendar } from "react-icons/fc";
 import { RiMapPinAddLine } from "react-icons/ri";
-import styled from 'styled-components';
 
-const CalendarWrapper = styled.div`
-  position: relative;
-`;
+import axios from 'axios';
+import { API_URL } from "../../config";
+import NewTripPlacePop from './NewTripPlanPopup';
+
+
 
 const TripPlace = () => {
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const { user } = useSelector(state => state.user);
+  const [showPopup, setShowPopup] = useState(false);
+  const [tripInfo, setTripInfo] = useState([]);
+  const [selectedPlace, setSelectedPlace] = useState(null);
 
-  const handleCalendarClick = () => {
-    setShowDatePicker(!showDatePicker);
+  const handlePopupOpen = (placeInfo) => {
+    setSelectedPlace(placeInfo);
+    setShowPopup(true);
   };
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-    setShowDatePicker(false); // 선택 후 달력 닫기
+  const handlePopupClose = () => {
+    setShowPopup(false);
+    setSelectedPlace(null);
   };
+  
+
+  useEffect(() => {
+    const fetchTripPlaceInfo = async () => {
+      try {
+        const tripResponse = await axios.get(`${API_URL}/getSavePlace`, {
+          params: { userId: user.userId, tripId: user.mainTrip }
+        });
+
+        if (tripResponse.data['result code'] === 200) {
+          const updatedTripInfo = tripResponse.data.response.map(place => ({
+            place: place.title,
+            address: place.address,
+            latitude: place.latitude,
+            longitude: place.longitude,
+            description: place.description
+          }));
+          setTripInfo(updatedTripInfo);    
+        } else {
+          console.error('Failed to fetch trip data:', tripResponse.data);
+        }
+      } catch (error) {
+        console.error('Error fetching trip data:', error);
+      }
+    };
+
+    if (user.userId && user.mainTrip) {
+      fetchTripPlaceInfo();
+    }
+  }, [user.userId, user.mainTrip]);
 
   return (
     <>
-      <div className="tripPlaceSection">
-        <div className="tripPlaceTitle"><RiMapPinAddLine />&nbsp;&nbsp;저장한 장소</div>
-        <div className="tripPlaceContent">
-          <ul>
-            <li>
-              <div className="tripPlaceName">
-                Basílica de la Sagrada Família Basílica de la Sagrada Família
-              </div>
-              <CalendarWrapper className="tripPlaceCalendar">
-                <FcCalendar onClick={handleCalendarClick} />
-                {showDatePicker && (
-                  <DatePicker
-                    selected={selectedDate}
-                    onChange={handleDateChange}
-                    showTimeSelect
-                    timeFormat="HH:mm"
-                    timeIntervals={20}
-                    timeCaption="time"
-                    dateFormat="MMMM d, yyyy h:mm aa"
-                    inline
-                  />
-                )}
-              </CalendarWrapper>
-            </li>
-            <li>
-              <div className="tripPlaceName">
-                Basílica de la Sagrada Família
-              </div>
-              <CalendarWrapper className="tripPlaceCalendar">
-                <FcCalendar onClick={handleCalendarClick} />
-                {showDatePicker && (
-                  <DatePicker
-                    selected={selectedDate}
-                    onChange={handleDateChange}
-                    showTimeSelect
-                    timeFormat="HH:mm"
-                    timeIntervals={20}
-                    timeCaption="time"
-                    dateFormat="MMMM d, yyyy h:mm aa"
-                    inline
-                  />
-                )}
-              </CalendarWrapper>
-            </li>
+    <div className="tripPlaceSection">
+            <div className="tripPlaceTitle"><RiMapPinAddLine />&nbsp;&nbsp;저장한 장소</div>
+            <div className="tripPlaceContent">
+            <ul>
+            {tripInfo && tripInfo.map((info, index) => (
+              <li key={index}>
+                <div className="tripPlaceName">
+                  {info.place}
+                </div>
+                <div className="tripPlaceCalendar">
+                  <FcCalendar onClick={() => handlePopupOpen(info)} size={22} />
+                </div>
+                {showPopup && selectedPlace && <NewTripPlacePop onClose={handlePopupClose} placeInfo={selectedPlace}/>}
+              </li>
+            ))}
           </ul>
-        </div>
-      </div>
+            </div>
+          </div>
     </>
   );
 };

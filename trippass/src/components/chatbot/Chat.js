@@ -6,6 +6,7 @@ import '../../styles/chat.css';
 import { IoIosSend } from "react-icons/io";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import botProfileImage from '../../assets/bot1.png'; 
+import { IoIosSend } from "react-icons/io";
 
 const ITEMS_PER_PAGE = 4;
 
@@ -89,10 +90,13 @@ const Chat = () => {
     fetchChatData();
   }, [tripInfo, user.userId, user.mainTrip, user.nickname]);
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (event) => {
+    event.preventDefault();
     if (newMessage.trim()) {
+
       const userMessage = { message: newMessage, sender: 'user', isSerp: false };
       setNormalMessages(prevMessages => [...prevMessages, userMessage]);
+
       setNewMessage('');
 
       try {
@@ -230,6 +234,7 @@ const Chat = () => {
         <button className="chatButton">🔎 사용자 입력</button>
       </div>
       <div className="messageInputContainer">
+        <form onSubmit={handleSendMessage}>
         <input
           type="text"
           value={newMessage}
@@ -239,7 +244,9 @@ const Chat = () => {
         />
         <button onClick={handleSendMessage} className="sendMessageButton">
           <IoIosSend style={{ verticalAlign: 'middle', fontSize: '1.2em' }} />
-        </button>
+        </button>    
+        </form>
+
       </div>
       {totalPages > 1 && (
         <div className="paginationControls">
