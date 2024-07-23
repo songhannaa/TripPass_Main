@@ -130,10 +130,10 @@ const Chat = () => {
         ))}
       </div>
       <div className="buttonRow">
-        <button className="chatButton">{tripInfo ? tripInfo.city : ''} 인기 관광지</button>
-        <button className="chatButton">{tripInfo ? tripInfo.city : ''} 인기 식당</button>
-        <button className="chatButton">{tripInfo ? tripInfo.city : ''} 인기 카페</button>
-        <button className="chatButton">사용자 입력</button>
+        <button className="chatButton">{tripInfo ? tripInfo.city : ''} 인기 관광지🗼</button>
+        <button className="chatButton">{tripInfo ? tripInfo.city : ''} 인기 식당 🍽️</button>
+        <button className="chatButton">{tripInfo ? tripInfo.city : ''} 인기 카페 ☕</button>
+        <button className="chatButton">🔎 사용자 입력</button>
       </div>
       <div className="messageInputContainer">
         <input

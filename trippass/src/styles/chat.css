@@ -71,6 +71,7 @@
     background-color: #b7cee7;
     color: white;
     cursor: pointer;
+    letter-spacing: -1px;
   }
   
   .chatButton:hover {
