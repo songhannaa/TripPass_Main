@@ -12,10 +12,6 @@ const GlobalStyle = createGlobalStyle`
     font-family: Arial, sans-serif;
   }
 
-  ::-webkit-scrollbar {
-  width: 0px; /* 스크롤바 너비 */
-}
-
 
   a {
     color: inherit;
@@ -46,17 +42,19 @@ const GlobalStyle = createGlobalStyle`
   }
 
 
-  ::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-  } 
-
-  ::-webkit-scrollbar-track {
-    background-color: #f5f5f5;
+  ::-webkit-scrollbar {
+    width: 0px; /* 스크롤바 너비 */
   }
 
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: #999;
-  }
+  /* ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0); 스크롤바 트랙 배경색
+  } */
+
+  /* ::-webkit-scrollbar-thumb {
+    background: #ccc; 스크롤바 색상
+    border-radius: 80px;
+    border: 4px solid #f8f9fa;
+  } */
 
   
 `;

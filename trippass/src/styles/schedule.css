@@ -1,14 +1,15 @@
 .schedule{
-    border-left: 2px solid #DFE1FF;
+    border-left: 2px solid #f5f5f5;
     padding: 0 20px 0 40px;
     box-sizing: border-box;
+    height: 98%;
 }
 .schedule ul{
     overflow-y: scroll;
-    height: 200px;
+    height: 235px;
 }
 
-.schedule ul  li{
+.schedule ul li{
     margin-bottom: 20px;
 }
 .scheduleDay{

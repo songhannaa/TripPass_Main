@@ -85,7 +85,7 @@ const StyledCalendar = styled(Calendar)`
 `;
 
 const ScheduleContainer = styled.div`
-  padding: 40px 40px 20px 10px;
+  padding: 40px 40px 30px 10px;
   width: 70%;
   flex-grow: 1; /* 높이를 자동으로 맞추기 위해 추가 */
   overflow-y: auto;
