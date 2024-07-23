@@ -9,9 +9,33 @@ const Chat = () => {
   const { user } = useSelector(state => state.user);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [tripInfo, setTripInfo] = useState(null);
 
   useEffect(() => {
-    const fetchChatDataAndTripData = async () => {
+    const fetchTripInfo = async () => {
+      try {
+        const tripResponse = await axios.get(`${API_URL}/getMyTrips`, {
+          params: { userId: user.userId, tripId: user.mainTrip }
+        });
+
+        if (tripResponse.data['result code'] === 200) {
+          const tripInfo = tripResponse.data.response[0];
+          setTripInfo(tripInfo);
+        } else {
+          console.error('Failed to fetch trip data:', tripResponse.data);
+        }
+      } catch (error) {
+        console.error('Error fetching trip data:', error);
+      }
+    };
+
+    fetchTripInfo();
+  }, [user.userId, user.mainTrip]);
+
+  useEffect(() => {
+    const fetchChatData = async () => {
+      if (!tripInfo) return;
+
       try {
         const chatResponse = await axios.get(`${API_URL}/getChatMessages`, {
           params: { userId: user.userId, tripId: user.mainTrip }
@@ -20,38 +44,37 @@ const Chat = () => {
         if (chatResponse.data.result_code === 200 && chatResponse.data.messages.length > 0) {
           setMessages(chatResponse.data.messages);
         } else if (chatResponse.data.result_code === 404) {
-          const tripResponse = await axios.get(`${API_URL}/getMyTrips`, {
-            params: { tripId: user.mainTrip }
+          const formatDate = (dateStr) => {
+            const date = new Date(dateStr);
+            return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
+          };
+
+          const startDate = formatDate(tripInfo.startDate);
+          const endDate = formatDate(tripInfo.endDate);
+
+          const welcomeMessage = {
+            message: `안녕하세요, ${startDate}부터 ${endDate}까지 ${tripInfo.city}로 여행을 가시는 ${user.nickname}님!\n${user.nickname}님만의 여행 플랜 만들기를 시작해볼까요?\n제가 관광지, 식당, 카페 등 다양한 장소를 추천해드릴 수 있어요!\n추천 받길 원하시는 곳의 버튼을 눌러주세요.`,
+            sender: 'bot'
+          };
+
+          await axios.post(`${API_URL}/saveChatMessage`, {
+            userId: user.userId,
+            tripId: user.mainTrip,
+            sender: 'bot',
+            message: welcomeMessage.message
           });
 
-          if (tripResponse.data['result code'] === 200) {
-            const tripInfo = tripResponse.data.response[0];
-            const welcomeMessage = {
-              message: `안녕하세요, ${user.nickname}님!${tripInfo.startDate || '시작 날짜'} ~ ${tripInfo.endDate || '종료 날짜'}에 ${tripInfo.city || '도시'}로 여행을 가시는군요! 추천 받길 원하시는 버튼을 눌러주세요.`,
-              sender: 'bot'
-            };
-
-            await axios.post(`${API_URL}/saveChatMessage`, {
-              userId: user.userId,
-              tripId: user.mainTrip,
-              sender: 'bot',
-              message: welcomeMessage.message
-            });
-
-            setMessages([welcomeMessage]);
-          } else {
-            console.error('Failed to fetch trip data:', tripResponse.data);
-          }
+          setMessages([welcomeMessage]);
         } else {
           console.error('Failed to fetch chat data:', chatResponse.data);
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching chat data:', error);
       }
     };
 
-    fetchChatDataAndTripData();
-  }, [user.mainTrip, user.userId, user.nickname]);
+    fetchChatData();
+  }, [tripInfo, user.userId, user.mainTrip, user.nickname]);
 
   const handleSendMessage = async () => {
     if (newMessage.trim()) {
@@ -77,6 +100,15 @@ const Chat = () => {
     }
   };
 
+  const renderMessageWithLineBreaks = (message) => {
+    return message.split('\n').map((text, index) => (
+      <React.Fragment key={index}>
+        {text}
+        <br />
+      </React.Fragment>
+    ));
+  };
+
   return (
     <div className="chatContainer">
       <div className="chatMessages">
@@ -85,7 +117,7 @@ const Chat = () => {
             key={index}
             className={`chatMessage ${message.sender === 'user' ? 'myMessage' : 'otherMessage'}`}
           >
-            <div className="messageText">{message.message}</div>
+            <div className="messageText">{renderMessageWithLineBreaks(message.message)}</div>
             <img
               src={message.sender === 'user' 
                     ? `data:image/png;base64,${user.profileImage || user.socialProfileImage}` 
@@ -95,6 +127,12 @@ const Chat = () => {
             />
           </div>
         ))}
+      </div>
+      <div className="buttonRow">
+        <button className="chatButton">{tripInfo ? tripInfo.city : ''} 인기 관광지</button>
+        <button className="chatButton">{tripInfo ? tripInfo.city : ''} 인기 식당</button>
+        <button className="chatButton">{tripInfo ? tripInfo.city : ''} 인기 카페</button>
+        <button className="chatButton">사용자 입력</button>
       </div>
       <div className="messageInputContainer">
         <input

@@ -6,6 +6,7 @@ import axios from 'axios';
 import "../styles/layout.css"; 
 import logo from "../assets/logo.png";
 import { MdOutlineNotificationsNone } from "react-icons/md";
+import { FaTimes} from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { API_URL } from '../config';
 
@@ -40,6 +41,7 @@ const Header = () => {
     }
   }, [isAuthenticated, user]);
 
+  //알림
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
@@ -53,7 +55,7 @@ const Header = () => {
               (request.userId === user.userId && (request.status === 1 || request.status === 2))
             )
           );
-          console.log("Notifications: ", newNotifications);  // 로그 추가
+          console.log("Notifications: ", newNotifications);  // 로그
           setNotifications(newNotifications);
         }
       } catch (error) {
@@ -115,16 +117,18 @@ const Header = () => {
               <div className="notification-popup">
                 {notifications.length > 0 ? (
                   notifications.map(notification => (
-                    <div key={notification.requestId} className="notification-item" onClick={() => handleNotificationItemClick(notification)}>
+                    <div key={notification.requestId} className="notification-item">
                       <p>
                         {notification.status === 0 && notification.crewLeader === user.userId
-                          ? `${notification.crewTitle} 크루 가입 요청이 있습니다.`
+                          ? `${notification.crewTitle} 크루에 새로운 가입 요청이 있습니다.`
                           : notification.status === 1 && notification.userId === user.userId
                           ? `${notification.crewTitle} 크루에 가입되었습니다!`
                           : notification.status === 2 && notification.userId === user.userId
                           ? `${notification.crewTitle} 크루 가입이 거절되었습니다.`
                           : ''}
                       </p>
+                      <button className="close-button" onClick={() => handleNotificationItemClick(notification)}><FaTimes size={10} />
+                      </button>
                     </div>
                   ))
                 ) : (
