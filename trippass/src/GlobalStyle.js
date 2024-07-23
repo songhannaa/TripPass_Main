@@ -6,12 +6,12 @@ const GlobalStyle = createGlobalStyle`
   @font-face {
   font-family: 'Pretendard-Regular';
   src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-  font-weight: 400;
   font-style: normal;
   }
   body {
     font-family: Arial, sans-serif;
   }
+
 
   a {
     color: inherit;
@@ -41,22 +41,20 @@ const GlobalStyle = createGlobalStyle`
     outline: none;
   }
 
+
   ::-webkit-scrollbar {
-    width: 10px;
+    width: 0px; /* 스크롤바 너비 */
   }
 
-  ::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 5px;
-  } 
+  /* ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0); 스크롤바 트랙 배경색
+  } */
 
-  ::-webkit-scrollbar-track {
-    background-color: #f5f5f5;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: #999;
-  }
+  /* ::-webkit-scrollbar-thumb {
+    background: #ccc; 스크롤바 색상
+    border-radius: 80px;
+    border: 4px solid #f8f9fa;
+  } */
 
   
 `;

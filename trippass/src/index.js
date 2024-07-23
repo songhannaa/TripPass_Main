@@ -4,10 +4,10 @@ import { Provider } from 'react-redux';
 import store from './store'; 
 import App from './App';
 
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
-ReactDOM.render(
+root.render(
   <Provider store={store}>
     <App />
-  </Provider>,
-  document.getElementById('root')
+  </Provider>
 );

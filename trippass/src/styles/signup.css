@@ -48,10 +48,12 @@ textarea{
 
 .success {
   color: green;
+  font-size: 13px;
 }
 
 .error {
   color: red;
+  font-size: 13px;
 }
 
 .signup-form button,
@@ -73,7 +75,7 @@ textarea{
 
 .signup-form .half {
   display: inline-block;
-  width: calc(50% - 20px); 
+  width: calc(45% - 10px); 
   margin-bottom: 20px;
 
 }

@@ -1,0 +1,110 @@
+{
+    "data": [
+      {
+        "country": "미국",
+        "city": [
+          {"city_name": "보스턴"},
+          {"city_name": "버밍엄"},
+          {"city_name": "샌프란시스코"},
+          {"city_name": "시카고"},
+          {"city_name": "애틀란타"},
+          {"city_name": "오스틴"},
+          {"city_name": "워싱턴, D.C."},
+          {"city_name": "콜럼버스"},
+          {"city_name": "클리블랜드"},
+          {"city_name": "뉴욕"},
+          {"city_name": "로스앤젤레스"},
+          {"city_name": "라스베가스"},
+          {"city_name": "디트로이트"},
+          {"city_name": "달라스"},
+          {"city_name": "버팔로"},
+          {"city_name": "마이애미"},
+          {"city_name": "뉴올리언스"},
+          {"city_name": "샌안토니오"},
+          {"city_name": "시애틀"},
+          {"city_name": "휴스턴"},
+          {"city_name": "필라델피아"},
+          {"city_name": "포틀랜드"}
+        ]
+      },
+      {
+        "country": "영국",
+        "city": [
+          {"city_name": "런던"},
+          {"city_name": "맨체스터"},
+          {"city_name": "버밍엄"},
+          {"city_name": "글래스고"},
+          {"city_name": "리버풀"},
+          {"city_name": "에든버러"},
+          {"city_name": "브리스톨"},
+          {"city_name": "리즈"},
+          {"city_name": "뉴캐슬"},
+          {"city_name": "캠브리지"},
+          {"city_name": "옥스퍼드"}
+        ]
+      },
+      {
+        "country": "호주",
+        "city": [
+          {"city_name": "멜버른"},
+          {"city_name": "시드니"},
+          {"city_name": "브리즈번"},
+          {"city_name": "퍼스"},
+          {"city_name": "캔버라"},
+          {"city_name": "골드코스트"},
+          {"city_name": "애들레이드"}
+        ]
+      },
+      {
+        "country": "캐나다",
+        "city": [
+          {"city_name": "토론토"},
+          {"city_name": "밴쿠버"},
+          {"city_name": "몬트리올"},
+          {"city_name": "캘거리"}
+        ]
+      },
+      {
+        "country": "프랑스",
+        "city": [
+          {"city_name": "파리"},
+          {"city_name": "리옹"},
+          {"city_name": "마르세유"}
+        ]
+      },
+      {
+        "country": "이탈리아",
+        "city": [
+          {"city_name": "로마"},
+          {"city_name": "밀라노"},
+          {"city_name": "나폴리"},
+          {"city_name": "피렌체"},
+          {"city_name": "베네치아"}
+        ]
+      },
+      {
+        "country": "독일",
+        "city": [
+          {"city_name": "베를린"},
+          {"city_name": "뮌헨"},
+          {"city_name": "프랑크푸르트"},
+          {"city_name": "쾰른"}
+        ]
+      },
+      {
+        "country": "스페인",
+        "city": [
+          {"city_name": "바르셀로나"}
+        ]
+      },
+      {
+        "country": "아랍에미리트",
+        "city": [
+          {"city_name": "두바이"},
+          {"city_name": "아부다비"},
+          {"city_name": "샤르자"}
+        ]
+      }
+    ]
+  }
+  

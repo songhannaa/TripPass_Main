@@ -1,0 +1,125 @@
+.trip-plan {
+  padding: 20px;
+  flex-grow: 1;
+}
+
+.trip-plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.trip-plan-header h2 {
+  color: #5F6165; /* 년 월 일의 색상 변경 */
+  letter-spacing: -0.5px; /* 자간 줄이기 */
+  font-weight: bold;
+  font-size: 20px;
+  margin: 10px;
+}
+
+.days {
+  display: flex;
+  justify-content: space-between;
+}
+
+.no-schedule {
+  text-align: center;
+  color: #5F6165;
+  margin-top: 50px;
+}
+
+.no-schedule-robot {
+  width: 50%; /* 이미지의 너비를 50%로 설정 */
+  height: 50%; /* 이미지의 높이를 50%로 설정 */
+  object-fit: cover; /* 이미지를 잘라서 보여줌 */
+  object-position: top; /* 이미지의 중앙 부분을 보여줌 */
+  margin-top: 20px;
+}
+
+.no-schedule p {
+  font-size: 40px; /* 글자 크기 조정 */
+  line-height: 1.5; /* 행간 조정 */
+  font-weight: bold;
+  color: #84868A;
+}
+
+.pagination-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.pagination-buttons button {
+  color: #84868A;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px; /* 버튼 글자 크기 */
+}
+
+.pagination-buttons button:disabled {
+  opacity: 0.5; /* 비활성화된 버튼을 흐리게 */
+  cursor: not-allowed;
+}
+
+.pagination-buttons button:hover:not(:disabled) {
+  color: #525ACE;
+}
+/* src/components/EventCard.css */
+.event-card {
+  background-color: #fff;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between; /* 좌우로 정렬 */
+  align-items: center;
+  background-color: #EBF3FF; /* 배경색 설정 */
+  padding: 5px;
+  border-radius: 4px; /* 모서리 둥글게 */
+  margin-bottom: 10px; /* 아래 요소와 간격 */
+}
+.event-description {
+  margin : 5px;
+  line-height: 1.3rem;
+}
+.event-title {
+  font-weight: bold; /* 제목 강조 */
+  color : #46485B;
+  margin : 5px;
+}
+
+.event-time {
+  color : #717171 /* 시간 강조 */
+}
+
+.event-card .location {
+  display: flex;
+  align-items: center;
+  margin : 5px;
+
+}
+
+.event-card .location-icon {
+  width: 16px; /* 아이콘 크기 */
+  height: 16px;
+  margin-right: 5px; /* 텍스트와 아이콘 사이 간격 */
+}
+
+/*/DayPlan.css */
+.day-plan {
+  width: 30%;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.day-plan h3 {
+  margin: 10px;
+  color : #717171;
+}

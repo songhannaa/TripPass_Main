@@ -1,12 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../styles/memo.css";
-import { FaPencilAlt } from "react-icons/fa"; 
+import { FaPencilAlt } from "react-icons/fa";
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { API_URL } from "../../config";
 
 const Memo = () => {
+  const { user } = useSelector(state => state.user);
   const [memo, setMemo] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
-  const handleSaveMemo = () => {
+
+  useEffect(() => {
+    const fetchMemo = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/getMyTrips?tripId=${user.mainTrip}`);
+        const tripData = response.data.response[0]; 
+        setMemo(tripData.memo || '아직 메모가 없어요');
+      } catch (error) {
+        console.error('메모 가져오기 실패:', error.message);
+      }
+    };
+
+    if (user.mainTrip && user.mainTrip) {
+      fetchMemo();
+    }
+  }, [user.mainTrip]); 
+  
+  const handleSaveMemo = async () => {
+    try {
+      const formData = new URLSearchParams();
+      formData.append('tripId', user.mainTrip);
+      formData.append('memo', memo);
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      };
+
+      await axios.post(`${API_URL}/updateMyTripsMemo`, formData.toString(), config);
+    } catch (error) {
+      console.error('메모 업데이트 실패:', error.message);
+    }
     setIsEditing(false);
   };
 
