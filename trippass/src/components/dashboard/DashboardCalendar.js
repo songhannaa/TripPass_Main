@@ -6,6 +6,20 @@ import "../../styles/schedule.css";
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { API_URL } from '../../config';
+import { FaMapMarkerAlt } from "react-icons/fa"; // 아이콘 임포트
+import { RiTeamLine } from 'react-icons/ri'; // RiTeamLine 아이콘 임포트
+
+const colors = [
+  '#4177A6', // Blue
+  '#D9D0C1', // Beige
+  '#FBAFC5', // Pink
+  '#DFACF6', // Lavender
+  '#BBD6FD', // Light Blue
+  '#BDD9F5',  // Pale Blue
+  '#BFADBF', // Light Grey
+  '#F2EEAD', // Pale Yellow
+  '#FDD5DA', // Light Pink
+];
 
 const CalendarWrapper = styled.div`
   display: flex;
@@ -71,7 +85,7 @@ const StyledCalendar = styled(Calendar)`
 `;
 
 const ScheduleContainer = styled.div`
-  padding: 40px 40px 20px 10px;
+  padding: 40px 40px 30px 10px;
   width: 70%;
   flex-grow: 1; /* 높이를 자동으로 맞추기 위해 추가 */
   overflow-y: auto;
@@ -81,6 +95,8 @@ const ScheduleTitle = styled.div`
   font-size: 1.5em;
   font-weight: bold;
   margin: 20px 0 10px;
+  display: flex;
+  align-items: center;
 `;
 
 const ScheduleItem = styled.div`
@@ -201,15 +217,16 @@ const DashboardCalendar = () => {
       <ScheduleContainer>
         <div className="schedule">
           <ul>
-            {Object.keys(groupedPlans).map(date => (
+            {Object.keys(groupedPlans).map((date, index) => (
               <li key={date} ref={el => scheduleRefs.current[date] = el}>
                 <ScheduleTitle>
+                  <FaMapMarkerAlt style={{ color: colors[index % colors.length], marginRight: '10px' }} />
                   {new Date(date).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' })}
                 </ScheduleTitle>
                 {groupedPlans[date].map(plan => (
                   <ScheduleItem key={plan.planId}>
                     <div className="scheduleTitle">
-                      {plan.title}
+                      {plan.title} {plan.crewId && <RiTeamLine style={{ color: "#A1A1A1" }} />}
                     </div>
                     <div className="scheduleContent">
                       {new Date(plan.date + 'T' + new Date(plan.time * 1000).toISOString().substr(11, 8)).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })} - {plan.place}

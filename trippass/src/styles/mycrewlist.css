@@ -1,0 +1,423 @@
+.crewSection{
+  margin-bottom: 30px;
+}
+.crewListContainer{
+  height: 230px;
+}
+.section-title{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-title span {
+  font-weight: bold;
+}
+
+.crewList, .noCrewMessage {
+  display: flex;
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 10px;
+  height: 230px;
+}
+
+.noCrewMessage{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  color: #6e6e6e;
+}
+
+.crewCards {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+}
+
+.crewCard {
+  width: calc(20% - 20px);
+  margin: 10px;
+  box-sizing: border-box;
+  position: relative;
+  transition: transform 0.3s ease-in-out;
+}
+
+.crewCard:hover {
+  transform: scale(1.05); 
+}
+
+.crewCardImageWrapper {
+  position: relative;
+  height: 180px; 
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.crewCardImageWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 10px;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.crewCardImageWrapper:hover img {
+  opacity: 0.8; 
+}
+
+.crewCardOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 10px;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.crewCardInfo {
+  flex: 1;
+}
+
+.crewCardInfo .crewDate {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.crewCardInfo .crewTitle {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.deleteCrewButton {
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+.crewCard:hover .deleteCrewButton {
+  opacity: 1; 
+}
+
+.scrollButton{
+  border: none;
+  font-size: 20px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.scrollButton:hover{
+  background-color: #fff;
+}
+
+.newCrewButton{
+  position: fixed;
+  bottom: 30px; 
+  right: 30px;
+  background-color: #5d7cc0; 
+  color: #fff; 
+  font-size: 18px; 
+  padding: 15px 20px; 
+  border-radius: 50%; 
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  z-index: 1000; 
+}
+
+.newCrewButton:hover::before {
+  content: "새로운 크루 만들기"; 
+  position: absolute;
+  left: -120px;
+  bottom: 50%; 
+  background-color: #333; 
+  color: #fff; 
+  padding: 8px 16px; 
+  border-radius: 5px;
+  font-size: 14px;
+  opacity: 0; 
+  transition: opacity 0.3s ease;
+}
+
+.newCrewButton:hover {
+  background-color: #436aa7; 
+}
+
+.newCrewButton:hover::before {
+  opacity: 1;
+}
+
+/* 크루찾기 */
+
+.toggle-label {
+  font-size: 0.775em;
+  vertical-align: middle;
+  letter-spacing: -0.5px;
+  color: #444;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 34px;
+  height: 20px;
+  margin: 0 15px 0 5px;
+  vertical-align: middle;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.switch > input:checked + .slider {
+  background-color: #525ace;
+}
+
+.switch > input:checked + .slider:before {
+  transform: translateX(14px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.selectSort {
+  vertical-align: middle;
+  height: 3.5vh;
+}
+
+.searchCrewCards {
+  display: flex;
+  flex-direction: column;
+}
+
+.searchCrewCards > li {
+  display: flex;
+  flex-direction: row;
+  background-color: #fff;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  padding: 2%;
+  height: 250px;
+}
+
+.profileImage {
+  margin-right: 15px;
+}
+
+.crewDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 50%;
+}
+
+.searchCrewCardImg{
+  width: 30%;
+}
+
+.searchCrewCardImg img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+}
+.searchCrewCardInfo{
+  width: 40%;
+  padding: 0 2%;
+}
+.searchCrewCardMate{
+  width: 30%;
+}
+
+.searchCrewTitle{
+  font-size: 23px;
+  font-weight: bold;
+  margin-bottom: 4%;
+}
+
+.searchCrewDate{
+  font-size: 18px;
+  font-weight: bold;
+  color:#3f3f3f;
+  margin-bottom: 4%;
+}
+
+.searchCrewAddress{
+  margin-bottom: 4%;
+  line-height: 1.5rem;
+}
+
+.searchCrewNote{
+  color: #555555;
+}
+
+.searchCrewNum{
+  margin-top: 5%;
+  color: #555555;
+}
+
+.searchCrewNum .crewNumIcon {
+  vertical-align: middle;
+}
+
+.searchCrewNum .crewNumText {
+  vertical-align: middle;
+}
+
+.searchCrewCardMate{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.joinReqBtn {
+  align-self: flex-end; 
+  margin-top: auto; 
+  background-color: #8F97FC;
+  padding: 10px 30px; 
+  color: #fff;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; 
+  height: 18%;
+}
+
+.joinReqBtn:hover {
+  background-color: #436aa7; 
+}
+
+.joinReqBtn.closed {
+  background-color: #777;
+  cursor: not-allowed;
+}
+
+.joinReqBtn.closed:hover {
+  background-color: #777;
+}
+
+.searchCrewCardMate > ul{
+  height: 80%;
+}
+
+.searchCrewCardMate > ul > li{
+  margin-bottom: 2%;
+}
+
+.searchCrewCardMates {
+  display: flex;
+  align-items: center;
+}
+
+/* 성향보기 */
+.personalityList{
+  position: absolute;
+  top: 25px;
+  left: 30px;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 9px 9px 30px rgba(126, 123, 160, 0.2);
+  padding: 14px;
+  border-radius: 10px;
+  z-index: 9999;
+  visibility: hidden;
+  opacity: 1;
+}
+
+.personalityTitle:hover + .personalityList {
+  visibility: visible;
+  opacity: 1;
+}
+
+.personalityList > li{
+  margin: 5% 0;
+}
+
+.searchCrewCardMateImg{
+  width: 20%;
+}
+
+.searchCrewCardMateImg img{
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.crewNickname{
+  font-weight: bold;
+  font-size: 17px;
+  margin-bottom: 5px;
+}
+
+.crewSimilarity,
+.personalityTitle{
+  font-size: 14px;
+  color: #555555;
+}
+
+.personalityDetails{
+  width: 25%;
+}
+
+.personalityTitle{
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  padding: 5px 2px;
+  text-align: center;
+}
+
+
+.personalityTitle:hover{
+  background-color: #6e6e6e;
+  color: #fff;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}

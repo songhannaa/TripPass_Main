@@ -86,6 +86,15 @@
 	cursor: pointer; 
 }
 
+.password-button:hover {
+	background-color: #718EBF;
+	border: 1.5px solid #718EBF;
+	color: #fff;
+	cursor: pointer; 
+}
+
+
+/* 성향 선택 부분 */
 
 /* 성향 선택 부분 */
 

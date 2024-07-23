@@ -6,7 +6,7 @@ import '../../styles/signup.css';
 import { loginSuccess, loginFailure } from '../../store/userSlice';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { API_URL } from "../../config";
+import { API_URL, KAKAO_CLIENT_ID, KAKAO_REDIRECT_URI } from "../../config";
 import axios from 'axios';
 
 
@@ -36,8 +36,7 @@ const Login = () => {
       dispatch(loginSuccess(response.data));
       localStorage.setItem('user', JSON.stringify(response.data));
 
-      navigate('/dashboard');
-
+      navigate('/myTrip');
 
     } catch (error) {
       // 로그인 실패 시 오류 메시지 처리
@@ -52,6 +51,14 @@ const Login = () => {
         position: "top-center"
       });
     }
+  };
+
+  const handleKakaoLogin = async () => {
+    try {
+      window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}`;
+   } catch (error) {
+      console.error('카카오 로그인 실패:', error.message);
+   }
   };
 
   return (
@@ -76,6 +83,7 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            autoComplete="current-password"
           />
         </div>
         <button type="submit">로그인</button>
@@ -85,7 +93,7 @@ const Login = () => {
         <ul className="loginList">
           <li>──────&nbsp;&nbsp;<span>간편 로그인</span>&nbsp;&nbsp;──────</li>
           <li className="googleLogin">구글 계정으로 로그인</li>
-          <li className="kakaoLogin">카카오 계정으로 로그인</li>
+          <li className="kakaoLogin" onClick={handleKakaoLogin}>카카오 계정으로 로그인</li>
         </ul>
       </form>
     </>

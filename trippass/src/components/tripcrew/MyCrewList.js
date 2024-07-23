@@ -1,121 +1,118 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
-import NewTripCrewPop from './NewTripCrewPop';
-import '../../styles/MyCrewList.css';
-import { API_URL } from '../../config'; // config.js에서 API_URL 가져오기
+import { TiDelete } from 'react-icons/ti';
+import { API_URL } from '../../config';
+import '../../styles/mycrewlist.css';
 
-const CrewCard = ({ banner, date, time, title }) => {
-  return (
-    <div className="crewCard">
-      <div className="crewCardImageWrapper">
-        <img src={banner} alt="Crew Banner" className="crewCardImage" />
-        <div className="crewCardOverlay">
-          <h3>{title}</h3>
-          <p>{date}</p>
-          <p>{time}</p>
-        </div>
-      </div>
-    </div>
-  );
-};
+const MyCrewList = () => {
+  const { user } = useSelector(state => state.user);
+  const [crewData, setCrewData] = useState([]); // 초기값을 빈 배열로 설정
+  const [startIndex, setStartIndex] = useState(0);
+  const maxCards = 5;
 
-const MyCrewList = ({ userId, tripId }) => {
-  const [crews, setCrews] = useState([]);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const fetchMyCrew = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/getThisTripCrew?tripId=${user.mainTrip}`);
+      const crewData = response.data.response || [];
+      setCrewData(crewData);
+    } catch (error) {
+      console.error('MyCrew 가져오기 실패:', error.message);
+    }
+  };
 
   useEffect(() => {
-    const fetchCrewData = async () => {
-      if (!tripId) {
-        return;
-      }
-
-      try {
-        console.log(`Fetching data for userId: ${userId}, tripId: ${tripId}`);
-
-        const response = await axios.get(`${API_URL}/getMyCrew`, {
-          params: { userId, tripId }
-        });
-
-        console.log('getMyCrew response:', response);
-
-        const data = response.data.response.map(crew => ({
-          banner: crew.banner ? `data:image/jpeg;base64,${crew.banner}` : 'https://via.placeholder.com/150',
-          date: crew.date,
-          time: crew.time,
-          title: crew.title,
-        }));
-
-        console.log('Formatted crew data:', data);
-
-        setCrews(data);
-      } catch (error) {
-        console.error('Error fetching crew data:', error);
-      }
-    };
-
-    fetchCrewData();
-  }, [userId, tripId]);
-
-  const handleSave = (newCrew) => {
-    const newCrewData = {
-      banner: newCrew.bannerPreview,
-      date: newCrew.date,
-      time: newCrew.time,
-      title: newCrew.crewName,
-    };
-    setCrews([...crews, newCrewData]);
-
-    const data = new FormData();
-    data.append('planId', newCrew.planId);
-    data.append('title', newCrew.crewName);
-    data.append('contact', newCrew.contact);
-    data.append('note', newCrew.note);
-    data.append('numOfMate', newCrew.numOfMate);
-    if (newCrew.banner) {
-      data.append('banner', newCrew.banner);
+    if (user.mainTrip) {
+      fetchMyCrew();
     }
+  }, [user.mainTrip]);
 
-    axios.post(`${API_URL}/insertCrew`, data, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-    .then(response => {
-      if (response.status === 200) {
-        console.log('Crew saved successfully');
+  const scrollLeft = () => {
+    setStartIndex(Math.max(startIndex - maxCards, 0));
+  };
+
+  const scrollRight = () => {
+    setStartIndex(startIndex + maxCards);
+  };
+
+  const handleCrewDelete = async (crewId) => {
+    try {
+      const response = await axios.delete(`${API_URL}/deleteCrew`, {
+        data: { crewId: crewId, userId: user.userId },
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.data['result code'] === 200) {
+        fetchMyCrew(); // 데이터를 다시 가져옵니다.
+      } else if (response.data['result code'] === 402) {
+        alert("메이트가 있는 여행은 삭제할 수 없습니다.");
       } else {
-        console.error('Error saving crew:', response.data);
+        console.error('Failed to delete trip:', response.data);
       }
-    })
-    .catch(error => {
-      console.error('Error saving crew:', error);
-    });
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 400) {
+          if (error.response.data['result code'] === 402) {
+            alert("메이트가 있는 여행은 삭제할 수 없습니다.");
+          }
+        } else {
+          alert("트립 삭제를 할 수 없습니다.");
+        }
+      } else {
+        alert("서버와의 통신에 문제가 발생했습니다.");
+      }
+      console.error('Error deleting trip:', error);
+    }
   };
 
-  const openPopup = () => {
-    setIsPopupOpen(true);
-  };
-
-  const closePopup = () => {
-    setIsPopupOpen(false);
+  const confirmAndDelete = (crewId) => {
+    const confirmed = window.confirm("이 크루를 정말 삭제하시겠습니까?");
+    if (confirmed) {
+      handleCrewDelete(crewId);
+    }
   };
 
   return (
     <div className="crewSection">
-      <h2>마이 크루</h2>
-      <div className="sliderContainer">
-        <div className="sliderWrapper">
-          <div className="slider">
-            {crews.map((crew, index) => (
-              <CrewCard key={index} {...crew} />
-            ))}
-            <div className="crewCard createCrewCard" onClick={openPopup}>
-              <button className="createCrewButton">+<br />새로운 크루 만들기</button>
-            </div>
-          </div>
+      <div className="section-title">
+        <span>마이 크루</span>
+        <div>
+          <button className="scrollButton" onClick={scrollLeft}>
+            &lt;
+          </button>
+          <button className="scrollButton" onClick={scrollRight}>
+            &gt;
+          </button>
         </div>
       </div>
-      {isPopupOpen && <NewTripCrewPop onClose={closePopup} onSave={handleSave} tripId={tripId} />}
+      <div className="crewListContainer">
+        {crewData.length === 0 ? (
+          <div className="noCrewMessage">아직 크루가 없어요 함께 찾아볼까요?</div>
+        ) : (
+          <div className="crewList">
+            <ul className="crewCards">
+              {crewData.slice(startIndex, startIndex + maxCards).map((crew, index) => (
+                <li key={index} className="crewCard">
+                  <div className="crewCardImageWrapper">
+                    <img src={`data:image/jpeg;base64,${crew.banner}`} alt={crew.title} />
+                    <div className="crewCardOverlay">
+                      <div className="crewCardInfo">
+                        <div className="crewDate">{crew.date}</div>
+                        <div className="crewTitle">{crew.title}</div>
+                      </div>
+                      <div className="deleteCrewButton" onClick={() => confirmAndDelete(crew.crewId)}>
+                        <TiDelete size={20} />
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

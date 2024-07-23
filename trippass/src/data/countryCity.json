@@ -40,10 +40,7 @@
           {"city_name": "리즈"},
           {"city_name": "뉴캐슬"},
           {"city_name": "캠브리지"},
-          {"city_name": "옥스퍼드"},
-          {"city_name": "배스"},
-          {"city_name": "미든헤드"},
-          {"city_name": "미들스브러프"}
+          {"city_name": "옥스퍼드"}
         ]
       },
       {
@@ -55,11 +52,7 @@
           {"city_name": "퍼스"},
           {"city_name": "캔버라"},
           {"city_name": "골드코스트"},
-          {"city_name": "애들레이드"},
-          {"city_name": "토우링"},
-          {"city_name": "라닝"},
-          {"city_name": "데레트"},
-          {"city_name": "밸리"}
+          {"city_name": "애들레이드"}
         ]
       },
       {
@@ -68,17 +61,7 @@
           {"city_name": "토론토"},
           {"city_name": "밴쿠버"},
           {"city_name": "몬트리올"},
-          {"city_name": "캘거리"},
-          {"city_name": "엘리스"},
-          {"city_name": "케스러"},
-          {"city_name": "캠론"},
-          {"city_name": "케츠"},
-          {"city_name": "키니"},
-          {"city_name": "허스"},
-          {"city_name": "에미스"},
-          {"city_name": "하우스"},
-          {"city_name": "텐타"},
-          {"city_name": "다운스"}
+          {"city_name": "캘거리"}
         ]
       },
       {
@@ -86,17 +69,7 @@
         "city": [
           {"city_name": "파리"},
           {"city_name": "리옹"},
-          {"city_name": "마르세유"},
-          {"city_name": "틀럼"},
-          {"city_name": "부다페스트"},
-          {"city_name": "서울"},
-          {"city_name": "프랑스"},
-          {"city_name": "매싱"},
-          {"city_name": "이르"},
-          {"city_name": "돌고"},
-          {"city_name": "르브"},
-          {"city_name": "프라"},
-          {"city_name": "엄바"}
+          {"city_name": "마르세유"}
         ]
       },
       {
@@ -115,13 +88,21 @@
           {"city_name": "베를린"},
           {"city_name": "뮌헨"},
           {"city_name": "프랑크푸르트"},
-          {"city_name": "쾰른"},
-          {"city_name": "할러스"},
-          {"city_name": "틀럼"},
-          {"city_name": "헤르헨"},
-          {"city_name": "버마"},
-          {"city_name": "코베스"},
-          {"city_name": "파리"}
+          {"city_name": "쾰른"}
+        ]
+      },
+      {
+        "country": "스페인",
+        "city": [
+          {"city_name": "바르셀로나"}
+        ]
+      },
+      {
+        "country": "아랍에미리트",
+        "city": [
+          {"city_name": "두바이"},
+          {"city_name": "아부다비"},
+          {"city_name": "샤르자"}
         ]
       }
     ]

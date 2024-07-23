@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updatePersonality } from "../../store/userSlice";
+import { updatePersonality } from "../../store/userActions";
 import moneyImg from '../../assets/profile/money.png';
 import foodImg from '../../assets/profile/food.png';
 import transportImg from '../../assets/profile/transport.png';
@@ -43,11 +43,9 @@ const UserPersonality = () => {
   const { user } = useSelector(state => state.user);
 
   useEffect(() => {
-    console.log("Current user object:", user); // 디버깅을 위한 현재 사용자 객체 확인
     if (user && user.personality && user.personality !== "none") {
       try {
         const parsedPersonality = JSON.parse(user.personality);
-        console.log("Parsed personality:", parsedPersonality); // 파싱된 성향 데이터 확인
         setPreferences(parsedPersonality);
       } catch (error) {
         console.error("Error parsing JSON:", error);

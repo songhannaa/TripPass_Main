@@ -1,41 +1,83 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import "../styles/layout.css"; 
-import bot from "../assets/bot1.png";
-import dashboardIcon from "../assets/dashboard.png";
-import NewTrip from "../components/dashboard/NewTrip";
+import { PiAirplaneTiltBold } from "react-icons/pi";
+import { PiAlienBold } from "react-icons/pi";
+import { RiRobot2Line } from "react-icons/ri";
+import { LuCalendarDays } from "react-icons/lu";
+import axios from 'axios';
+import { API_URL } from '../config';
 
 const Sidebar = () => {
   const { isAuthenticated, user } = useSelector(state => state.user);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [tripData, setTripData] = useState(null);
 
-  const handleButtonClick = () => {
-    setIsPopupOpen(true);
-  };
+  useEffect(() => {
+    const fetchTripData = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/getMyTrips?tripId=${user.mainTrip}`);
+        if (response.data['result code'] === 200) {
+          const data = response.data.response[0];
+          setTripData(data);
+        } else {
+          console.error('Failed to fetch trip data:', response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch trip data:', error);
+      }
+    };
 
-  const handleClosePopup = () => {
-    setIsPopupOpen(false);
+    if (user && user.mainTrip) {
+      fetchTripData();
+    }
+  }, [user]);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}.${month}.${day}`;
   };
 
   return (
     <div className="sidebar">
       <div className="sidebar-nav">
-        <div className="planInsert">
-          <div className="botProfile">
-            <img src={bot} alt="trippass bot1" />
-          </div>
-          <div className="planInsertText">
-            <div className="description">어디로 여행을 가시나요?</div>
-            <div className="planInsertBtn" onClick={handleButtonClick}>
-              새로운 여행 계획하기
+        {isAuthenticated ? (
+          tripData ? (
+            <div className="planInsert">
+              <div className="planInsertText">
+                <div className="description">{formatDate(tripData.startDate)} - {formatDate(tripData.endDate)}</div>
+                <div className="planInsertBtn">
+                  {tripData.title} 
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="planInsert">
+              <div className="planInsertText">
+                <div className="description">아직 여행계획이 없어요!</div>
+                <div className="planInsertBtn">
+                함께 여행 계획을 만들어볼까요?
+                </div>
+              </div>
+            </div>
+          )
+        ) : (
+          <div className="planInsert">
+            <div className="planInsertText">
+              <div className="description">아직 여행계획이 없어요!</div>
+              <div className="planInsertBtn">
+                로그인 후 이용 가능합니다
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <ul>
           <li>
             <NavLink
-              to="/dashboard"
+              to="/myTrip"
               style={({ isActive }) => ({
                 backgroundColor: isActive ? '#F3F5F8' : '',
                 padding: isActive ? '' : '',
@@ -43,13 +85,13 @@ const Sidebar = () => {
                 color: isActive ? '#5F6165' : ''
               })}
             >
-              <img src={dashboardIcon} alt="Dashboard Icon" />
-              Dashboard
+              <PiAirplaneTiltBold size={24} />&nbsp;
+              MY TRIP
             </NavLink>
           </li>
           <li>
             <NavLink
-              to="/MyTrip"
+              to="/tripPlan"
               style={({ isActive }) => ({
                 backgroundColor: isActive ? '#F3F5F8' : '',
                 padding: isActive ? '' : '',
@@ -57,8 +99,8 @@ const Sidebar = () => {
                 color: isActive ? '#5F6165' : ''
               })}
             >
-              <img src={dashboardIcon} alt="Dashboard Icon" />
-              MyTrip
+              <LuCalendarDays size={22} />&nbsp;
+              TRIP PLAN
             </NavLink>
           </li>
           <li>
@@ -71,8 +113,8 @@ const Sidebar = () => {
                 color: isActive ? '#5F6165' : ''
               })}
             >
-              <img src={dashboardIcon} alt="Dashboard Icon" />
-              TripCrew
+              <PiAlienBold size={24} />&nbsp;
+              TRIP CREW
             </NavLink>
           </li>
           <li>
@@ -85,24 +127,28 @@ const Sidebar = () => {
                 color: isActive ? '#5F6165' : ''
               })}
             >
-              <img src={dashboardIcon} alt="Dashboard Icon" />
-              Chat
+              <RiRobot2Line size={24} />&nbsp;
+              CHATBOT
             </NavLink>
           </li>
         </ul>
       </div>
       <div className="sidebar-user">
-        {isAuthenticated && (
+        {isAuthenticated && user && (
           <NavLink
             to="/user"
             style={({ isActive }) => ({
-              backgroundColor: isActive ? '#F3F5F8' : '',
-              padding: isActive ? '' : '',
-              borderRadius: isActive ? '13px' : ''
+              color: isActive ? '#2c2c2c' : '',
             })}
           >
             <div className="userProfile">
-              <img src={user.profileImage ? `data:image/jpeg;base64,${user.profileImage}` : null} alt="user profile" />
+              {user.profileImage ? (
+                <img src={`data:image/jpeg;base64,${user.profileImage}`} alt="user profile" className="profile-image" />
+              ) : (
+                user.socialProfileImage && (
+                  <img src={user.socialProfileImage} alt="user profile" className="profile-image" />
+                )
+              )}
             </div>
             <div className="userName">
               {user.nickname}님
@@ -110,7 +156,6 @@ const Sidebar = () => {
           </NavLink>
         )}
       </div>
-      {isPopupOpen && <NewTrip onClose={handleClosePopup} />}
     </div>
   );
 };
