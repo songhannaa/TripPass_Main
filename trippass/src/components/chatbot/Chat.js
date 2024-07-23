@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { API_URL } from "../../config";
 import '../../styles/chat.css';
+import { IoIosSend } from "react-icons/io";
 import botProfileImage from '../../assets/bot1.png'; 
 
 const Chat = () => {
@@ -142,7 +143,9 @@ const Chat = () => {
           className="messageInput"
           placeholder="메시지를 입력하세요..."
         />
-        <button onClick={handleSendMessage} className="sendMessageButton">전송</button>
+        <button onClick={handleSendMessage} className="sendMessageButton">
+          <IoIosSend style={{ verticalAlign: 'middle', fontSize: '1.2em' }} />
+        </button>
       </div>
     </div>
   );
