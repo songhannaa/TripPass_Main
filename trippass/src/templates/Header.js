@@ -55,7 +55,7 @@ const Header = () => {
               (request.userId === user.userId && (request.status === 1 || request.status === 2))
             )
           );
-          console.log("Notifications: ", newNotifications);  // 로그
+          // console.log("Notifications: ", newNotifications);  // 로그
           setNotifications(newNotifications);
         }
       } catch (error) {
