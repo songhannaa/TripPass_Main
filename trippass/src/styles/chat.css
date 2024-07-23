@@ -38,6 +38,7 @@
     padding: 10px;
     border-radius: 10px;
     background-color: #f1f1f1;
+    line-height: 125%;
   }
   
   .myMessage .messageText {
@@ -55,6 +56,26 @@
   
   .otherMessage .profileImage {
     order: 1; 
+  }
+
+  .buttonRow {
+    padding: 3px 10px;
+  }
+
+  .chatButton {
+    flex: 1;
+    margin: 0 5px;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    background-color: #b7cee7;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .chatButton:hover {
+    background-color: #6970D5;
+    color: white;
   }
   
   .messageInputContainer {
