@@ -29,7 +29,13 @@ const Chat = () => {
       }
     };
 
+    fetchTripInfo();
+  }, [user.userId, user.mainTrip]);
+
+  useEffect(() => {
     const fetchChatData = async () => {
+      if (!tripInfo) return;
+
       try {
         const chatResponse = await axios.get(`${API_URL}/getChatMessages`, {
           params: { userId: user.userId, tripId: user.mainTrip }
@@ -43,24 +49,22 @@ const Chat = () => {
             return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
           };
 
-          if (tripInfo) {
-            const startDate = formatDate(tripInfo.startDate);
-            const endDate = formatDate(tripInfo.endDate);
+          const startDate = formatDate(tripInfo.startDate);
+          const endDate = formatDate(tripInfo.endDate);
 
-            const welcomeMessage = {
-              message: `안녕하세요, ${startDate}부터 ${endDate}까지 ${tripInfo.city}로 여행을 가시는 ${user.nickname}님!\n${user.nickname}님만의 여행 플랜 만들기를 시작해볼까요?\n제가 관광지, 식당, 카페 등 다양한 장소를 추천해드릴 수 있어요!\n추천 받길 원하시는 곳의 버튼을 눌러주세요.`,
-              sender: 'bot'
-            };
+          const welcomeMessage = {
+            message: `안녕하세요, ${startDate}부터 ${endDate}까지 ${tripInfo.city}로 여행을 가시는 ${user.nickname}님!\n${user.nickname}님만의 여행 플랜 만들기를 시작해볼까요?\n제가 관광지, 식당, 카페 등 다양한 장소를 추천해드릴 수 있어요!\n추천 받길 원하시는 곳의 버튼을 눌러주세요.`,
+            sender: 'bot'
+          };
 
-            await axios.post(`${API_URL}/saveChatMessage`, {
-              userId: user.userId,
-              tripId: user.mainTrip,
-              sender: 'bot',
-              message: welcomeMessage.message
-            });
+          await axios.post(`${API_URL}/saveChatMessage`, {
+            userId: user.userId,
+            tripId: user.mainTrip,
+            sender: 'bot',
+            message: welcomeMessage.message
+          });
 
-            setMessages([welcomeMessage]);
-          }
+          setMessages([welcomeMessage]);
         } else {
           console.error('Failed to fetch chat data:', chatResponse.data);
         }
@@ -69,8 +73,8 @@ const Chat = () => {
       }
     };
 
-    fetchTripInfo().then(fetchChatData);
-  }, [user.mainTrip, user.userId, user.nickname, tripInfo]);
+    fetchChatData();
+  }, [tripInfo, user.userId, user.mainTrip, user.nickname]);
 
   const handleSendMessage = async () => {
     if (newMessage.trim()) {
