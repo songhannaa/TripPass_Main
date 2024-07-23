@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import { MdOutlineNavigateBefore, MdOutlineNavigateNext } from "react-icons/md";
 import { TiDelete } from 'react-icons/ti';
 import { API_URL } from '../../config';
 import '../../styles/mycrewlist.css';
@@ -80,10 +81,10 @@ const MyCrewList = () => {
         <span>마이 크루</span>
         <div>
           <button className="scrollButton" onClick={scrollLeft}>
-            &lt;
+            <MdOutlineNavigateBefore />
           </button>
           <button className="scrollButton" onClick={scrollRight}>
-            &gt;
+            <MdOutlineNavigateNext />
           </button>
         </div>
       </div>
