@@ -6,7 +6,6 @@ import '../../styles/chat.css';
 import { IoIosSend } from "react-icons/io";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import botProfileImage from '../../assets/bot1.png'; 
-import { IoIosSend } from "react-icons/io";
 
 const ITEMS_PER_PAGE = 4;
 
