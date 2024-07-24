@@ -48,7 +48,7 @@ const Sidebar = () => {
           tripData ? (
             <div className="planInsert">
               <div className="planInsertText">
-                <div className="description">{formatDate(tripData.startDate)} - {formatDate(tripData.endDate)}</div>
+                <div className="description">{formatDate(tripData.startDate)} ~ {formatDate(tripData.endDate)}</div>
                 <div className="planInsertBtn">
                   {tripData.title} 
                 </div>
