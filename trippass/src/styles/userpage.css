@@ -170,7 +170,7 @@
   .edit-button {
 	background-color: #ffffff;
 	color: #718EBF;
-	font-size: 12px;
+	font-size: 14px;
 	border: 1.5px solid #DFEAF2;
 	padding: 7px 15px;
 	border-radius: 10px;
@@ -178,4 +178,11 @@
 	text-align: center;
 	width: 15%;
 	margin: 0 auto;
+  }
+
+  .edit-button:hover {
+	background-color: #718EBF;
+	border: 1.5px solid #718EBF;
+	color: #fff;
+	cursor: pointer; 
   }
