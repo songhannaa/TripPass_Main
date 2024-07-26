@@ -44,6 +44,80 @@
         ]
       },
       {
+        "country": "일본",
+        "city": [
+          {"city_name": "가와사키"},
+          {"city_name": "고베"},
+          {"city_name": "교토"},
+          {"city_name": "나고야"},
+          {"city_name": "도쿄"},
+          {"city_name": "사이타마"},
+          {"city_name": "삿포로"},
+          {"city_name": "오사카"},
+          {"city_name": "요코하마"},
+          {"city_name": "후쿠오카"}
+        ]
+      },
+      {
+        "country": "베트남",
+        "city": [
+          {"city_name": "호찌민"},
+          {"city_name": "하노이"},
+          {"city_name": "다낭"},
+          {"city_name": "호이안"},
+          {"city_name": "나트랑"},
+          {"city_name": "하이퐁"},
+          {"city_name": "달랏"},
+          {"city_name": "무이네"},
+          {"city_name": "꽝응아이"},
+          {"city_name": "사파"},
+          {"city_name": "하롱베이"}
+        ]
+      },
+      {
+        "country": "인도",
+        "city": [
+          {"city_name": "델리"},
+          {"city_name": "캘커타"},
+          {"city_name": "벵갈루루"},
+          {"city_name": "아그라"},
+          {"city_name": "첸나이"},
+          {"city_name": "뭄바이"},
+          {"city_name": "뜨리웬드럼"},
+          {"city_name": "바라나시"},
+          {"city_name": "수랏"},
+          {"city_name": "자이푸르"},
+          {"city_name": "푸네"},
+          {"city_name": "칸푸르"}
+        ]
+      },
+      {
+        "country": "태국",
+        "city": [
+          {"city_name": "방콕"},
+          {"city_name": "파타야"},
+          {"city_name": "치앙마이"},
+          {"city_name": "아유타야"},
+          {"city_name": "치앙라이"},
+          {"city_name": "코사무이"},
+          {"city_name": "후아힌"},
+          {"city_name": "끄라비"},
+          {"city_name": "푸켓"}
+        ]
+      },
+      {
+        "country": "필리핀",
+        "city": [
+          {"city_name": "마닐라"},
+          {"city_name": "세부"},
+          {"city_name": "다바오"},
+          {"city_name": "일로일로"},
+          {"city_name": "팔라완"},
+          {"city_name": "보홀"},
+          {"city_name": "보라카이"}
+        ]
+      },
+      {
         "country": "호주",
         "city": [
           {"city_name": "멜버른"},
@@ -94,7 +168,24 @@
       {
         "country": "스페인",
         "city": [
-          {"city_name": "바르셀로나"}
+          {"city_name": "바르셀로나"},
+          {"city_name": "마드리드"},
+          {"city_name": "세비야"},
+          {"city_name": "그라나다"},
+          {"city_name": "발렌시아"},
+          {"city_name": "론다"},
+          {"city_name": "말라가"}
+        ]
+      },
+      {
+        "country": "포르투갈",
+        "city": [
+          {"city_name": "포르투"},
+          {"city_name": "리스본"},
+          {"city_name": "에보라"},
+          {"city_name": "몬사라즈"},
+          {"city_name": "알가르베"},
+          {"city_name": "신트라"}
         ]
       },
       {
