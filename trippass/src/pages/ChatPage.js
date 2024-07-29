@@ -26,6 +26,7 @@ const DailyPlanSection = styled.div`
   display: flex;
   flex-direction: column;
   height: 85vh;
+
 `;
 
 const TripPlaceContainer = styled.div`
@@ -48,7 +49,10 @@ const DailyPlanContainer = styled.div`
   flex: 7;
   margin-bottom: 20px;
   box-sizing: border-box;
+  overflow-y: auto; // 세로 스크롤을 가능하게 함
 `;
+
+
 
 const ChatPage = () => {
   return (
