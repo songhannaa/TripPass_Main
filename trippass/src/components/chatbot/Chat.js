@@ -4,20 +4,13 @@ import axios from 'axios';
 import { API_URL } from "../../config";
 import '../../styles/chat.css';
 import { IoIosSend } from "react-icons/io";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import botProfileImage from '../../assets/bot1.png'; 
-
-
-const ITEMS_PER_PAGE = 4;
 
 const Chat = () => {
   const { user } = useSelector(state => state.user);
-  const [normalMessages, setNormalMessages] = useState([]);
-  const [serpMessages, setSerpMessages] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [tripInfo, setTripInfo] = useState(null);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     const fetchTripInfo = async () => {
@@ -51,11 +44,7 @@ const Chat = () => {
 
         if (chatResponse.data.result_code === 200) {
           const conversation = chatResponse.data.messages;
-          const normalMsgs = conversation.filter(message => !message.isSerp);
-          const serpMsgs = conversation.filter(message => message.isSerp);
-          setNormalMessages(normalMsgs);
-          setSerpMessages(serpMsgs);
-          setTotalPages(Math.ceil(serpMsgs.length / ITEMS_PER_PAGE));
+          setMessages(conversation);
         } else if (chatResponse.data.result_code === 404) {
           const formatDate = (dateStr) => {
             const date = new Date(dateStr);
@@ -68,7 +57,8 @@ const Chat = () => {
           const welcomeMessage = {
             message: `안녕하세요, ${startDate}부터 ${endDate}까지 ${tripInfo.city}로 여행을 가시는 ${user.nickname}님!\n${user.nickname}님만의 여행 플랜 만들기를 시작해볼까요?\n제가 관광지, 식당, 카페 등 다양한 장소를 추천해드릴 수 있어요!\n추천 받길 원하시는 곳의 버튼을 눌러주세요.`,
             sender: 'bot',
-            isSerp: false
+            isSerp: false,
+            timestamp: new Date().toISOString()
           };
 
           await axios.post(`${API_URL}/saveChatMessage`, {
@@ -78,7 +68,7 @@ const Chat = () => {
             message: welcomeMessage.message
           });
 
-          setNormalMessages([welcomeMessage]);
+          setMessages([welcomeMessage]);
         } else {
           console.error('Failed to fetch chat data:', chatResponse.data);
         }
@@ -93,29 +83,57 @@ const Chat = () => {
   const handleSendMessage = async (event) => {
     event.preventDefault();
     if (newMessage.trim()) {
-
-      const userMessage = { message: newMessage, sender: 'user', isSerp: false };
-      setNormalMessages(prevMessages => [...prevMessages, userMessage]);
+      const userMessage = { message: newMessage, sender: 'user', isSerp: false, timestamp: new Date().toISOString() };
+      setMessages(prevMessages => [...prevMessages, userMessage]);
 
       setNewMessage('');
 
       try {
+        // 사용자 메시지를 서버에 저장
         await axios.post(`${API_URL}/saveChatMessage`, {
           userId: user.userId,
           tripId: user.mainTrip,
           sender: 'user',
           message: newMessage
         });
+
+        // 장소 검색 API 호출
+        const response = await axios.post(`${API_URL}/callOpenAIFunction`, {
+          userId: user.userId,
+          tripId: user.mainTrip,
+          sender: 'user',
+          message: newMessage
+        });
+
+        if (response.data.result_code === 200) {
+          const formatted_results_str = response.data.response;
+
+          const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp: true, timestamp: new Date().toISOString() };
+
+          // 상태에 검색 결과 메시지 추가
+          setMessages(prevMessages => [...prevMessages, serpMessage]);
+
+          // 검색 결과 메시지를 서버에 저장
+          await axios.post(`${API_URL}/saveChatMessage`, {
+            userId: user.userId,
+            tripId: user.mainTrip,
+            sender: 'bot',
+            message: formatted_results_str,
+            isSerp: true
+          });
+        } else {
+          console.error('Failed to fetch places:', response.data.message);
+        }
       } catch (error) {
         console.error('Error sending message:', error);
       }
     }
   };
 
-  const handleButtonClick = async (query, userQuery) => {
-    const userMessage = { message: userQuery, sender: 'user', isSerp: false };
+  const handleButtonClick = async (userQuery) => {
+    const userMessage = { message: userQuery, sender: 'user', isSerp: false, timestamp: new Date().toISOString() };
     // 먼저 사용자 메시지를 상태에 추가합니다.
-    setNormalMessages(prevMessages => [...prevMessages, userMessage]);
+    setMessages(prevMessages => [...prevMessages, userMessage]);
 
     try {
       // 사용자 메시지를 서버에 저장
@@ -127,34 +145,27 @@ const Chat = () => {
       });
 
       // 장소 검색 API 호출
-      const response = await axios.post(`${API_URL}/searchPlace`, {
+      const response = await axios.post(`${API_URL}/callOpenAIFunction`, {
         userId: user.userId,
         tripId: user.mainTrip,
         sender: 'user',
-        message: query
+        message: userQuery
       });
 
       if (response.data.result_code === 200) {
-        // 검색 결과 메시지를 생성
-        const botMessage = response.data.places.map((place, index) => (
-          `${index + 1}. ${place.title}\n별점: ${place.rating}\n주소: ${place.address}\n설명: ${place.description}\n\n`
-        )).join('');
+        const formatted_results_str = response.data.response;
 
-        const serpMessage = { message: botMessage, sender: 'bot', isSerp: true };
+        const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp: true, timestamp: new Date().toISOString() };
 
         // 상태에 검색 결과 메시지 추가
-        setSerpMessages(prevMessages => {
-          const updatedMessages = [...prevMessages, serpMessage];
-          setTotalPages(Math.ceil(updatedMessages.length / ITEMS_PER_PAGE));
-          return updatedMessages;
-        });
+        setMessages(prevMessages => [...prevMessages, serpMessage]);
 
         // 검색 결과 메시지를 서버에 저장
         await axios.post(`${API_URL}/saveChatMessage`, {
           userId: user.userId,
           tripId: user.mainTrip,
           sender: 'bot',
-          message: botMessage,
+          message: formatted_results_str,
           isSerp: true
         });
       } else {
@@ -166,6 +177,11 @@ const Chat = () => {
   };
 
   const renderMessageWithLineBreaks = (message) => {
+    if (typeof message !== 'string') {
+      console.error('Invalid message format:', message);
+      return null;
+    }
+  
     return message.split('\n').map((text, index) => (
       <React.Fragment key={index}>
         {text}
@@ -174,43 +190,10 @@ const Chat = () => {
     ));
   };
 
-  const renderPaginatedBotData = () => {
-    const startIndex = currentPage * ITEMS_PER_PAGE;
-    const selectedItems = serpMessages.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-
-    return (
-      <div className="chatMessage otherMessage">
-        <div className="messageText">
-          {selectedItems.map((message, index) => (
-            <div key={index}>
-              {renderMessageWithLineBreaks(message.message)}
-            </div>
-          ))}
-            <div className="paginationButtons">
-            <button
-              disabled={currentPage === 0}
-              onClick={() => setCurrentPage(currentPage - 1)}
-            >
-              <FaChevronLeft />
-            </button>
-            <button
-              disabled={startIndex + ITEMS_PER_PAGE >= serpMessages.length}
-              onClick={() => setCurrentPage(currentPage + 1)}
-            >
-              <FaChevronRight />
-            </button>
-          </div>
-        </div>
-        
-        <img src={botProfileImage} alt="Profile" className="profileImage" />
-      </div>
-    );
-  };
-
   return (
     <div className="chatContainer">
       <div className="chatMessages">
-        {normalMessages.map((message, index) => (
+        {messages.map((message, index) => (
           <div
             key={index}
             className={`chatMessage ${message.sender === 'user' ? 'myMessage' : 'otherMessage'}`}
@@ -225,12 +208,11 @@ const Chat = () => {
             />
           </div>
         ))}
-        {serpMessages.length > 0 && renderPaginatedBotData()}
       </div>
       <div className="buttonRow">
-        <button className="chatButton" onClick={() => handleButtonClick(`${tripInfo.city} 인기 관광지`, `${tripInfo.city}에서 인기 있는 관광지 알려줘`)}>{tripInfo ? tripInfo.city : ''} 인기 관광지🗼</button>
-        <button className="chatButton" onClick={() => handleButtonClick(`${tripInfo.city} 인기 식당`, `${tripInfo.city}에서 인기 있는 식당 알려줘`)}>{tripInfo ? tripInfo.city : ''} 인기 식당 🍽️</button>
-        <button className="chatButton" onClick={() => handleButtonClick(`${tripInfo.city} 인기 카페`, `${tripInfo.city}에서 인기 있는 카페 알려줘`)}>{tripInfo ? tripInfo.city : ''} 인기 카페 ☕</button>
+        <button className="chatButton" onClick={() => handleButtonClick(`${tripInfo.city}에서 인기 있는 관광지 알려줘`)}>{tripInfo ? tripInfo.city : ''} 인기 관광지🗼</button>
+        <button className="chatButton" onClick={() => handleButtonClick(`${tripInfo.city}에서 인기 있는 식당 알려줘`)}>{tripInfo ? tripInfo.city : ''} 인기 식당 🍽️</button>
+        <button className="chatButton" onClick={() => handleButtonClick(`${tripInfo.city}에서 인기 있는 카페 알려줘`)}>{tripInfo ? tripInfo.city : ''} 인기 카페 ☕</button>
         <button className="chatButton">🔎 사용자 입력</button>
       </div>
       <div className="messageInputContainer">
@@ -242,28 +224,11 @@ const Chat = () => {
           className="messageInput"
           placeholder="메시지를 입력하세요..."
         />
-        <button onClick={handleSendMessage} className="sendMessageButton">
+        <button type="submit" className="sendMessageButton">
           <IoIosSend style={{ verticalAlign: 'middle', fontSize: '1.2em' }} />
         </button>    
         </form>
-
       </div>
-      {totalPages > 1 && (
-        <div className="paginationControls">
-          <button
-            disabled={currentPage === 0}
-            onClick={() => setCurrentPage(prevPage => Math.max(prevPage - 1, 0))}
-          >
-            <FaChevronLeft />
-          </button>
-          <button
-            disabled={currentPage >= totalPages - 1}
-            onClick={() => setCurrentPage(prevPage => Math.min(prevPage + 1, totalPages - 1))}
-          >
-            <FaChevronRight />
-          </button>
-        </div>
-      )}
     </div>
   );
 };
