@@ -46,29 +46,22 @@ const Chat = () => {
           const conversation = chatResponse.data.messages;
           setMessages(conversation);
         } else if (chatResponse.data.result_code === 404) {
-          const formatDate = (dateStr) => {
-            const date = new Date(dateStr);
-            return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
-          };
-
-          const startDate = formatDate(tripInfo.startDate);
-          const endDate = formatDate(tripInfo.endDate);
-
-          const welcomeMessage = {
-            message: `안녕하세요, ${startDate}부터 ${endDate}까지 ${tripInfo.city}로 여행을 가시는 ${user.nickname}님!\n${user.nickname}님만의 여행 플랜 만들기를 시작해볼까요?\n제가 관광지, 식당, 카페 등 다양한 장소를 추천해드릴 수 있어요!\n추천 받길 원하시는 곳의 버튼을 눌러주세요.`,
-            sender: 'bot',
-            isSerp: false,
-            timestamp: new Date().toISOString()
-          };
-
-          await axios.post(`${API_URL}/saveChatMessage`, {
-            userId: user.userId,
-            tripId: user.mainTrip,
-            sender: 'bot',
-            message: welcomeMessage.message
+          const welcomeResponse = await axios.get(`${API_URL}/getWelcomeMessage`, {
+            params: { userId: user.userId, tripId: user.mainTrip }
           });
 
-          setMessages([welcomeMessage]);
+          if (welcomeResponse.data.result_code === 200) {
+            const welcomeMessage = {
+              message: welcomeResponse.data.welcome_message,
+              sender: 'bot',
+              isSerp: false,
+              timestamp: new Date().toISOString()
+            };
+
+            setMessages([welcomeMessage]);
+          } else {
+            console.error('Failed to fetch welcome message:', welcomeResponse.data.message);
+          }
         } else {
           console.error('Failed to fetch chat data:', chatResponse.data);
         }
@@ -84,48 +77,48 @@ const Chat = () => {
     event.preventDefault();
     if (newMessage.trim()) {
       const userMessage = { message: newMessage, sender: 'user', isSerp: false, timestamp: new Date().toISOString() };
-      setMessages(prevMessages => [...prevMessages, userMessage]);
+    setMessages(prevMessages => [...prevMessages, userMessage]);
 
       setNewMessage('');
 
-      try {
+    try {
         // 사용자 메시지를 서버에 저장
+      await axios.post(`${API_URL}/saveChatMessage`, {
+        userId: user.userId,
+        tripId: user.mainTrip,
+        sender: 'user',
+          message: newMessage
+      });
+
+        // 장소 검색 API 호출
+      const response = await axios.post(`${API_URL}/callOpenAIFunction`, {
+        userId: user.userId,
+        tripId: user.mainTrip,
+        sender: 'user',
+          message: newMessage
+      });
+
+      if (response.data.result_code === 200) {
+          const formatted_results_str = response.data.response;
+
+        const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp: true, timestamp: new Date().toISOString() };
+
+          // 상태에 검색 결과 메시지 추가
+        setMessages(prevMessages => [...prevMessages, serpMessage]);
+
+          // 검색 결과 메시지를 서버에 저장
         await axios.post(`${API_URL}/saveChatMessage`, {
           userId: user.userId,
           tripId: user.mainTrip,
-          sender: 'user',
-          message: newMessage
+          sender: 'bot',
+          message: formatted_results_str,
+          isSerp: true
         });
-
-        // 장소 검색 API 호출
-        const response = await axios.post(`${API_URL}/callOpenAIFunction`, {
-          userId: user.userId,
-          tripId: user.mainTrip,
-          sender: 'user',
-          message: newMessage
-        });
-
-        if (response.data.result_code === 200) {
-          const formatted_results_str = response.data.response;
-
-          const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp: true, timestamp: new Date().toISOString() };
-
-          // 상태에 검색 결과 메시지 추가
-          setMessages(prevMessages => [...prevMessages, serpMessage]);
-
-          // 검색 결과 메시지를 서버에 저장
-          await axios.post(`${API_URL}/saveChatMessage`, {
-            userId: user.userId,
-            tripId: user.mainTrip,
-            sender: 'bot',
-            message: formatted_results_str,
-            isSerp: true
-          });
-        } else {
-          console.error('Failed to fetch places:', response.data.message);
-        }
-      } catch (error) {
-        console.error('Error sending message:', error);
+      } else {
+        console.error('Failed to fetch places:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
       }
     }
   };
