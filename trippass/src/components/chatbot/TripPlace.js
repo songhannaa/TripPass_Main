@@ -33,7 +33,7 @@ const TripPlace = () => {
           params: { userId: user.userId, tripId: user.mainTrip }
         });
 
-        if (tripResponse.data['result code'] === 200) {
+        if (tripResponse.data['result_code'] === 200) {
           const updatedTripInfo = tripResponse.data.response.map(place => ({
             place: place.title,
             address: place.address,
