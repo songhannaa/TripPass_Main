@@ -4,6 +4,7 @@ import axios from 'axios';
 import { API_URL } from "../../config";
 import '../../styles/chat.css';
 import { IoIosSend } from "react-icons/io";
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import botProfileImage from '../../assets/bot1.png'; 
 
 const Chat = () => {
@@ -235,16 +236,18 @@ const renderSerpMessages = (serpMessage) => {
         ))}
         <div className="pagination">
           <button 
+            style={{ border: 'none', background: 'none', cursor: 'pointer' }}
             disabled={currentPage === 0}
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
           >
-            이전
+            <FaArrowLeft />
           </button>
           <button 
+            style={{ border: 'none', background: 'none', cursor: 'pointer' }}
             disabled={endIndex >= allLocations.length}
             onClick={() => setCurrentPage(prev => prev + 1)}
           >
-            다음
+            <FaArrowRight />
           </button>
         </div>
       </div>
