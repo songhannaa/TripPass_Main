@@ -6,6 +6,7 @@ import L from 'leaflet';
 import { API_URL } from "../../config";
 import '../../styles/chat.css';
 import { IoIosSend } from "react-icons/io";
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import botProfileImage from '../../assets/bot1.png'; 
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 
@@ -107,6 +108,8 @@ const Chat = () => {
           message: newMessage,
         });
 
+        // 챗봇 API 호출
+
         const response = await axios.post(`${API_URL}/callOpenAIFunction`, {
           userId: user.userId,
           tripId: user.mainTrip,
@@ -136,7 +139,7 @@ const Chat = () => {
           console.error('Failed to fetch places:', response.data.message);
         }
       } catch (error) {
-        console.error('Error sending message:', error);
+        console.error('Error sending message:', error.response ? error.response.data : error.message);
       }
     }
   };
@@ -206,6 +209,7 @@ const Chat = () => {
     if (typeof message !== 'string') {
       console.error('Invalid message format:', message);
       return null;
+
     }
 
     return message.split('\n').map((line, index) => (
@@ -215,6 +219,7 @@ const Chat = () => {
       </React.Fragment>
     ));
   };
+
 
 const renderSerpMessages = (serpMessage) => {
   const allLocations = serpMessage.message.split(/\*/).filter(location => location.trim() !== '');
@@ -230,6 +235,7 @@ const renderSerpMessages = (serpMessage) => {
         {locationsToShow.map((location, index) => (
           <div key={index}>{renderMessageWithLineBreaks(location)}</div>
         ))}
+
         {/* allLocations.length > 4인 경우에만 페이지네이션 버튼을 표시 */}
         {allLocations.length > 4 && (
           <div className="pagination">
@@ -251,6 +257,7 @@ const renderSerpMessages = (serpMessage) => {
             )}
           </div>
         )}
+
       </div>
       <img
         src={botProfileImage}
