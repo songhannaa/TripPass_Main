@@ -11,8 +11,10 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [tripInfo, setTripInfo] = useState(null);
+
   const [currentPage, setCurrentPage] = useState(0); // 페이지네이션을 위한 상태
   const messagesEndRef = useRef(null);
+
 
   useEffect(() => {
     const fetchTripInfo = async () => {
@@ -144,7 +146,7 @@ const Chat = () => {
         message: userQuery
       });
 
-      // 장소 검색 API 호출
+      // 챗봇 API 호출 
       const response = await axios.post(`${API_URL}/callOpenAIFunction`, {
         userId: user.userId,
         tripId: user.mainTrip,
@@ -175,6 +177,32 @@ const Chat = () => {
       console.error('Error fetching places:', error);
     }
   };
+
+
+  const handleUserInputButtonClick = async () => {
+    const botMessage = "어느 장소를 입력하고 싶으신가요? 정확한 장소명을 입력해주세요.";
+    const botChatMessage = { message: botMessage, sender: 'bot', isSerp: false, timestamp: new Date().toISOString() };
+
+    // 봇 메시지를 상태에 추가합니다.
+    setMessages(prevMessages => [...prevMessages, botChatMessage]);
+
+    try {
+      // 봇 메시지를 서버에 저장
+      await axios.post(`${API_URL}/saveChatMessage`, {
+        userId: user.userId,
+        tripId: user.mainTrip,
+        sender: 'bot',
+        message: botMessage
+      });
+    } catch (error) {
+      console.error('Error saving bot message:', error);
+    }
+  };
+
+  const renderMessageWithLineBreaks = (message) => {
+    if (typeof message !== 'string') {
+      console.error('Invalid message format:', message);
+      return null;
 
 const renderMessageWithLineBreaks = (message) => {
   if (typeof message !== 'string') {
@@ -238,6 +266,7 @@ const renderSerpMessages = (serpMessage) => {
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+
     }
   };
 
@@ -271,7 +300,7 @@ const renderSerpMessages = (serpMessage) => {
         <button className="chatButton" onClick={() => handleButtonClick(`${tripInfo.city}에서 인기 있는 관광지 알려줘`)}>{tripInfo ? tripInfo.city : ''} 인기 관광지🗼</button>
         <button className="chatButton" onClick={() => handleButtonClick(`${tripInfo.city}에서 인기 있는 식당 알려줘`)}>{tripInfo ? tripInfo.city : ''} 인기 식당 🍽️</button>
         <button className="chatButton" onClick={() => handleButtonClick(`${tripInfo.city}에서 인기 있는 카페 알려줘`)}>{tripInfo ? tripInfo.city : ''} 인기 카페 ☕</button>
-        <button className="chatButton">🔎 사용자 입력</button>
+        <button className="chatButton" onClick={handleUserInputButtonClick}>🔎 사용자 입력</button>
       </div>
       <div className="messageInputContainer">
         <form onSubmit={handleSendMessage}>
