@@ -4,6 +4,7 @@ import axios from 'axios';
 import { API_URL } from "../../config";
 import '../../styles/chat.css';
 import { IoIosSend } from "react-icons/io";
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import botProfileImage from '../../assets/bot1.png'; 
 
 const Chat = () => {
@@ -98,7 +99,7 @@ const Chat = () => {
           message: newMessage,
         });
 
-        // 장소 검색 API 호출
+        // 챗봇 API 호출
         const response = await axios.post(`${API_URL}/callOpenAIFunction`, {
           userId: user.userId,
           tripId: user.mainTrip,
@@ -126,7 +127,7 @@ const Chat = () => {
           console.error('Failed to fetch places:', response.data.message);
         }
       } catch (error) {
-        console.error('Error sending message:', error);
+        console.error('Error sending message:', error.response ? error.response.data : error.message);
       }
     }
   };
@@ -203,12 +204,7 @@ const Chat = () => {
     if (typeof message !== 'string') {
       console.error('Invalid message format:', message);
       return null;
-
-const renderMessageWithLineBreaks = (message) => {
-  if (typeof message !== 'string') {
-    console.error('Invalid message format:', message);
-    return null;
-  }
+    };
 
   // 줄바꿈(\n)을 기준으로 메시지를 분리
   return message.split('\n').map((line, index) => (
@@ -240,16 +236,18 @@ const renderSerpMessages = (serpMessage) => {
         ))}
         <div className="pagination">
           <button 
+            style={{ border: 'none', background: 'none', cursor: 'pointer' }}
             disabled={currentPage === 0}
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
           >
-            이전
+            <FaArrowLeft />
           </button>
           <button 
+            style={{ border: 'none', background: 'none', cursor: 'pointer' }}
             disabled={endIndex >= allLocations.length}
             onClick={() => setCurrentPage(prev => prev + 1)}
           >
-            다음
+            <FaArrowRight />
           </button>
         </div>
       </div>
