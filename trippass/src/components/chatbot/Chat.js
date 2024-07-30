@@ -1,21 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
 import { API_URL } from "../../config";
 import '../../styles/chat.css';
 import { IoIosSend } from "react-icons/io";
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import botProfileImage from '../../assets/bot1.png'; 
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
+
+// Marker 아이콘 설정 (기본 아이콘이 제대로 표시되지 않는 경우)
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
 
 const Chat = () => {
   const { user } = useSelector(state => state.user);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [tripInfo, setTripInfo] = useState(null);
-
-  const [currentPage, setCurrentPage] = useState(0); // 페이지네이션을 위한 상태
+  const [currentPage, setCurrentPage] = useState(0);
+  const [geoCoordinates, setGeoCoordinates] = useState([]); // 좌표 저장
   const messagesEndRef = useRef(null);
-
 
   useEffect(() => {
     const fetchTripInfo = async () => {
@@ -48,7 +58,7 @@ const Chat = () => {
 
         if (chatResponse.data.result_code === 200) {
           setMessages(chatResponse.data.messages);
-          scrollToBottom(); // 처음 렌더링 시 맨 아래로 스크롤
+          scrollToBottom();
         } else if (chatResponse.data.result_code === 404) {
           const welcomeResponse = await axios.get(`${API_URL}/getWelcomeMessage`, {
             params: { userId: user.userId, tripId: user.mainTrip }
@@ -63,7 +73,7 @@ const Chat = () => {
             };
 
             setMessages([welcomeMessage]);
-            scrollToBottom(); // 처음 렌더링 시 맨 아래로 스크롤
+            scrollToBottom();
           } else {
             console.error('Failed to fetch welcome message:', welcomeResponse.data.message);
           }
@@ -79,7 +89,7 @@ const Chat = () => {
   }, [tripInfo, user.userId, user.mainTrip]);
 
   useEffect(() => {
-    scrollToBottom(); // 메시지 변경 시마다 자동 스크롤
+    scrollToBottom();
   }, [messages]);
 
   const handleSendMessage = async (event) => {
@@ -91,7 +101,6 @@ const Chat = () => {
       setNewMessage('');
 
       try {
-        // 사용자 메시지를 서버에 저장
         await axios.post(`${API_URL}/saveChatMessage`, {
           userId: user.userId,
           tripId: user.mainTrip,
@@ -100,6 +109,7 @@ const Chat = () => {
         });
 
         // 챗봇 API 호출
+
         const response = await axios.post(`${API_URL}/callOpenAIFunction`, {
           userId: user.userId,
           tripId: user.mainTrip,
@@ -109,13 +119,15 @@ const Chat = () => {
 
         if (response.data.result_code === 200) {
           const formatted_results_str = response.data.response;
-          const isSerp = response.data.isSerp; // SERP 여부 가져오기
+          const isSerp = response.data.isSerp;
           const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp, timestamp: new Date().toISOString() };
-          console.log(isSerp);
-          // 상태에 검색 결과 메시지 추가
-          setMessages(prevMessages => [...prevMessages, serpMessage]);
+          const geo = response.data.geo; // 추가된 geo 데이터를 받습니다.
 
-          // 검색 결과 메시지를 서버에 저장
+          setMessages(prevMessages => [...prevMessages, serpMessage]);
+          if (isSerp) {
+            setGeoCoordinates(geo); // geo 좌표를 상태에 저장합니다.
+          }
+
           await axios.post(`${API_URL}/saveChatMessage`, {
             userId: user.userId,
             tripId: user.mainTrip,
@@ -134,12 +146,9 @@ const Chat = () => {
 
   const handleButtonClick = async (userQuery) => {
     const userMessage = { message: userQuery, sender: 'user', isSerp: false, timestamp: new Date().toISOString() };
-
-    // 먼저 사용자 메시지를 상태에 추가합니다.
     setMessages(prevMessages => [...prevMessages, userMessage]);
 
     try {
-      // 사용자 메시지를 서버에 저장
       await axios.post(`${API_URL}/saveChatMessage`, {
         userId: user.userId,
         tripId: user.mainTrip,
@@ -147,7 +156,6 @@ const Chat = () => {
         message: userQuery
       });
 
-      // 챗봇 API 호출 
       const response = await axios.post(`${API_URL}/callOpenAIFunction`, {
         userId: user.userId,
         tripId: user.mainTrip,
@@ -157,19 +165,19 @@ const Chat = () => {
 
       if (response.data.result_code === 200) {
         const formatted_results_str = response.data.response;
-        const isSerp = true; // 버튼 클릭 시 무조건 true
+        const isSerp = true;
         const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp, timestamp: new Date().toISOString() };
+        const geo = response.data.geo;
 
-        // 상태에 검색 결과 메시지 추가
         setMessages(prevMessages => [...prevMessages, serpMessage]);
+        setGeoCoordinates(geo);
 
-        // 검색 결과 메시지를 서버에 저장
         await axios.post(`${API_URL}/saveChatMessage`, {
           userId: user.userId,
           tripId: user.mainTrip,
           sender: 'bot',
           message: formatted_results_str,
-          isSerp: isSerp // isSerp 값 전달
+          isSerp: isSerp
         });
       } else {
         console.error('Failed to fetch places:', response.data.message);
@@ -179,16 +187,13 @@ const Chat = () => {
     }
   };
 
-
   const handleUserInputButtonClick = async () => {
     const botMessage = "어느 장소를 입력하고 싶으신가요? 정확한 장소명을 입력해주세요.";
     const botChatMessage = { message: botMessage, sender: 'bot', isSerp: false, timestamp: new Date().toISOString() };
 
-    // 봇 메시지를 상태에 추가합니다.
     setMessages(prevMessages => [...prevMessages, botChatMessage]);
 
     try {
-      // 봇 메시지를 서버에 저장
       await axios.post(`${API_URL}/saveChatMessage`, {
         userId: user.userId,
         tripId: user.mainTrip,
@@ -204,29 +209,25 @@ const Chat = () => {
     if (typeof message !== 'string') {
       console.error('Invalid message format:', message);
       return null;
-    };
 
-  // 줄바꿈(\n)을 기준으로 메시지를 분리
-  return message.split('\n').map((line, index) => (
-    <React.Fragment key={index}>
-      {line}
-      <br />
-    </React.Fragment>
-  ));
-};
+    }
 
-
+    return message.split('\n').map((line, index) => (
+      <React.Fragment key={index}>
+        {line}
+        <br />
+      </React.Fragment>
+    ));
+  };
 
 
 const renderSerpMessages = (serpMessage) => {
-  // 정규식 패턴으로 숫자와 "장소 이름:" 앞에서 분리
-  const allLocations = serpMessage.message.split(/(?=\d{1,2}\.\s*장소 이름:)/)
-    .filter(location => location.trim() !== '');
-
+  const allLocations = serpMessage.message.split(/\*/).filter(location => location.trim() !== '');
 
   const startIndex = currentPage * 4;
   const endIndex = startIndex + 4;
   const locationsToShow = allLocations.slice(startIndex, endIndex);
+  const geoCoordinatesToShow = geoCoordinates.slice(startIndex, endIndex);
 
   return (
     <div className="chatMessage otherMessage">
@@ -234,37 +235,67 @@ const renderSerpMessages = (serpMessage) => {
         {locationsToShow.map((location, index) => (
           <div key={index}>{renderMessageWithLineBreaks(location)}</div>
         ))}
-        <div className="pagination">
-          <button 
-            style={{ border: 'none', background: 'none', cursor: 'pointer' }}
-            disabled={currentPage === 0}
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
-          >
-            <FaArrowLeft />
-          </button>
-          <button 
-            style={{ border: 'none', background: 'none', cursor: 'pointer' }}
-            disabled={endIndex >= allLocations.length}
-            onClick={() => setCurrentPage(prev => prev + 1)}
-          >
-            <FaArrowRight />
-          </button>
-        </div>
+
+        {/* allLocations.length > 4인 경우에만 페이지네이션 버튼을 표시 */}
+        {allLocations.length > 4 && (
+          <div className="pagination">
+            {currentPage > 0 && (
+              <button 
+                style={{ border: 'none', background: 'none', cursor: 'pointer' }}
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
+              >
+                <FaArrowLeft />
+              </button>
+            )}
+            {endIndex < allLocations.length && (
+              <button 
+                style={{ border: 'none', background: 'none', cursor: 'pointer' }}
+                onClick={() => setCurrentPage(prev => prev + 1)}
+              >
+                <FaArrowRight />
+              </button>
+            )}
+          </div>
+        )}
+
       </div>
       <img
         src={botProfileImage}
         alt="Profile"
         className="profileImage"
       />
+      {geoCoordinatesToShow.length > 0 && (
+        <MapContainer
+          center={[geoCoordinatesToShow[0][0], geoCoordinatesToShow[0][1]]}
+          zoom={13}
+          style={{ height: "300px", width: "100%", marginTop: "10px" }}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {geoCoordinatesToShow.map((coord, index) => {
+            const location = locationsToShow[index].split('\n')[0]; // 첫 번째 줄에서 장소 이름과 번호 추출
+            return (
+              <Marker key={index} position={[coord[0], coord[1]]}>
+                <Popup>
+                  {location}
+                </Popup>
+              </Marker>
+            );
+          })}
+        </MapContainer>
+      )}
     </div>
   );
 };
 
 
+
+
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-
     }
   };
 
@@ -300,6 +331,7 @@ const renderSerpMessages = (serpMessage) => {
         <button className="chatButton" onClick={() => handleButtonClick(`${tripInfo.city}에서 인기 있는 카페 알려줘`)}>{tripInfo ? tripInfo.city : ''} 인기 카페 ☕</button>
         <button className="chatButton" onClick={handleUserInputButtonClick}>🔎 사용자 입력</button>
       </div>
+      
       <div className="messageInputContainer">
         <form onSubmit={handleSendMessage}>
           <input
