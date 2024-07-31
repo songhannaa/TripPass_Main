@@ -114,7 +114,7 @@ const Chat = () => {
           userId: user.userId,
           tripId: user.mainTrip,
           sender: 'user',
-          message: newMessage
+          message: newMessage,
         });
 
         if (response.data.result_code === 200) {
@@ -256,7 +256,9 @@ const renderSerpMessages = (serpMessage) => {
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
                   >
 
+
                     <FaArrowLeft />
+
 
                   </button>
                 )}
@@ -266,7 +268,9 @@ const renderSerpMessages = (serpMessage) => {
                     onClick={() => setCurrentPage(prev => prev + 1)}
                   >
 
+
                     <FaArrowRight />
+
 
                   </button>
                 )}
