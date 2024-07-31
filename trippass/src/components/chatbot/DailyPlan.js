@@ -57,6 +57,12 @@ const PlanAddress = styled.div`
   margin-top: 8px;
 `;
 
+const PlanDescription = styled.div`
+  font-size: 14px;
+  color: #777;
+  margin-top: 8px;
+`;
+
 const DailyPlan = () => {
   const { user } = useSelector(state => state.user);
   const [tripData, setTripData] = useState(null);
@@ -139,7 +145,9 @@ const DailyPlan = () => {
                     <PlanTime>{plan.time}</PlanTime>
                   </PlanTitle>
                   <PlanAddress><FaMapMarkerAlt style={{ marginRight: '4px' }} />{plan.address}</PlanAddress>
-                  <PlanAddress>{plan.description}</PlanAddress>
+
+                  <PlanDescription>{plan.description}</PlanDescription>
+
                 </DailyPlanItem>
               ))}
             </ul>
