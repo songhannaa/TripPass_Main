@@ -8,7 +8,7 @@ import '../../styles/chat.css';
 import { IoIosSend } from "react-icons/io";
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import botProfileImage from '../../assets/bot1.png'; 
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
+
 
 // Marker 아이콘 설정 (기본 아이콘이 제대로 표시되지 않는 경우)
 delete L.Icon.Default.prototype._getIconUrl;
@@ -230,45 +230,48 @@ const renderSerpMessages = (serpMessage) => {
   const geoCoordinatesToShow = geoCoordinates.slice(startIndex, endIndex);
 
   return (
-    <div className="chatMessage otherMessage">
-      <div className="messageText">
-        {locationsToShow.map((location, index) => (
-          <div key={index}>{renderMessageWithLineBreaks(location)}</div>
-        ))}
+    <>
+      <div className="serpChatMessageContainer">
+      <div className="serpChatMessage">
+        <img
+          src={botProfileImage}
+          alt="Profile"
+          className="profileImage"
+        />
+        <div className="messageText">
+          {locationsToShow.map((location, index) => (
+            <div key={index}>{renderMessageWithLineBreaks(location)}</div>
+          ))}
 
-        {/* allLocations.length > 4인 경우에만 페이지네이션 버튼을 표시 */}
-        {allLocations.length > 4 && (
-          <div className="pagination">
-            {currentPage > 0 && (
-              <button 
-                style={{ border: 'none', background: 'none', cursor: 'pointer' }}
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
-              >
-                <FaArrowLeft />
-              </button>
-            )}
-            {endIndex < allLocations.length && (
-              <button 
-                style={{ border: 'none', background: 'none', cursor: 'pointer' }}
-                onClick={() => setCurrentPage(prev => prev + 1)}
-              >
-                <FaArrowRight />
-              </button>
-            )}
-          </div>
-        )}
-
+          {/* allLocations.length > 4인 경우에만 페이지네이션 버튼을 표시 */}
+          {allLocations.length > 4 && (
+            <div className="pagination">
+              {currentPage > 0 && (
+                <button 
+                  style={{ border: 'none', background: 'none', cursor: 'pointer' }}
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
+                >
+                  <FaArrowLeft />
+                </button>
+              )}
+              {endIndex < allLocations.length && (
+                <button 
+                  style={{ border: 'none', background: 'none', cursor: 'pointer' }}
+                  onClick={() => setCurrentPage(prev => prev + 1)}
+                >
+                  <FaArrowRight />
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-      <img
-        src={botProfileImage}
-        alt="Profile"
-        className="profileImage"
-      />
+      
       {geoCoordinatesToShow.length > 0 && (
         <MapContainer
           center={[geoCoordinatesToShow[0][0], geoCoordinatesToShow[0][1]]}
           zoom={13}
-          style={{ height: "300px", width: "100%", marginTop: "10px" }}
+          style={{ height: "300px", width: "400px", marginTop: "10px", marginLeft: "63px" }}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -287,6 +290,7 @@ const renderSerpMessages = (serpMessage) => {
         </MapContainer>
       )}
     </div>
+    </>
   );
 };
 
@@ -304,7 +308,7 @@ const renderSerpMessages = (serpMessage) => {
       <div className="chatMessages">
         {messages.map((message, index) => {
           if (message.isSerp) {
-            return <div key={index}>{renderSerpMessages(message)}</div>;
+            return <div className="serpMessage" key={index}>{renderSerpMessages(message)}</div>;
           } else {
             return (
               <div
