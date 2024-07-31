@@ -256,9 +256,7 @@ const renderSerpMessages = (serpMessage) => {
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
                   >
 
-
                     <FaArrowLeft />
-
 
                   </button>
                 )}
@@ -268,8 +266,8 @@ const renderSerpMessages = (serpMessage) => {
                     onClick={() => setCurrentPage(prev => prev + 1)}
                   >
 
-
                     <FaArrowRight />
+
 
 
                   </button>
