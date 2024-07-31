@@ -255,7 +255,9 @@ const renderSerpMessages = (serpMessage) => {
                     style={{ border: 'none', background: 'none', cursor: 'pointer' }}
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
                   >
-                    <FaChevronLeft />
+
+                    <FaArrowLeft />
+
                   </button>
                 )}
                 {endIndex < allLocations.length && (
@@ -263,7 +265,9 @@ const renderSerpMessages = (serpMessage) => {
                     style={{ border: 'none', background: 'none', cursor: 'pointer' }}
                     onClick={() => setCurrentPage(prev => prev + 1)}
                   >
-                    <FaChevronRight />
+
+                    <FaArrowRight />
+
                   </button>
                 )}
               </div>
