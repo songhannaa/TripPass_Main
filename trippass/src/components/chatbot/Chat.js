@@ -6,7 +6,7 @@ import L from 'leaflet';
 import { API_URL } from "../../config";
 import '../../styles/chat.css';
 import { IoIosSend } from "react-icons/io";
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import botProfileImage from '../../assets/bot1.png'; 
 
 
@@ -255,7 +255,9 @@ const renderSerpMessages = (serpMessage) => {
                     style={{ border: 'none', background: 'none', cursor: 'pointer' }}
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
                   >
+
                     <FaArrowLeft />
+
                   </button>
                 )}
                 {endIndex < allLocations.length && (
@@ -263,7 +265,9 @@ const renderSerpMessages = (serpMessage) => {
                     style={{ border: 'none', background: 'none', cursor: 'pointer' }}
                     onClick={() => setCurrentPage(prev => prev + 1)}
                   >
+
                     <FaArrowRight />
+
                   </button>
                 )}
               </div>
