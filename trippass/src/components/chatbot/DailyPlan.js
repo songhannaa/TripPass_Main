@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { API_URL } from "../../config";
 import styled from 'styled-components';
@@ -60,6 +60,7 @@ const PlanAddress = styled.div`
 const DailyPlan = () => {
   const { user } = useSelector(state => state.user);
   const [tripData, setTripData] = useState(null);
+  const dispatch = useDispatch();
 
   // 초 단위를 HH:MM 형식으로 변환하는 함수
   const secondsToTimeString = (seconds) => {
@@ -95,7 +96,6 @@ const DailyPlan = () => {
         const response = await axios.get(`${API_URL}/getTripPlans?tripId=${user.mainTrip}`);
         if (response.data['result code'] === 200) {
           let data = response.data.response;
-
           // 시간이 초 단위로 되어 있으면 변환
           data = data.map(plan => ({
             ...plan,
@@ -110,6 +110,7 @@ const DailyPlan = () => {
           });
 
           setTripData(groupByDate(data));
+        
         } else {
           console.error('Failed to fetch trip data:', response.data);
         }
@@ -138,6 +139,7 @@ const DailyPlan = () => {
                     <PlanTime>{plan.time}</PlanTime>
                   </PlanTitle>
                   <PlanAddress><FaMapMarkerAlt style={{ marginRight: '4px' }} />{plan.address}</PlanAddress>
+                  <PlanAddress>{plan.description}</PlanAddress>
                 </DailyPlanItem>
               ))}
             </ul>

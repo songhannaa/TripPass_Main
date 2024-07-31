@@ -114,7 +114,7 @@ const Chat = () => {
           userId: user.userId,
           tripId: user.mainTrip,
           sender: 'user',
-          message: newMessage
+          message: newMessage,
         });
 
         if (response.data.result_code === 200) {
@@ -222,6 +222,12 @@ const Chat = () => {
 
 
 const renderSerpMessages = (serpMessage) => {
+  if (!serpMessage || !serpMessage.message) {
+    console.error('serpMessage 또는 serpMessage.message가 정의되지 않았습니다.');
+    return <div>Loading...</div>; // 데이터가 아직 로드되지 않았거나 오류가 있는 경우
+  }
+
+  // allLocations 변수 선언과 초기화는 이 시점에서 안전합니다.
   const allLocations = serpMessage.message.split(/\*/).filter(location => location.trim() !== '');
 
   const startIndex = currentPage * 4;
@@ -232,64 +238,67 @@ const renderSerpMessages = (serpMessage) => {
   return (
     <>
       <div className="serpChatMessageContainer">
-      <div className="serpChatMessage">
-        <img
-          src={botProfileImage}
-          alt="Profile"
-          className="profileImage"
-        />
-        <div className="messageText">
-          {locationsToShow.map((location, index) => (
-            <div key={index}>{renderMessageWithLineBreaks(location)}</div>
-          ))}
-
-          {/* allLocations.length > 4인 경우에만 페이지네이션 버튼을 표시 */}
-          {allLocations.length > 4 && (
-            <div className="pagination">
-              {currentPage > 0 && (
-                <button 
-                  style={{ border: 'none', background: 'none', cursor: 'pointer' }}
-                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
-                >
-                  <FaArrowLeft />
-                </button>
-              )}
-              {endIndex < allLocations.length && (
-                <button 
-                  style={{ border: 'none', background: 'none', cursor: 'pointer' }}
-                  onClick={() => setCurrentPage(prev => prev + 1)}
-                >
-                  <FaArrowRight />
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-      
-      {geoCoordinatesToShow.length > 0 && (
-        <MapContainer
-          center={[geoCoordinatesToShow[0][0], geoCoordinatesToShow[0][1]]}
-          zoom={13}
-          style={{ height: "300px", width: "400px", marginTop: "10px", marginLeft: "63px" }}
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        <div className="serpChatMessage">
+          <img
+            src={botProfileImage}
+            alt="Profile"
+            className="profileImage"
           />
-          {geoCoordinatesToShow.map((coord, index) => {
-            const location = locationsToShow[index].split('\n')[0]; // 첫 번째 줄에서 장소 이름과 번호 추출
-            return (
-              <Marker key={index} position={[coord[0], coord[1]]}>
-                <Popup>
-                  {location}
-                </Popup>
-              </Marker>
-            );
-          })}
-        </MapContainer>
-      )}
-    </div>
+          <div className="messageText">
+            {locationsToShow.map((location, index) => (
+              <div key={index}>{renderMessageWithLineBreaks(location)}</div>
+            ))}
+            {allLocations.length > 4 && (
+              <div className="pagination">
+                {currentPage > 0 && (
+                  <button 
+                    style={{ border: 'none', background: 'none', cursor: 'pointer' }}
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
+                  >
+                    <FaArrowLeft />
+                  </button>
+                )}
+                {endIndex < allLocations.length && (
+                  <button 
+                    style={{ border: 'none', background: 'none', cursor: 'pointer' }}
+                    onClick={() => setCurrentPage(prev => prev + 1)}
+                  >
+                    <FaArrowRight />
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {geoCoordinatesToShow.length > 0 && (
+          <MapContainer
+            center={[geoCoordinatesToShow[0][0], geoCoordinatesToShow[0][1]]}
+            zoom={13}
+            style={{ height: "300px", width: "400px", marginTop: "10px", marginLeft: "63px" }}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {geoCoordinatesToShow.map((coord, index) => {
+              const locationData = locationsToShow[index];
+              if (!locationData) {
+                return null;
+              }
+              
+              const location = locationData.split('\n')[0]; // 첫 번째 줄에서 장소 이름과 번호 추출
+              return (
+                <Marker key={index} position={[coord[0], coord[1]]}>
+                  <Popup>
+                    {location}
+                  </Popup>
+                </Marker>
+              );
+            })}
+          </MapContainer>
+        )}
+      </div>
     </>
   );
 };
