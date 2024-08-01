@@ -8,7 +8,9 @@ import '../../styles/chat.css';
 import { IoIosSend } from "react-icons/io";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import botProfileImage from '../../assets/bot1.png';
+
 import { updateTripPlace, deleteTripPlace } from '../../store/tripSlice';
+
 
 // Marker 아이콘 설정 (기본 아이콘이 제대로 표시되지 않는 경우)
 delete L.Icon.Default.prototype._getIconUrl;
@@ -119,7 +121,7 @@ const Chat = () => {
         if (response.data.result_code === 200) {
           const formatted_results_str = response.data.response;
           const isSerp = response.data.isSerp;
-          console.log(isSerp);
+
           const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp, timestamp: new Date().toISOString(), currentPage: 0 };
           const geo = response.data.geo; // 추가된 geo 데이터를 받습니다.
 
@@ -239,7 +241,9 @@ const Chat = () => {
     return (
       <>
         <div className="serpChatMessageContainer">
+
         <div className="serpChatMessage">
+
             <img
               src={botProfileImage}
               alt="Profile"
@@ -288,7 +292,6 @@ const Chat = () => {
               )}
             </div>
           </div>
-
 
 
           {geoCoordinatesToShow.length > 0 && (

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useSelector ,useDispatch } from 'react-redux';
 import { FcCalendar } from "react-icons/fc";
-import { RiMapPinAddLine } from "react-icons/ri";
+
 import axios from 'axios';
 import { API_URL } from "../../config";
 import NewTripPlacePop from './NewTripPlanPopup';
-import { deleteTripPlace } from '../../store/tripSlice';
-
+import { IoIosRemoveCircle } from "react-icons/io";
+import { HiMiniQuestionMarkCircle } from "react-icons/hi2";
+import { SlMagicWand } from "react-icons/sl";
 
 
 const TripPlace = () => {
@@ -15,6 +16,9 @@ const TripPlace = () => {
   const [tripInfo, setTripInfo] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const dispatch = useDispatch();
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [placeToDelete, setPlaceToDelete] = useState(null);
+  const [isHovered, setIsHovered] = useState(false);
 
 
   const handlePopupOpen = (placeInfo) => {
@@ -26,6 +30,37 @@ const TripPlace = () => {
     setShowPopup(false);
     setSelectedPlace(null);
   };
+
+
+const handleDeleteClick = async (place) => {
+  const confirmDelete = window.confirm(`${place.place} 장소를 삭제하시겠습니까?`);
+  if (confirmDelete) {
+    try {
+      await axios.delete(`${API_URL}/deletePlaceData/${user.mainTrip}/${place.place}`);
+      setTripInfo(tripInfo.filter(info => info.place !== place.place));
+    } catch (error) {
+      console.error('Error deleting place data:', error);
+    }
+  }
+};
+
+  const handleDeleteConfirm = async () => {
+    try {
+      await axios.delete(`${API_URL}/deletePlaceData/${user.mainTrip}/${placeToDelete.place}`);
+      setTripInfo(tripInfo.filter(info => info.place !== placeToDelete.place));
+    } catch (error) {
+      console.error('Error deleting place data:', error);
+    }
+    setShowDeletePopup(false);
+    setPlaceToDelete(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeletePopup(false);
+    setPlaceToDelete(null);
+  };
+
+
 
 
   const fetchTripPlaceInfo = async () => {
@@ -45,6 +80,7 @@ const TripPlace = () => {
         setTripInfo(updatedTripInfo);    
       } else {
         console.error('Failed to fetch trip data:', tripResponse.data);
+
       }
     } catch (error) {
       console.error('Error fetching trip data:', error);
@@ -74,8 +110,21 @@ const TripPlace = () => {
   return (
     <>
       <div className="tripPlaceSection">
-        <div className="tripPlaceTitle">
-          <RiMapPinAddLine />&nbsp;&nbsp;저장한 장소
+
+         <div className="tripPlaceTitle">
+          &nbsp;&nbsp;{user.nickname}의 목적지&nbsp;&nbsp;
+          <HiMiniQuestionMarkCircle 
+            color="#808080" 
+            size={20} 
+            onMouseOver={() => setIsHovered(true)}
+            onMouseOut={() => setIsHovered(false)}
+          />
+          {isHovered && (
+            <div className="trip_place_hoverPopup">
+              채팅으로 저장한 장소들을 이용해 일정을 만들어 드려요! 
+            </div>
+          )}
+
         </div>
         <div className="tripPlaceContent">
           <ul>
@@ -85,14 +134,26 @@ const TripPlace = () => {
                   {info.place}
                 </div>
                 <div className="tripPlaceCalendar">
-                  <FcCalendar onClick={() => handlePopupOpen(info)} size={22} />
+                  <FcCalendar onClick={() => handlePopupOpen(info)} size={22} /> &nbsp;&nbsp;
+                  <IoIosRemoveCircle onClick={() => handleDeleteClick(info)} color="#ff6666" size={22} />
                 </div>
-                {showPopup && selectedPlace && <NewTripPlacePop onClose={handlePopupClose} placeInfo={selectedPlace}/>}
+                {showPopup && selectedPlace && <NewTripPlacePop onClose={handlePopupClose} placeInfo={selectedPlace} />}
               </li>
             ))}
           </ul>
         </div>
       </div>
+
+      {showDeletePopup && (
+        <div className="deletePopup">
+          <div className="deletePopupContent">
+            <p>{`'${placeToDelete.place}' 장소를 삭제하시겠습니까?`}</p>
+            <button onClick={handleDeleteConfirm}>삭제</button>
+            <button onClick={handleDeleteCancel}>취소</button>
+          </div>
+        </div>
+      )}
+
     </>
   );
 };
