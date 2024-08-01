@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
 import { FcCalendar } from "react-icons/fc";
 import { RiMapPinAddLine } from "react-icons/ri";
-
 import axios from 'axios';
 import { API_URL } from "../../config";
 import NewTripPlacePop from './NewTripPlanPopup';
-
+import { IoIosRemoveCircle } from "react-icons/io";
 
 
 const TripPlace = () => {
@@ -41,7 +40,7 @@ const TripPlace = () => {
             longitude: place.longitude,
             description: place.description
           }));
-          setTripInfo(updatedTripInfo);    
+          setTripInfo(updatedTripInfo);
         } else {
           console.error('Failed to fetch trip data:', tripResponse.data);
         }
@@ -68,6 +67,9 @@ const TripPlace = () => {
                 </div>
                 <div className="tripPlaceCalendar">
                   <FcCalendar onClick={() => handlePopupOpen(info)} size={22} />
+                </div>
+                <div className="tripPlaceDelete">
+                  <IoIosRemoveCircle size={22} color="#ff6666" cursor={"pointer"} />
                 </div>
                 {showPopup && selectedPlace && <NewTripPlacePop onClose={handlePopupClose} placeInfo={selectedPlace}/>}
               </li>

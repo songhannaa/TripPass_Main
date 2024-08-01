@@ -127,11 +127,37 @@ const Chat = () => {
           const isSerp = response.data.isSerp;
           const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
           const geo = response.data.geo; // 추가된 geo 데이터를 받습니다.
+          const function_name = response.data.function_name;
 
           // 로딩 상태의 메시지를 실제 메시지로 교체
           setMessages(prevMessages => prevMessages.map((msg, index) =>
             index === loadingMessageIndex ? serpMessage : msg
           ));
+
+          // 성향 반영 메시지 추가
+          if (function_name === "search_places") {
+            const preferenceMessage = { message: `${user.nickname}님의 여행 성향을 반영하여 추천된 장소들입니다🤓\n가고싶은 곳의 번호와 함께 저장할게라고 말해주세요!\n예시: "2번 7번 8번 저장할게"`, sender: 'bot', isSerp: false, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
+            setMessages(prevMessages => [...prevMessages, preferenceMessage]);
+
+            await axios.post(`${API_URL}/saveChatMessage`, {
+              userId: user.userId,
+              tripId: user.mainTrip,
+              sender: 'bot',
+              message: preferenceMessage.message,
+              isSerp: false
+            });
+          } else if (function_name === "save_plan") {
+            const crewMessage = { message: `여행 계획을 다 짜셨다면 ${tripInfo.city}에 있는 크루를 찾아보시겠어요?`, sender: 'bot', isSerp: false, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
+            setMessages(prevMessages => [...prevMessages, crewMessage]);
+
+            await axios.post(`${API_URL}/saveChatMessage`, {
+              userId: user.userId,
+              tripId: user.mainTrip,
+              sender: 'bot',
+              message: crewMessage.message,
+              isSerp: false
+            });
+          }
 
           if (isSerp) {
             setGeoCoordinates(geo); // geo 좌표를 상태에 저장합니다.
@@ -185,10 +211,27 @@ const Chat = () => {
         const isSerp = true;
         const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
         const geo = response.data.geo;
+        const function_name = response.data.function_name;
 
+        // 로딩 상태의 메시지를 실제 메시지로 교체
         setMessages(prevMessages => prevMessages.map((msg, index) =>
           index === loadingMessageIndex ? serpMessage : msg
         ));
+
+        // 성향 반영 메시지 추가
+        if (function_name === "search_places") {
+          const preferenceMessage = { message: `${user.nickname}님의 여행 성향을 반영하여 추천된 장소들입니다🤓\n가고싶은 곳의 번호와 함께 저장할게라고 말해주세요!\n예시: "2번 7번 8번 저장할게"`, sender: 'bot', isSerp: false, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
+          setMessages(prevMessages => [...prevMessages, preferenceMessage]);
+
+          await axios.post(`${API_URL}/saveChatMessage`, {
+            userId: user.userId,
+            tripId: user.mainTrip,
+            sender: 'bot',
+            message: preferenceMessage.message,
+            isSerp: false
+          });
+        }
+
         setGeoCoordinates(geo);
 
         await axios.post(`${API_URL}/saveChatMessage`, {

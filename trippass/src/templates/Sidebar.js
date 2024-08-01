@@ -55,14 +55,14 @@ const Sidebar = () => {
               </div>
             </div>
           ) : (
-            <div className="planInsert">
+            <NavLink to="/myTrip" className="planInsert">
               <div className="planInsertText">
                 <div className="description">아직 여행계획이 없어요!</div>
                 <div className="planInsertBtn">
                 함께 여행 계획을 만들어볼까요?
                 </div>
               </div>
-            </div>
+            </NavLink>
           )
         ) : (
           <div className="planInsert">
