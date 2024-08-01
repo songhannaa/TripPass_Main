@@ -69,10 +69,15 @@ const Header = () => {
 
   }, [isAuthenticated, user, location]);
 
-  const handleLogout = () => {
-    alert("로그아웃 되었습니다");
-    dispatch(logout());
-    window.location.reload();
+  const handleLogout = async () => {
+    try {
+      await axios.post(`${API_URL}/clearMemory`);
+      alert("로그아웃 되었습니다");
+      dispatch(logout());
+      window.location.reload();
+    } catch (error) {
+      console.error('Error clearing memory:', error);
+    }
   };
 
   const handleNotificationClick = () => {
