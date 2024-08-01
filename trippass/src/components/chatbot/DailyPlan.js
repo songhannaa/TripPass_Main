@@ -23,7 +23,7 @@ const DailyPlanItem = styled.li`
   border: 1px solid #ddd;
   border-radius: 8px;
   margin-bottom: 16px;
-  padding: 16px;
+  padding: 10px;
   background: #fff;
 `;
 
@@ -61,6 +61,8 @@ const PlanDescription = styled.div`
   font-size: 14px;
   color: #777;
   margin-top: 8px;
+  margin-left: 3%;
+  margin-right: 3%;
 `;
 
 const DailyPlan = () => {

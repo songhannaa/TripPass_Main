@@ -8,7 +8,8 @@ import '../../styles/chat.css';
 import { IoIosSend } from "react-icons/io";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import botProfileImage from '../../assets/bot1.png';
-import LottieAnimation from './LottieAnimation'; 
+import LottieAnimation from './LottieAnimation';
+import { NavLink } from 'react-router-dom';
 
 // Marker 아이콘 설정 (기본 아이콘이 제대로 표시되지 않는 경우)
 delete L.Icon.Default.prototype._getIconUrl;
@@ -147,7 +148,14 @@ const Chat = () => {
               isSerp: false
             });
           } else if (function_name === "save_plan") {
-            const crewMessage = { message: `${user.nickname}님의 여행 성향을 반영하여 만든 여행 계획입니다🥰\n여행 계획을 다 짜셨다면 ${tripInfo.city}에 있는 크루를 찾아보시겠어요?`, sender: 'bot', isSerp: false, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
+            const crewMessage = { 
+            message: `${user.nickname}님의 여행 성향을 반영하여 만든 여행 계획입니다🥰\n여행 계획을 다 짜셨다면 ${tripInfo.city}에 있는 크루를 찾아보시겠어요?`, 
+            sender: 'bot', 
+            isSerp: false, 
+            timestamp: new Date().toISOString(), 
+            currentPage: 0, 
+            isLoading: false 
+            };
             setMessages(prevMessages => [...prevMessages, crewMessage]);
 
             await axios.post(`${API_URL}/saveChatMessage`, {
@@ -157,6 +165,17 @@ const Chat = () => {
               message: crewMessage.message,
               isSerp: false
             });
+
+            const navLinkMessage = {
+              message: "크루 찾기",
+              sender: 'bot',
+              isSerp: false,
+              timestamp: new Date().toISOString(),
+              currentPage: 0,
+              isLoading: false,
+              isButton: true // 버튼..
+            };
+            setMessages(prevMessages => [...prevMessages, navLinkMessage]);
           }
 
           if (isSerp) {
@@ -274,7 +293,6 @@ const Chat = () => {
     if (typeof message !== 'string') {
       console.error('Invalid message format:', message);
       return null;
-
     }
 
     return message.split('\n').map((line, index) => (
@@ -404,6 +422,15 @@ const Chat = () => {
             return (
               <div className="serpMessage" key={index}>
                 {renderSerpMessages(message, index)}
+              </div>
+            );
+          } else if (message.isButton) {
+            return (
+              <div key={index} className="chatMessage otherMessage">
+                <NavLink to="/tripCrew" className="navLinkButton">
+                  <button className="crewButton">{message.message}</button>
+                </NavLink>
+                <img src={botProfileImage} alt="Profile" className="profileImage" />
               </div>
             );
           } else {
