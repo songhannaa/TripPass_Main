@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
@@ -8,6 +8,9 @@ import '../../styles/chat.css';
 import { IoIosSend } from "react-icons/io";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import botProfileImage from '../../assets/bot1.png';
+
+import { updateTripPlace, deleteTripPlace } from '../../store/tripSlice';
+
 
 // Marker 아이콘 설정 (기본 아이콘이 제대로 표시되지 않는 경우)
 delete L.Icon.Default.prototype._getIconUrl;
@@ -24,6 +27,7 @@ const Chat = () => {
   const [tripInfo, setTripInfo] = useState(null);
   const [geoCoordinates, setGeoCoordinates] = useState([]); // 좌표 저장
   const messagesEndRef = useRef(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchTripInfo = async () => {
@@ -48,7 +52,6 @@ const Chat = () => {
   useEffect(() => {
     const fetchChatData = async () => {
       if (!tripInfo) return;
-
       try {
         const chatResponse = await axios.get(`${API_URL}/getChatMessages`, {
           params: { userId: user.userId, tripId: user.mainTrip }
@@ -90,6 +93,7 @@ const Chat = () => {
     scrollToBottom();
   }, [messages]);
 
+  // 사용자 메세지 직접 입력 
   const handleSendMessage = async (event) => {
     event.preventDefault();
     if (newMessage.trim()) {
@@ -117,12 +121,16 @@ const Chat = () => {
         if (response.data.result_code === 200) {
           const formatted_results_str = response.data.response;
           const isSerp = response.data.isSerp;
+
           const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp, timestamp: new Date().toISOString(), currentPage: 0 };
           const geo = response.data.geo; // 추가된 geo 데이터를 받습니다.
 
           setMessages(prevMessages => [...prevMessages, serpMessage]);
           if (isSerp) {
             setGeoCoordinates(geo); // geo 좌표를 상태에 저장합니다.
+            dispatch(deleteTripPlace());
+          } else {
+            dispatch(updateTripPlace());
           }
 
           await axios.post(`${API_URL}/saveChatMessage`, {
@@ -165,9 +173,10 @@ const Chat = () => {
         const isSerp = true;
         const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp, timestamp: new Date().toISOString(), currentPage: 0 };
         const geo = response.data.geo;
-
+      
         setMessages(prevMessages => [...prevMessages, serpMessage]);
         setGeoCoordinates(geo);
+        dispatch(deleteTripPlace());
 
         await axios.post(`${API_URL}/saveChatMessage`, {
           userId: user.userId,
@@ -232,7 +241,9 @@ const Chat = () => {
     return (
       <>
         <div className="serpChatMessageContainer">
-          <div className="serpChatMessage">
+
+        <div className="serpChatMessage">
+
             <img
               src={botProfileImage}
               alt="Profile"
@@ -240,6 +251,7 @@ const Chat = () => {
             />
             <div className="messageText">
               {locationsToShow.map((location, index) => (
+
                 <div key={index}>{renderMessageWithLineBreaks(location)}</div>
               ))}
               {allLocations.length > 4 && (
@@ -280,6 +292,7 @@ const Chat = () => {
               )}
             </div>
           </div>
+
 
           {geoCoordinatesToShow.length > 0 && (
             <MapContainer
@@ -331,7 +344,7 @@ const Chat = () => {
                 key={index}
                 className={`chatMessage ${message.sender === 'user' ? 'myMessage' : 'otherMessage'}`}
               >
-                <div className="messageText">{renderMessageWithLineBreaks(message.message)}</div>
+                <div className="messageText">{renderMessageWithLineBreaks(message.message)}</div>                
                 <img
                   src={message.sender === 'user' 
                         ? `data:image/png;base64,${user.profileImage || user.socialProfileImage}` 
