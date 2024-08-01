@@ -1,24 +1,22 @@
-import { SET_TRIP_PLANS, ADD_TRIP_PLAN } from './tripActions';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  tripPlans: [],
+  tripPlace: sessionStorage.getItem('tripPlace') || null
 };
 
-const tripReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case SET_TRIP_PLANS:
-      return {
-        ...state,
-        tripPlans: action.payload,
-      };
-    case ADD_TRIP_PLAN:
-      return {
-        ...state,
-        tripPlans: [...state.tripPlans, action.payload],
-      };
-    default:
-      return state;
-  }
-};
+const tripSlice = createSlice({
+  name: 'tripPlace',
+  initialState,
+  reducers: {
+    updateTripPlace() {
+      sessionStorage.setItem('tripPlace', "update");
+    },
+    deleteTripPlace(){
+      sessionStorage.setItem('tripPlace', null);
+    }
+}
+});
 
-export default tripReducer;
+export const { updateTripPlace, deleteTripPlace } = tripSlice.actions;
+
+export default tripSlice.reducer;
