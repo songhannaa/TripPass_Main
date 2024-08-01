@@ -428,7 +428,7 @@ const Chat = () => {
             return (
               <div key={index} className="chatMessage otherMessage">
                 <NavLink to="/tripCrew" className="navLinkButton">
-                  <button className="crewButton">{message.message}</button>
+                  <div className="crewButton">{message.message}</div>
                 </NavLink>
                 <img src={botProfileImage} alt="Profile" className="profileImage" />
               </div>
