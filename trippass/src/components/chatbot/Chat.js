@@ -147,7 +147,7 @@ const Chat = () => {
               isSerp: false
             });
           } else if (function_name === "save_plan") {
-            const crewMessage = { message: `여행 계획을 다 짜셨다면 ${tripInfo.city}에 있는 크루를 찾아보시겠어요?`, sender: 'bot', isSerp: false, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
+            const crewMessage = { message: `${user.nickname}님의 여행 성향을 반영하여 만든 여행 계획입니다🥰\n여행 계획을 다 짜셨다면 ${tripInfo.city}에 있는 크루를 찾아보시겠어요?`, sender: 'bot', isSerp: false, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
             setMessages(prevMessages => [...prevMessages, crewMessage]);
 
             await axios.post(`${API_URL}/saveChatMessage`, {
