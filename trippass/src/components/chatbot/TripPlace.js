@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector ,useDispatch} from 'react-redux';
 import { FcCalendar } from "react-icons/fc";
 import axios from 'axios';
@@ -20,7 +20,7 @@ const TripPlace = () => {
   const [tripInfo, setTripInfo] = useState([]);
   const dispatch = useDispatch();
 
-  const fetchTripPlaceInfo = async () => {
+  const fetchTripPlaceInfo = useCallback(async () => {
     try {
       const tripResponse = await axios.get(`${API_URL}/getSavePlace`, {
         params: { userId: user.userId, tripId: user.mainTrip }
@@ -41,19 +41,18 @@ const TripPlace = () => {
     } catch (error) {
       console.error('Error fetching trip data:', error);
     }
-  };
-
+  }, [user.userId, user.mainTrip]);
 
   useEffect(() => {
     fetchTripPlaceInfo();
-  }, [user.userId, user.mainTrip]);
+  }, [fetchTripPlaceInfo]);
 
   useEffect(() => {
     if (trip === "save_place") {
       fetchTripPlaceInfo();
       dispatch(deleteTrip());
     }
-  }, [trip]);
+  }, [trip, fetchTripPlaceInfo, dispatch]);
 
   const handlePopupOpen = (placeInfo) => {
     setSelectedPlace(placeInfo);
@@ -98,7 +97,7 @@ const TripPlace = () => {
       <div className="tripPlaceSection">
 
          <div className="tripPlaceTitle">
-          &nbsp;&nbsp;{user.nickname}의 목적지&nbsp;&nbsp;
+          &nbsp;&nbsp;{user.nickname}님의 목적지&nbsp;&nbsp;
           <HiMiniQuestionMarkCircle 
             color="#808080" 
             size={20} 
