@@ -8,8 +8,10 @@ import '../../styles/chat.css';
 import { IoIosSend } from "react-icons/io";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import botProfileImage from '../../assets/bot1.png';
-
+import LottieAnimation from './LottieAnimation';
+import { NavLink } from 'react-router-dom';
 import { updateTripPlace, deleteTripPlace } from '../../store/tripSlice';
+
 
 
 // Marker 아이콘 설정 (기본 아이콘이 제대로 표시되지 않는 경우)
@@ -26,6 +28,7 @@ const Chat = () => {
   const [newMessage, setNewMessage] = useState('');
   const [tripInfo, setTripInfo] = useState(null);
   const [geoCoordinates, setGeoCoordinates] = useState([]); // 좌표 저장
+  const [loading, setLoading] = useState(false); // 애니메이션 로딩 상태
   const messagesEndRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -102,6 +105,12 @@ const Chat = () => {
 
       setNewMessage('');
 
+      setLoading(true); // 메시지 전송 후 로딩 시작
+
+      // 로딩 메시지 추가
+      const loadingMessageIndex = messages.length + 1;
+      setMessages(prevMessages => [...prevMessages, { sender: 'bot', isLoading: true, message: '', isSerp: false }]);
+
       try {
         await axios.post(`${API_URL}/saveChatMessage`, {
           userId: user.userId,
@@ -121,11 +130,58 @@ const Chat = () => {
         if (response.data.result_code === 200) {
           const formatted_results_str = response.data.response;
           const isSerp = response.data.isSerp;
-
-          const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp, timestamp: new Date().toISOString(), currentPage: 0 };
+          const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
           const geo = response.data.geo; // 추가된 geo 데이터를 받습니다.
+          const function_name = response.data.function_name;
 
-          setMessages(prevMessages => [...prevMessages, serpMessage]);
+          // 로딩 상태의 메시지를 실제 메시지로 교체
+          setMessages(prevMessages => prevMessages.map((msg, index) =>
+            index === loadingMessageIndex ? serpMessage : msg
+          ));
+
+          // 성향 반영 메시지 추가
+          if (function_name === "search_places") {
+            const preferenceMessage = { message: `${user.nickname}님의 여행 성향을 반영하여 추천된 장소들입니다🤓\n가고싶은 곳의 번호와 함께 저장할게라고 말해주세요!\n예시: "2번 7번 8번 저장할게"`, sender: 'bot', isSerp: false, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
+            setMessages(prevMessages => [...prevMessages, preferenceMessage]);
+
+            await axios.post(`${API_URL}/saveChatMessage`, {
+              userId: user.userId,
+              tripId: user.mainTrip,
+              sender: 'bot',
+              message: preferenceMessage.message,
+              isSerp: false
+            });
+          } else if (function_name === "save_plan") {
+            const crewMessage = { 
+            message: `${user.nickname}님의 여행 성향을 반영하여 만든 여행 계획입니다🥰\n여행 계획을 다 짜셨다면 ${tripInfo.city}에 있는 크루를 찾아보시겠어요?`, 
+            sender: 'bot', 
+            isSerp: false, 
+            timestamp: new Date().toISOString(), 
+            currentPage: 0, 
+            isLoading: false 
+            };
+            setMessages(prevMessages => [...prevMessages, crewMessage]);
+
+            await axios.post(`${API_URL}/saveChatMessage`, {
+              userId: user.userId,
+              tripId: user.mainTrip,
+              sender: 'bot',
+              message: crewMessage.message,
+              isSerp: false
+            });
+
+            const navLinkMessage = {
+              message: "크루 찾기",
+              sender: 'bot',
+              isSerp: false,
+              timestamp: new Date().toISOString(),
+              currentPage: 0,
+              isLoading: false,
+              isButton: true // 버튼..
+            };
+            setMessages(prevMessages => [...prevMessages, navLinkMessage]);
+          }
+
           if (isSerp) {
             setGeoCoordinates(geo); // geo 좌표를 상태에 저장합니다.
             dispatch(deleteTripPlace());
@@ -145,6 +201,8 @@ const Chat = () => {
         }
       } catch (error) {
         console.error('Error sending message:', error.response ? error.response.data : error.message);
+      } finally {
+        setLoading(false); // 메시지 전송 후 로딩 종료
       }
     }
   };
@@ -152,6 +210,12 @@ const Chat = () => {
   const handleButtonClick = async (userQuery) => {
     const userMessage = { message: userQuery, sender: 'user', isSerp: false, timestamp: new Date().toISOString() };
     setMessages(prevMessages => [...prevMessages, userMessage]);
+
+    setLoading(true); // 버튼 클릭 후 로딩 시작
+
+    // 로딩 메시지 추가
+    const loadingMessageIndex = messages.length + 1;
+    setMessages(prevMessages => [...prevMessages, { sender: 'bot', isLoading: true, message: '', isSerp: false }]);
 
     try {
       await axios.post(`${API_URL}/saveChatMessage`, {
@@ -171,10 +235,29 @@ const Chat = () => {
       if (response.data.result_code === 200) {
         const formatted_results_str = response.data.response;
         const isSerp = true;
-        const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp, timestamp: new Date().toISOString(), currentPage: 0 };
+        const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
         const geo = response.data.geo;
-      
-        setMessages(prevMessages => [...prevMessages, serpMessage]);
+        const function_name = response.data.function_name;
+
+        // 로딩 상태의 메시지를 실제 메시지로 교체
+        setMessages(prevMessages => prevMessages.map((msg, index) =>
+          index === loadingMessageIndex ? serpMessage : msg
+        ));
+
+        // 성향 반영 메시지 추가
+        if (function_name === "search_places") {
+          const preferenceMessage = { message: `${user.nickname}님의 여행 성향을 반영하여 추천된 장소들입니다🤓\n가고싶은 곳의 번호와 함께 저장할게라고 말해주세요!\n예시: "2번 7번 8번 저장할게"`, sender: 'bot', isSerp: false, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
+          setMessages(prevMessages => [...prevMessages, preferenceMessage]);
+
+          await axios.post(`${API_URL}/saveChatMessage`, {
+            userId: user.userId,
+            tripId: user.mainTrip,
+            sender: 'bot',
+            message: preferenceMessage.message,
+            isSerp: false
+          });
+        }
+
         setGeoCoordinates(geo);
         dispatch(deleteTripPlace());
 
@@ -185,11 +268,14 @@ const Chat = () => {
           message: formatted_results_str,
           isSerp: isSerp
         });
+
       } else {
         console.error('Failed to fetch places:', response.data.message);
       }
     } catch (error) {
       console.error('Error fetching places:', error);
+    } finally {
+      setLoading(false); // 버튼 클릭 후 로딩 종료 
     }
   };
 
@@ -215,7 +301,6 @@ const Chat = () => {
     if (typeof message !== 'string') {
       console.error('Invalid message format:', message);
       return null;
-
     }
 
     return message.split('\n').map((line, index) => (
@@ -242,7 +327,7 @@ const Chat = () => {
       <>
         <div className="serpChatMessageContainer">
 
-        <div className="serpChatMessage">
+          <div className="serpChatMessage">
 
             <img
               src={botProfileImage}
@@ -251,7 +336,6 @@ const Chat = () => {
             />
             <div className="messageText">
               {locationsToShow.map((location, index) => (
-
                 <div key={index}>{renderMessageWithLineBreaks(location)}</div>
               ))}
               {allLocations.length > 4 && (
@@ -292,8 +376,6 @@ const Chat = () => {
               )}
             </div>
           </div>
-
-
           {geoCoordinatesToShow.length > 0 && (
             <MapContainer
               center={[geoCoordinatesToShow[0][0], geoCoordinatesToShow[0][1]]}
@@ -336,15 +418,43 @@ const Chat = () => {
     <div className="chatContainer">
       <div className="chatMessages">
         {messages.map((message, index) => {
-          if (message.isSerp) {
-            return <div className="serpMessage" key={index}>{renderSerpMessages(message, index)}</div>;
+
+          if (message.isLoading) {
+            return (
+              <div key={index} className="chatMessage otherMessage">
+                <div className="messageText">
+                  <LottieAnimation isVisible={true} />
+                </div>
+                <img src={botProfileImage} alt="Profile" className="profileImage" />
+              </div>
+            );
+          } else if (message.isSerp) {
+            return (
+              <div className="serpMessage" key={index}>
+                {renderSerpMessages(message, index)}
+              </div>
+            );
+          } else if (message.isButton) {
+            return (
+              <div key={index} className="chatMessage otherMessage">
+                <NavLink to="/tripCrew" className="navLinkButton">
+                  <div className="crewButton">{message.message}</div>
+                </NavLink>
+                <img src={botProfileImage} alt="Profile" className="profileImage" />
+              </div>
+            );
+
           } else {
             return (
               <div
                 key={index}
                 className={`chatMessage ${message.sender === 'user' ? 'myMessage' : 'otherMessage'}`}
               >
-                <div className="messageText">{renderMessageWithLineBreaks(message.message)}</div>                
+
+                <div className="messageText">
+                  {renderMessageWithLineBreaks(message.message)}
+                </div>
+
                 <img
                   src={message.sender === 'user' 
                         ? `data:image/png;base64,${user.profileImage || user.socialProfileImage}` 
@@ -376,7 +486,7 @@ const Chat = () => {
           />
           <button type="submit" className="sendMessageButton">
             <IoIosSend style={{ verticalAlign: 'middle', fontSize: '1.2em' }} />
-          </button>    
+          </button>
         </form>
       </div>
     </div>

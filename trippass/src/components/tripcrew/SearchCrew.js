@@ -224,16 +224,19 @@ const SearchCrew = () => {
                               })}
                             </div>
                             <div className="personalityDetails">
-                              <div className='personalityTitle'>성향보기</div>
+                              <div className='personalityTitle'>성향 보기</div>
                               <ul className='personalityList'>
-                                {Object.entries(JSON.parse(userData.personality)).map(([key, value]) => (
-                                  <li key={key}>
-                                    {keyTranslations[key]}: {
-                                      groupedPreferences[key] ?
-                                      groupedPreferences[key].find(preference => preference.id === value).label : value
-                                    }
-                                  </li>
-                                ))}
+                                {Object.entries(JSON.parse(userData.personality)).map(([key, value]) => {
+                                  const isMatching = JSON.parse(user.personality)[key] === value;
+                                  return (
+                                    <li key={key} style={{ fontWeight: isMatching ? 'bold' : 'normal' }}>
+                                      {keyTranslations[key]}: {
+                                        groupedPreferences[key] ?
+                                        groupedPreferences[key].find(preference => preference.id === value).label : value
+                                      }
+                                    </li>
+                                  );
+                                })}
                               </ul>
                             </div>
                           </li>
