@@ -8,6 +8,7 @@ import { IoIosRemoveCircle } from "react-icons/io";
 import { HiMiniQuestionMarkCircle } from "react-icons/hi2";
 import { deleteTrip } from "../../store/tripSlice";
 
+
 const TripPlace = () => {
   const { user } = useSelector(state => state.user);
   const trip = useSelector(state => state.trip.trip);
@@ -42,6 +43,7 @@ const TripPlace = () => {
     }
   };
 
+
   useEffect(() => {
     fetchTripPlaceInfo();
   }, [user.userId, user.mainTrip]);
@@ -52,7 +54,7 @@ const TripPlace = () => {
       dispatch(deleteTrip());
     }
   }, [trip]);
-  
+
   const handlePopupOpen = (placeInfo) => {
     setSelectedPlace(placeInfo);
     setShowPopup(true);
@@ -90,7 +92,6 @@ const TripPlace = () => {
     setShowDeletePopup(false);
     setPlaceToDelete(null);
   };
-
 
   return (
     <>
