@@ -1,26 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { useSelector ,useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { FcCalendar } from "react-icons/fc";
-import { RiMapPinAddLine } from "react-icons/ri";
 import axios from 'axios';
 import { API_URL } from "../../config";
 import NewTripPlacePop from './NewTripPlanPopup';
 import { IoIosRemoveCircle } from "react-icons/io";
 import { HiMiniQuestionMarkCircle } from "react-icons/hi2";
-import { SlMagicWand } from "react-icons/sl";
-
-
 
 const TripPlace = () => {
   const { user } = useSelector(state => state.user);
   const [showPopup, setShowPopup] = useState(false);
   const [tripInfo, setTripInfo] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
-  const dispatch = useDispatch();
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [placeToDelete, setPlaceToDelete] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
-
 
   const handlePopupOpen = (placeInfo) => {
     setSelectedPlace(placeInfo);
@@ -31,7 +25,11 @@ const TripPlace = () => {
     setShowPopup(false);
     setSelectedPlace(null);
   };
-  
+
+  const handleDeleteCancel = () => {
+    setShowDeletePopup(false);
+    setPlaceToDelete(null);
+  };
   
   const handleDeleteClick = async (place) => {
     const confirmDelete = window.confirm(`${place.place} 장소를 삭제하시겠습니까?`);
@@ -55,33 +53,6 @@ const TripPlace = () => {
     setShowDeletePopup(false);
     setPlaceToDelete(null);
   };
-
-  const handleDeleteCancel = () => {
-    setShowDeletePopup(false);
-    setPlaceToDelete(null);
-  };
-
-
-  const fetchTripPlaceInfo = async () => {
-    try {
-      const tripResponse = await axios.get(`${API_URL}/getSavePlace`, {
-        params: { userId: user.userId, tripId: user.mainTrip }
-      });
-
-      if (tripResponse.data['result_code'] === 200) {
-        const updatedTripInfo = tripResponse.data.response.map(place => ({
-          place: place.title,
-          address: place.address,
-          latitude: place.latitude,
-          longitude: place.longitude,
-          description: place.description
-        }));
-        setTripInfo(updatedTripInfo);
-      } else {
-        console.error('Failed to fetch trip data:', tripResponse.data);
-      }
-    } catch (error) {
-      console.error('Error fetching trip data:', error);
 
   const fetchTripPlaceInfo = async () => {
     try {
@@ -113,19 +84,7 @@ const TripPlace = () => {
     }
   }, [user.userId, user.mainTrip]);
 
-  useEffect(() => {
-    const checkSessionStorage = () => {
-      const tripPlaceStatus = sessionStorage.getItem('tripPlace');
-      if (tripPlaceStatus === 'update') {
-        fetchTripPlaceInfo();
-      }
-    };
-    checkSessionStorage();
-    const interval = setInterval(checkSessionStorage, 1000); 
-    return () => clearInterval(interval);
-  }, []);
-
-
+ 
 
   return (
     <>
@@ -157,12 +116,7 @@ const TripPlace = () => {
                   <FcCalendar onClick={() => handlePopupOpen(info)} size={22} /> &nbsp;&nbsp;
                   <IoIosRemoveCircle onClick={() => handleDeleteClick(info)} color="#ff6666" size={22} />
                 </div>
-
-                <div className="tripPlaceDelete">
-                  <IoIosRemoveCircle size={22} color="#ff6666" cursor={"pointer"} />
-                </div>
                 {showPopup && selectedPlace && <NewTripPlacePop onClose={handlePopupClose} placeInfo={selectedPlace}/>}
-
               </li>
             ))}
           </ul>
