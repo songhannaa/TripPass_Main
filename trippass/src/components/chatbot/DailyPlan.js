@@ -63,6 +63,7 @@ const PlanDescription = styled.div`
   margin-top: 8px;
   margin-left: 3%;
   margin-right: 3%;
+  line-height: 1.2rem;
 `;
 
 const DailyPlan = () => {
