@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
@@ -10,6 +10,9 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import botProfileImage from '../../assets/bot1.png';
 import LottieAnimation from './LottieAnimation';
 import { NavLink } from 'react-router-dom';
+import { updateTripPlace, deleteTripPlace } from '../../store/tripSlice';
+
+
 
 // Marker 아이콘 설정 (기본 아이콘이 제대로 표시되지 않는 경우)
 delete L.Icon.Default.prototype._getIconUrl;
@@ -27,6 +30,7 @@ const Chat = () => {
   const [geoCoordinates, setGeoCoordinates] = useState([]); // 좌표 저장
   const [loading, setLoading] = useState(false); // 애니메이션 로딩 상태
   const messagesEndRef = useRef(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchTripInfo = async () => {
@@ -51,7 +55,6 @@ const Chat = () => {
   useEffect(() => {
     const fetchChatData = async () => {
       if (!tripInfo) return;
-
       try {
         const chatResponse = await axios.get(`${API_URL}/getChatMessages`, {
           params: { userId: user.userId, tripId: user.mainTrip }
@@ -93,6 +96,7 @@ const Chat = () => {
     scrollToBottom();
   }, [messages]);
 
+  // 사용자 메세지 직접 입력 
   const handleSendMessage = async (event) => {
     event.preventDefault();
     if (newMessage.trim()) {
@@ -180,6 +184,9 @@ const Chat = () => {
 
           if (isSerp) {
             setGeoCoordinates(geo); // geo 좌표를 상태에 저장합니다.
+            dispatch(deleteTripPlace());
+          } else {
+            dispatch(updateTripPlace());
           }
 
           await axios.post(`${API_URL}/saveChatMessage`, {
@@ -252,6 +259,7 @@ const Chat = () => {
         }
 
         setGeoCoordinates(geo);
+        dispatch(deleteTripPlace());
 
         await axios.post(`${API_URL}/saveChatMessage`, {
           userId: user.userId,
@@ -318,7 +326,9 @@ const Chat = () => {
     return (
       <>
         <div className="serpChatMessageContainer">
+
           <div className="serpChatMessage">
+
             <img
               src={botProfileImage}
               alt="Profile"
@@ -366,7 +376,6 @@ const Chat = () => {
               )}
             </div>
           </div>
-
           {geoCoordinatesToShow.length > 0 && (
             <MapContainer
               center={[geoCoordinatesToShow[0][0], geoCoordinatesToShow[0][1]]}
@@ -409,6 +418,7 @@ const Chat = () => {
     <div className="chatContainer">
       <div className="chatMessages">
         {messages.map((message, index) => {
+
           if (message.isLoading) {
             return (
               <div key={index} className="chatMessage otherMessage">
@@ -433,15 +443,18 @@ const Chat = () => {
                 <img src={botProfileImage} alt="Profile" className="profileImage" />
               </div>
             );
+
           } else {
             return (
               <div
                 key={index}
                 className={`chatMessage ${message.sender === 'user' ? 'myMessage' : 'otherMessage'}`}
               >
+
                 <div className="messageText">
                   {renderMessageWithLineBreaks(message.message)}
                 </div>
+
                 <img
                   src={message.sender === 'user' 
                         ? `data:image/png;base64,${user.profileImage || user.socialProfileImage}` 

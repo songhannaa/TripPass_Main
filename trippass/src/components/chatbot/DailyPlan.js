@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { API_URL } from "../../config";
 import styled from 'styled-components';
@@ -68,7 +68,6 @@ const PlanDescription = styled.div`
 const DailyPlan = () => {
   const { user } = useSelector(state => state.user);
   const [tripData, setTripData] = useState(null);
-  const dispatch = useDispatch();
 
   // 초 단위를 HH:MM 형식으로 변환하는 함수
   const secondsToTimeString = (seconds) => {

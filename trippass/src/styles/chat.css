@@ -197,3 +197,18 @@
 .dailyPlanDate{
   background-color: #b7cee7;
 }
+
+.trip_place_hoverPopup {
+  position: absolute; /* 오버레이로 다른 요소 위에 표시 */
+  background-color: rgba(255, 255, 255, 0.8); /* 오패시티가 40%인 흰색 */
+  border-radius: 10px;
+  padding: 20px; /* 내부 여백 */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
+  font-size: 15px; /* 작은 폰트 크기 */
+  z-index: 100; /* 다른 요소들 위에 표시되도록 z-index 설정 */
+  width: 380px; /* 너비 설정 */
+  right:40px;
+  top:40px;
+  line-height: 1.3rem;
+  color: #808080;
+}
