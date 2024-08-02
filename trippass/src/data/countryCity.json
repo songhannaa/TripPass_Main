@@ -118,6 +118,18 @@
         ]
       },
       {
+        "country": "말레이시아",
+        "city": [
+          {"city_name": "쿠알라룸푸르"},
+          {"city_name": "페낭"},
+          {"city_name": "조호르바루"},
+          {"city_name": "랑카위"},
+          {"city_name": "코타키나발루"},
+          {"city_name": "보홀"},
+          {"city_name": "이포"}
+        ]
+      },
+      {
         "country": "호주",
         "city": [
           {"city_name": "멜버른"},
@@ -144,7 +156,11 @@
         "city": [
           {"city_name": "파리"},
           {"city_name": "리옹"},
-          {"city_name": "마르세유"}
+          {"city_name": "마르세유"},
+          {"city_name": "니스"},
+          {"city_name": "보르도"},
+          {"city_name": "툴루즈"},
+          {"city_name": "아비뇽"}
         ]
       },
       {
@@ -158,12 +174,33 @@
         ]
       },
       {
+        "country": "그리스",
+        "city": [
+          {"city_name": "아테네"},
+          {"city_name": "산토리니"},
+          {"city_name": "미코노스"},
+          {"city_name": "크레타"},
+          {"city_name": "로도스"},
+          {"city_name": "테살로니키"}
+        ]
+      },
+      {
         "country": "독일",
         "city": [
           {"city_name": "베를린"},
           {"city_name": "뮌헨"},
           {"city_name": "프랑크푸르트"},
           {"city_name": "쾰른"}
+        ]
+      },
+      {
+        "country": "스위스",
+        "city": [
+          {"city_name": "취리히"},
+          {"city_name": "제네바"},
+          {"city_name": "루체른"},
+          {"city_name": "인터라켄"},
+          {"city_name": "베른"}
         ]
       },
       {
@@ -194,7 +231,20 @@
         "city": [
           {"city_name": "두바이"},
           {"city_name": "아부다비"},
-          {"city_name": "샤르자"}
+          {"city_name": "샤르자"},
+          {"city_name": "라스 알카이마"},
+          {"city_name": "푸자이라"}
+        ]
+      },
+      {
+        "country": "터키",
+        "city": [
+          {"city_name": "이스탄불"},
+          {"city_name": "카파도키아"},
+          {"city_name": "안탈리아"},
+          {"city_name": "이즈미르"},
+          {"city_name": "파묵칼레"},
+          {"city_name": "페티예"}
         ]
       }
     ]
