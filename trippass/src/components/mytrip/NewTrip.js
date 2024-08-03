@@ -112,7 +112,7 @@ const NewTrip = ({ onClose }) => {
           <div className="loading-overlay">
             <div className="spinner"></div>
             <TypingEffect 
-              text="AI가 이미지를 생성중입니다! 잠시만 기다려주세요. . . 😎" 
+              text="AI가 이미지를 생성중입니다! 잠시만 기다려주세요. . . " 
               typingSpeed={100}
               delay={1000}    
             />
