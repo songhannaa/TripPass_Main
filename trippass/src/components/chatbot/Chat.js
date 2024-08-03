@@ -135,7 +135,6 @@ const Chat = () => {
           const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
           const geo = response.data.geo; // 추가된 geo 데이터를 받습니다.
           const function_name = response.data.function_name;
-          
           // 로딩 상태의 메시지를 실제 메시지로 교체
           setMessages(prevMessages => prevMessages.map((msg, index) =>
             index === loadingMessageIndex ? serpMessage : msg
@@ -185,10 +184,11 @@ const Chat = () => {
             };
             setMessages(prevMessages => [...prevMessages, navLinkMessage]);
             dispatch(updateTrip(function_name));
-          } else if (function_name === "save_place"){
-             // 저장하는 채팅 실행 했을때 , redux store 에 내용 업데이트  
+          } else if (function_name === "save_place"){ 
              dispatch(updateTrip(function_name));
-          } else{
+          } else if (function_name === "update_trip_plan_confirmed"){
+            dispatch(updateTrip(function_name));
+          }else{
             dispatch(deleteTrip());
           }
 
@@ -307,6 +307,27 @@ const Chat = () => {
       console.error('Error saving bot message:', error);
     }
   };
+
+  const handleUserInputUpdateButtonClick = async () =>{
+    const botMessage = `어떤 일정 수정을 도와드릴까요?🤓\n
+                        수정을 원하시는 일정의 시간 또는 날짜를 입력해주세요.📆\n
+                        예시: British Museum 관람 일정을 17시 30분으로 바꿔줘, \n
+                             Serp Kitchen 식사 일정을 9월 27일 17시 30분으로 바꿔줘`;
+    const botChatMessage = { message: botMessage, sender: 'bot', isSerp: false, timestamp: new Date().toISOString() };
+
+    setMessages(prevMessages => [...prevMessages, botChatMessage]);
+
+    try {
+      await axios.post(`${API_URL}/saveChatMessage`, {
+        userId: user.userId,
+        tripId: user.mainTrip,
+        sender: 'bot',
+        message: botMessage
+      });
+    } catch (error) {
+      console.error('Error saving bot message:', error);
+    }
+  }
 
   const renderMessageWithLineBreaks = (message) => {
     if (typeof message !== 'string') {
@@ -483,7 +504,8 @@ const Chat = () => {
         <button className="chatButton" onClick={() => handleButtonClick(`${tripInfo.city}에서 인기 있는 관광지 알려줘`)}>{tripInfo ? tripInfo.city : ''} 인기 관광지🗼</button>
         <button className="chatButton" onClick={() => handleButtonClick(`${tripInfo.city}에서 인기 있는 식당 알려줘`)}>{tripInfo ? tripInfo.city : ''} 인기 식당 🍽️</button>
         <button className="chatButton" onClick={() => handleButtonClick(`${tripInfo.city}에서 인기 있는 카페 알려줘`)}>{tripInfo ? tripInfo.city : ''} 인기 카페 ☕</button>
-        <button className="chatButton" onClick={handleUserInputButtonClick}>🔎 사용자 입력</button>
+        <button className="chatButton" onClick={handleUserInputButtonClick}> 사용자 입력 🔎</button>
+        <button className="chatButton" onClick={handleUserInputUpdateButtonClick}>일정 수정 📆</button>
       </div>
       
       <div className="messageInputContainer">

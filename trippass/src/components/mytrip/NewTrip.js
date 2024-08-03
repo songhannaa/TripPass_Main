@@ -89,8 +89,8 @@ const NewTrip = ({ onClose }) => {
         }
       });
       if (response.data["result code"] === 200) {
-        alert('여행 정보 저장 완료 채팅을 시작합니다!');
-        navigate('/chat');
+        alert('여행 계획이 저장되었습니다!');
+        navigate('/tripPlan');
         const tripId = response.data.response;
         dispatch(updateUserMainTrip(tripId));
         onClose();
