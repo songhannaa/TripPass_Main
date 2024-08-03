@@ -1,23 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { API_URL } from "../../config";
 import styled from 'styled-components';
 import { FaMapMarkerAlt } from "react-icons/fa"; 
-import { deleteTrip } from "../../store/tripSlice";
+import { FcCalendar } from "react-icons/fc";
+import { IoIosRemoveCircle } from "react-icons/io";
+
 
 // Styled components
 const DailyPlanSection = styled.div`
-  flex: 3;
   display: flex;
   flex-direction: column;
-  height: 85vh;
-  overflow-y: auto;
 `;
 
 const DailyPlanList = styled.div`
   list-style: none;
   padding: 0;
+  overflow-y: auto;
 `;
 
 const DailyPlanItem = styled.li`
@@ -29,7 +29,7 @@ const DailyPlanItem = styled.li`
 `;
 
 const PlanDate = styled.div`
-  font-size: 20px;
+  font-size: 17px;
   font-weight: bold;
   margin-bottom: 8px;
   color: #717171;
@@ -43,11 +43,15 @@ const PlanTitle = styled.div`
   border-radius: 6px;
   margin-bottom: 8px;
   font-size: 14px;
+  font-weight: bold;
+  align-items: center;
+  line-height: 1.2rem;
 `;
 
 const PlanTime = styled.div`
   font-size: 14px;
   color: #555;
+  font-weight: bold;
 `;
 
 const PlanAddress = styled.div`
@@ -71,7 +75,6 @@ const DailyPlan = () => {
   const { user } = useSelector(state => state.user);
   const trip = useSelector(state => state.trip.trip);
   const [tripData, setTripData] = useState(null);
-  const dispatch = useDispatch();
 
   // 초 단위를 HH:MM 형식으로 변환하는 함수
   const secondsToTimeString = useCallback((seconds) => {
@@ -136,24 +139,43 @@ const DailyPlan = () => {
   }, [user.mainTrip, fetchTripPlans]);
 
   useEffect(() => {
-    if (trip === "save_plan" || trip === "update_trip_plan" || trip === "add_plan") {
+    if (trip === "save_plan" || trip === "update_trip_plan_confirmed" || trip === "add_plan") {
       fetchTripPlans();
-      dispatch(deleteTrip());
     } 
-  }, [trip, fetchTripPlans, dispatch]);
+  }, [trip, fetchTripPlans]);
+
+  const handleDeleteClick = async (planId) => {
+    const confirmDelete = window.confirm('여행 계획을 삭제하시겠습니까?');
+    if (confirmDelete) {
+      try {
+        // Axios DELETE 요청에서 쿼리 파라미터를 URL에 직접 추가합니다.
+        const response = await axios.delete(`${API_URL}/deleteTripPlan`, {
+          params: { planId }
+        });
+        console.log(response.data);
+        if (response.data['result code'] === 200) {
+          alert('삭제되었습니다!');
+          fetchTripPlans();
+        }
+      } catch (error) {
+        console.error('Error deleting plan data:', error);
+      }
+    }
+};
+
 
   return (
     <DailyPlanSection>
-      <div className="dailyPlanContentTitle">여행 계획</div>
+      <div className="dailyPlanContentTitle">{user.nickname}님의 여행 계획</div>
       <DailyPlanList>
         {tripData && Object.keys(tripData).map(date => (
           <div key={date}>
-            <PlanDate>{formatDate(date)}</PlanDate>
-            <ul>
+            <PlanDate><FcCalendar />&nbsp;&nbsp;{formatDate(date)}</PlanDate>
+            <ul className="dailyPlanListContent">
               {tripData[date].map((plan, index) => (
                 <DailyPlanItem key={index}>
                   <PlanTitle>
-                    <div>{plan.title}</div>
+                    <div>{plan.title} <IoIosRemoveCircle color='#ff6666' style={{ margin: ' 0 8px 0 5px' }} onClick={() => handleDeleteClick(plan.planId)} /></div>
                     <PlanTime>{plan.time}</PlanTime>
                   </PlanTitle>
                   <PlanAddress><FaMapMarkerAlt style={{ marginRight: '4px' }} />{plan.address}</PlanAddress>

@@ -98,6 +98,7 @@ const Chat = () => {
   // 사용자 메세지 직접 입력 
   const handleSendMessage = async (event) => {
     event.preventDefault();
+    dispatch(deleteTrip());
     if (newMessage.trim()) {
       const userMessage = { message: newMessage, sender: 'user', isSerp: false, timestamp: new Date().toISOString() };
       setMessages(prevMessages => [...prevMessages, userMessage]);
@@ -111,6 +112,7 @@ const Chat = () => {
       setMessages(prevMessages => [...prevMessages, { sender: 'bot', isLoading: true, message: '', isSerp: false }]);
 
       try {
+        
         await axios.post(`${API_URL}/saveChatMessage`, {
           userId: user.userId,
           tripId: user.mainTrip,
@@ -142,7 +144,7 @@ const Chat = () => {
 
           // 성향 반영 메시지 추가
           if (function_name === "search_places") {
-            const preferenceMessage = { message: `${user.nickname}님의 여행 성향을 반영하여 추천된 장소들입니다🤓\n가고싶은 곳의 번호와 함께 저장할게라고 말해주세요!\n예시: "2번 7번 8번 저장할게"`, sender: 'bot', isSerp: false, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
+            const preferenceMessage = { message: `${user.nickname}님의 여행 성향을 반영하여 추천된 장소들입니다🤓\n가고싶은 곳의 번호와 함께 저장할게라고 말해주세요!\n예시: "2,7,8번 저장할게"`, sender: 'bot', isSerp: false, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
             setMessages(prevMessages => [...prevMessages, preferenceMessage]);
 
             await axios.post(`${API_URL}/saveChatMessage`, {
@@ -154,9 +156,10 @@ const Chat = () => {
             });
             dispatch(deleteTrip());
           } else if (function_name === "save_plan") {
+            dispatch(updateTrip(function_name));
             // 계획 저장 함수 호출되었을 시 
             const crewMessage = { 
-            message: `${user.nickname}님의 여행 성향을 반영하여 만든 여행 계획입니다🥰\n여행 계획을 다 짜셨다면 ${tripInfo.city}에 있는 크루를 찾아보시겠어요?`, 
+            message: `${user.nickname}님의 여행 성향을 반영하여 만든 여행 계획입니다🥰\n여행 계획을 다 짜셨다면 ${tripInfo.city}에 있는 크루들도 만나보세요!`, 
             sender: 'bot', 
             isSerp: false, 
             timestamp: new Date().toISOString(), 
@@ -172,26 +175,15 @@ const Chat = () => {
               message: crewMessage.message,
               isSerp: false
             });
-
-            const navLinkMessage = {
-              message: "크루 찾기",
-              sender: 'bot',
-              isSerp: false,
-              timestamp: new Date().toISOString(),
-              currentPage: 0,
-              isLoading: false,
-              isButton: true // 버튼..
-            };
-            setMessages(prevMessages => [...prevMessages, navLinkMessage]);
-            dispatch(updateTrip(function_name));
           } else if (function_name === "save_place"){ 
              dispatch(updateTrip(function_name));
           } else if (function_name === "update_trip_plan_confirmed"){
             dispatch(updateTrip(function_name));
+          }else if(function_name === "search_place_details"){
+            dispatch(updateTrip(function_name));
           }else{
             dispatch(deleteTrip());
           }
-
           if (isSerp) {
             setGeoCoordinates(geo); // geo 좌표를 상태에 저장합니다.
           } 
@@ -207,6 +199,7 @@ const Chat = () => {
         }
       } catch (error) {
         console.error('Error sending message:', error.response ? error.response.data : error.message);
+
       } finally {
         setLoading(false); // 메시지 전송 후 로딩 종료
       }
@@ -257,7 +250,7 @@ const Chat = () => {
 
         // 성향 반영 메시지 추가
         if (function_name === "search_places") {
-          const preferenceMessage = { message: `${user.nickname}님의 여행 성향을 반영하여 추천된 장소들입니다🤓\n가고싶은 곳의 번호와 함께 저장할게라고 말해주세요!\n예시: "2번 7번 8번 저장할게"`, sender: 'bot', isSerp: false, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
+          const preferenceMessage = { message: `${user.nickname}님의 여행 성향을 반영하여 추천된 장소들입니다🤓\n가고싶은 곳의 번호와 함께 저장할게라고 말해주세요!\n예시: "2, 7,8번 저장할게"`, sender: 'bot', isSerp: false, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
           setMessages(prevMessages => [...prevMessages, preferenceMessage]);
 
           await axios.post(`${API_URL}/saveChatMessage`, {
