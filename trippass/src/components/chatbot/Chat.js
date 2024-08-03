@@ -123,9 +123,22 @@ const Chat = () => {
         const response = await axios.post(`${API_URL}/callOpenAIFunction`, {
           userId: user.userId,
           tripId: user.mainTrip,
+          latitude: tripInfo.latitude, // 위도 
+          longitude: tripInfo.longitude, // 경도
+          personality: user.personality,
           sender: 'user',
           message: newMessage,
         });
+        
+        console.log({
+          userId: user.userId,
+          tripId: user.mainTrip,
+          latitude: tripInfo.latitude, // 위도 
+          longitude: tripInfo.longitude, // 경도
+          personality: user.personality,
+          sender: 'user',
+          message: newMessage
+        })
 
         if (response.data.result_code === 200) {
           const formatted_results_str = response.data.response;
@@ -228,9 +241,22 @@ const Chat = () => {
       const response = await axios.post(`${API_URL}/callOpenAIFunction`, {
         userId: user.userId,
         tripId: user.mainTrip,
+        latitude: tripInfo.latitude, // 위도 
+        longitude: tripInfo.longitude, // 경도
+        personality: user.personality,
         sender: 'user',
         message: userQuery
       });
+
+      console.log({
+        userId: user.userId,
+        tripId: user.mainTrip,
+        latitude: tripInfo.latitude, // 위도 
+        longitude: tripInfo.longitude, // 경도
+        personality: user.personality,
+        sender: 'user',
+        message: userQuery
+      })
 
       if (response.data.result_code === 200) {
         const formatted_results_str = response.data.response;
