@@ -112,6 +112,18 @@
         ]
       },
       {
+        "country": "말레이시아",
+        "city": [
+          {"city_name": "쿠알라룸푸르"},
+          {"city_name": "페낭"},
+          {"city_name": "조호르바루"},
+          {"city_name": "랑카위"},
+          {"city_name": "코타키나발루"},
+          {"city_name": "보홀"},
+          {"city_name": "이포"}
+        ]
+      },
+      {
         "country": "호주",
         "city": [
           {"city_name": "멜버른", "latitude": -37.814, "longitude": 144.96332},
@@ -152,12 +164,33 @@
         ]
       },
       {
+        "country": "그리스",
+        "city": [
+          {"city_name": "아테네"},
+          {"city_name": "산토리니"},
+          {"city_name": "미코노스"},
+          {"city_name": "크레타"},
+          {"city_name": "로도스"},
+          {"city_name": "테살로니키"}
+        ]
+      },
+      {
         "country": "독일",
         "city": [
           {"city_name": "베를린", "latitude": 52.520008, "longitude": 13.404954},
           {"city_name": "뮌헨", "latitude": 48.135125, "longitude": 11.581981},
           {"city_name": "프랑크푸르트", "latitude": 50.110924, "longitude": 8.682127},
           {"city_name": "쾰른", "latitude": 50.937531, "longitude": 6.960279}
+        ]
+      },
+      {
+        "country": "스위스",
+        "city": [
+          {"city_name": "취리히"},
+          {"city_name": "제네바"},
+          {"city_name": "루체른"},
+          {"city_name": "인터라켄"},
+          {"city_name": "베른"}
         ]
       },
       {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // useRef 제거
 import { useSelector, useDispatch } from 'react-redux';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -9,6 +9,29 @@ import { API_URL } from "../../config";
 import { useNavigate } from 'react-router-dom';
 import { updateUserMainTrip } from '../../store/userSlice';
 import 지영이 from '../../assets/지영이.png';
+
+
+const TypingEffect = ({ text, typingSpeed = 100, delay = 1000 }) => {
+  const [displayText, setDisplayText] = useState('');
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (displayText === text) {
+      const eraseTimeout = setTimeout(() => {
+        setDisplayText('');
+      }, delay);
+      return () => clearTimeout(eraseTimeout);
+    } else {
+      const typingInterval = setInterval(() => {
+        setDisplayText(prev => prev + text[index]);
+        setIndex(prev => (prev + 1) % text.length);
+      }, typingSpeed);
+      return () => clearInterval(typingInterval);
+    }
+  }, [displayText, text, index, typingSpeed, delay]);
+
+  return <div className="typing-text">{displayText}</div>;
+};
 
 const NewTrip = ({ onClose }) => {
   const { user } = useSelector(state => state.user);
@@ -26,7 +49,7 @@ const NewTrip = ({ onClose }) => {
   const handleCountryChange = (event) => {
     const country = event.target.value;
     setSelectedCountry(country);
-    
+
     const selectedCountryObj = countries.data.find(c => c.country === country);
     if (selectedCountryObj) {
       const city = selectedCountryObj.city[0];
@@ -48,7 +71,7 @@ const NewTrip = ({ onClose }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true); // 로딩 상태 시작
+    setLoading(true);
     const formData = new FormData();
     formData.append('userId', user.userId);
     formData.append('title', title);
@@ -78,23 +101,28 @@ const NewTrip = ({ onClose }) => {
       console.error('Error adding trip:', error);
       alert('여행 정보 저장에 실패했습니다. 다시 시도해주세요.');
     } finally {
-      setLoading(false); // 로딩 상태 종료
+      setLoading(false);
     }
   };
 
   return (
     <div className="popup-overlay">
       <div className="popup-content">
-        {loading && ( // 로딩 오버레이와 스피너 추가
+        {loading && (
           <div className="loading-overlay">
             <div className="spinner"></div>
+            <TypingEffect 
+              text="AI가 이미지를 생성중입니다! 잠시만 기다려주세요. . . 😎" 
+              typingSpeed={100}
+              delay={1000}    
+            />
           </div>
         )}
         <div className="new-trip-title">New Trip</div>
         <form className="new-trip-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label>제목</label>
-            <input type="text" placeholder="제목을 입력하세요." value={title} onChange={(e) => setTitle(e.target.value)} disabled={loading}/>
+            <input type="text" placeholder="제목을 입력하세요." value={title} onChange={(e) => setTitle(e.target.value)} disabled={loading} />
           </div>
           <div className="form-group">
             <label>지역</label>
@@ -136,7 +164,7 @@ const NewTrip = ({ onClose }) => {
           </div>
           <div className="form-group">
             <label>배너</label>
-                <img src={지영이} alt="지영이" className="bannerBot"/>
+            <img src={지영이} alt="지영이" className="bannerBot" />
           </div>
           <div className="form-group btnList">
             <button type="submit" disabled={loading}>저장</button>

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { API_URL } from "../../config";
 import styled from 'styled-components';
 import { FaMapMarkerAlt } from "react-icons/fa"; 
+import { deleteTrip } from "../../store/tripSlice";
 
 // Styled components
 const DailyPlanSection = styled.div`
@@ -63,30 +64,33 @@ const PlanDescription = styled.div`
   margin-top: 8px;
   margin-left: 3%;
   margin-right: 3%;
+  line-height: 1.2rem;
 `;
 
 const DailyPlan = () => {
   const { user } = useSelector(state => state.user);
+  const trip = useSelector(state => state.trip.trip);
   const [tripData, setTripData] = useState(null);
+  const dispatch = useDispatch();
 
   // 초 단위를 HH:MM 형식으로 변환하는 함수
-  const secondsToTimeString = (seconds) => {
+  const secondsToTimeString = useCallback((seconds) => {
     const hours = Math.floor(seconds / 3600).toString().padStart(2, '0');
     const minutes = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
     return `${hours}:${minutes}`;
-  };
+  }, []);
 
   // 날짜를 "YYYY년 MM월 DD일" 형식으로 변환하는 함수
-  const formatDate = (dateString) => {
+  const formatDate = useCallback((dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}년 ${month}월 ${day}일`;
-  };
+  }, []);
 
   // 날짜별로 그룹화하는 함수
-  const groupByDate = (data) => {
+  const groupByDate = useCallback((data) => {
     return data.reduce((acc, plan) => {
       const { date } = plan;
       if (!acc[date]) {
@@ -95,41 +99,48 @@ const DailyPlan = () => {
       acc[date].push(plan);
       return acc;
     }, {});
-  };
+  }, []);
+
+  // 데이터를 가져오는 함수
+  const fetchTripPlans = useCallback(async () => {
+    try {
+      const response = await axios.get(`${API_URL}/getTripPlans?tripId=${user.mainTrip}`);
+      if (response.data['result code'] === 200) {
+        let data = response.data.response;
+        // 시간이 초 단위로 되어 있으면 변환
+        data = data.map(plan => ({
+          ...plan,
+          time: typeof plan.time === 'number' ? secondsToTimeString(plan.time) : plan.time
+        }));
+
+        // 날짜와 시간 순서대로 소팅
+        data = data.sort((a, b) => {
+          const dateTimeA = new Date(`${a.date}T${a.time}`);
+          const dateTimeB = new Date(`${b.date}T${b.time}`);
+          return dateTimeA - dateTimeB;
+        });
+
+        setTripData(groupByDate(data));
+      } else {
+        console.error('Failed to fetch trip data:', response.data);
+      }
+    } catch (error) {
+      console.error('일정 가져오기 실패:', error.message);
+    }
+  }, [user.mainTrip, secondsToTimeString, groupByDate]);
 
   useEffect(() => {
-    const fetchTripPlans = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/getTripPlans?tripId=${user.mainTrip}`);
-        if (response.data['result code'] === 200) {
-          let data = response.data.response;
-          // 시간이 초 단위로 되어 있으면 변환
-          data = data.map(plan => ({
-            ...plan,
-            time: typeof plan.time === 'number' ? secondsToTimeString(plan.time) : plan.time
-          }));
-
-          // 날짜와 시간 순서대로 소팅
-          data = data.sort((a, b) => {
-            const dateTimeA = new Date(`${a.date}T${a.time}`);
-            const dateTimeB = new Date(`${b.date}T${b.time}`);
-            return dateTimeA - dateTimeB;
-          });
-
-          setTripData(groupByDate(data));
-        
-        } else {
-          console.error('Failed to fetch trip data:', response.data);
-        }
-      } catch (error) {
-        console.error('일정 가져오기 실패:', error.message);
-      }
-    };
-
     if (user.mainTrip) {
       fetchTripPlans();
     }
-  }, [user.mainTrip]);
+  }, [user.mainTrip, fetchTripPlans]);
+
+  useEffect(() => {
+    if (trip === "save_plan") {
+      fetchTripPlans();
+      dispatch(deleteTrip());
+    }
+  }, [trip, fetchTripPlans, dispatch]);
 
   return (
     <DailyPlanSection>
@@ -146,9 +157,7 @@ const DailyPlan = () => {
                     <PlanTime>{plan.time}</PlanTime>
                   </PlanTitle>
                   <PlanAddress><FaMapMarkerAlt style={{ marginRight: '4px' }} />{plan.address}</PlanAddress>
-
                   <PlanDescription>{plan.description}</PlanDescription>
-
                 </DailyPlanItem>
               ))}
             </ul>

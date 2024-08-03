@@ -10,8 +10,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import botProfileImage from '../../assets/bot1.png';
 import LottieAnimation from './LottieAnimation';
 import { NavLink } from 'react-router-dom';
-import { updateTripPlace, deleteTripPlace } from '../../store/tripSlice';
-
+import { updateTrip, deleteTrip } from "../../store/tripSlice";
 
 
 // Marker 아이콘 설정 (기본 아이콘이 제대로 표시되지 않는 경우)
@@ -146,7 +145,7 @@ const Chat = () => {
           const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
           const geo = response.data.geo; // 추가된 geo 데이터를 받습니다.
           const function_name = response.data.function_name;
-
+          
           // 로딩 상태의 메시지를 실제 메시지로 교체
           setMessages(prevMessages => prevMessages.map((msg, index) =>
             index === loadingMessageIndex ? serpMessage : msg
@@ -164,7 +163,9 @@ const Chat = () => {
               message: preferenceMessage.message,
               isSerp: false
             });
+            dispatch(deleteTrip());
           } else if (function_name === "save_plan") {
+            // 계획 저장 함수 호출되었을 시 
             const crewMessage = { 
             message: `${user.nickname}님의 여행 성향을 반영하여 만든 여행 계획입니다🥰\n여행 계획을 다 짜셨다면 ${tripInfo.city}에 있는 크루를 찾아보시겠어요?`, 
             sender: 'bot', 
@@ -193,15 +194,17 @@ const Chat = () => {
               isButton: true // 버튼..
             };
             setMessages(prevMessages => [...prevMessages, navLinkMessage]);
+            dispatch(updateTrip(function_name));
+          } else if (function_name === "save_place"){
+             // 저장하는 채팅 실행 했을때 , redux store 에 내용 업데이트  
+             dispatch(updateTrip(function_name));
+          } else{
+            dispatch(deleteTrip());
           }
 
           if (isSerp) {
             setGeoCoordinates(geo); // geo 좌표를 상태에 저장합니다.
-            dispatch(deleteTripPlace());
-          } else {
-            dispatch(updateTripPlace());
-          }
-
+          } 
           await axios.post(`${API_URL}/saveChatMessage`, {
             userId: user.userId,
             tripId: user.mainTrip,
@@ -261,9 +264,11 @@ const Chat = () => {
       if (response.data.result_code === 200) {
         const formatted_results_str = response.data.response;
         const isSerp = true;
-        const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
+        const savePlace = false;
+        const serpMessage = { message: formatted_results_str, sender: 'bot', isSerp, savePlace, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
         const geo = response.data.geo;
         const function_name = response.data.function_name;
+        
 
         // 로딩 상태의 메시지를 실제 메시지로 교체
         setMessages(prevMessages => prevMessages.map((msg, index) =>
@@ -285,7 +290,7 @@ const Chat = () => {
         }
 
         setGeoCoordinates(geo);
-        dispatch(deleteTripPlace());
+
 
         await axios.post(`${API_URL}/saveChatMessage`, {
           userId: user.userId,

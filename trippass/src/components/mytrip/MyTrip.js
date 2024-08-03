@@ -101,7 +101,7 @@ const MyTrip = () => {
 
   const handleCreateNewTrip = () => {
     const userPersonality = user.personality;
-    if (userPersonality == null) {
+    if (userPersonality === "none") {
       alert("여행을 시작하시기 전에 성향을 먼저 만들어볼까요?");
       navigate('/user')
     }else{

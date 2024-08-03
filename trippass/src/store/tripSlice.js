@@ -1,22 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  tripPlace: sessionStorage.getItem('tripPlace') || null
+  trip: ""
 };
 
 const tripSlice = createSlice({
-  name: 'tripPlace',
+  name: 'trip',
   initialState,
   reducers: {
-    updateTripPlace() {
-      sessionStorage.setItem('tripPlace', "update");
+    updateTrip(state, action) {
+      state.trip = action.payload;
     },
-    deleteTripPlace(){
-      sessionStorage.setItem('tripPlace', null);
+    deleteTrip(state) {
+      state.trip = "";
     }
 }
 });
 
-export const { updateTripPlace, deleteTripPlace } = tripSlice.actions;
+export const { updateTrip, deleteTrip } = tripSlice.actions;
 
 export default tripSlice.reducer;
