@@ -45,7 +45,7 @@ const TripPlace = () => {
 
   useEffect(() => {
     fetchTripPlaceInfo();
-  }, [fetchTripPlaceInfo]);
+  }, [user.userId,user.mainTrip,fetchTripPlaceInfo]);
 
   useEffect(() => {
     if (trip === "save_place") {

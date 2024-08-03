@@ -213,6 +213,15 @@ const DashboardCalendar = () => {
     return acc;
   }, {});
 
+  const handleClickChat = () => {
+    if(user.mainTrip){
+      navigate('/chat');
+    }else if(user.mainTrip === null){
+      alert("아직 여행 계획이 없어요! 계획을 먼저 만들어볼까요?");
+      navigate('/mytrip');
+    }
+  };
+
   return (
     <CalendarWrapper>
       <StyledCalendar
@@ -234,7 +243,7 @@ const DashboardCalendar = () => {
             <NoPlansMessage>
               아직 여행 계획이 없어요! <br /> 챗봇과 함께 여행 계획을 만들러 가볼까요?<br/><br/>
               <IoArrowForwardCircleSharp
-                onClick={() => navigate('/chat')} // 아이콘 클릭 시 /chat 페이지로 이동
+                onClick={handleClickChat} 
                 style={{ cursor: 'pointer', fontSize: '2em' }} // 포인터 커서 추가
               />
             </NoPlansMessage>
