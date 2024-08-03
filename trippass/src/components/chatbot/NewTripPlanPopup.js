@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { API_URL } from '../../config';
 import styled from 'styled-components';
+import { updateTrip } from "../../store/tripSlice";
 
 const PopupContainer = styled.div`
   position: fixed;
@@ -28,6 +29,8 @@ const PopupContent = styled.div`
 const NewTripPlanPopup = ({ onClose, placeInfo }) => {
   const { user } = useSelector(state => state.user);
   const [tripDates, setTripDates] = useState([]);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchTripPlans = async () => {
@@ -97,7 +100,7 @@ const NewTripPlanPopup = ({ onClose, placeInfo }) => {
     
         if (response.data['result code'] === 200) {
             alert('일정를 추가했습니다.');
-            window.location.reload();
+            dispatch(updateTrip("add_plan"));
             onClose();
         } else {
             console.error('Failed to add trip plan:', response.data);

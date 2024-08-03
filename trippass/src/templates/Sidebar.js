@@ -8,10 +8,22 @@ import { RiRobot2Line } from "react-icons/ri";
 import { LuCalendarDays } from "react-icons/lu";
 import axios from 'axios';
 import { API_URL } from '../config';
+import { useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
   const { isAuthenticated, user } = useSelector(state => state.user);
   const [tripData, setTripData] = useState(null);
+  const navigate = useNavigate();
+
+  const handleChatbotClick = (event) => {
+    event.preventDefault();  // 기본 링크 이동 동작을 막습니다.
+    if (user && user.mainTrip) {
+      navigate('/chat');
+    } else if (user && user.mainTrip === null) {
+      alert("아직 여행 계획이 없어요! 계획을 먼저 만들어볼까요?");
+      navigate('/mytrip');
+    }
+  };
 
   useEffect(() => {
     const fetchTripData = async () => {
@@ -117,20 +129,39 @@ const Sidebar = () => {
               TRIP CREW
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              to="/chat"
-              style={({ isActive }) => ({
-                backgroundColor: isActive ? '#F3F5F8' : '',
-                padding: isActive ? '' : '',
-                borderRadius: isActive ? '13px' : '',
-                color: isActive ? '#5F6165' : ''
-              })}
-            >
-              <RiRobot2Line size={24} />&nbsp;
-              CHATBOT
-            </NavLink>
-          </li>
+          {isAuthenticated && user && user.mainTrip && (
+            <li>
+              <NavLink
+                to="/chat"
+                style={({ isActive }) => ({
+                  backgroundColor: isActive ? '#F3F5F8' : '',
+                  padding: isActive ? '' : '',
+                  borderRadius: isActive ? '13px' : '',
+                  color: isActive ? '#5F6165' : ''
+                })}
+              >
+                <RiRobot2Line size={24} />&nbsp;
+                CHATBOT
+              </NavLink>
+            </li>
+          )}
+          {isAuthenticated && user && user.mainTrip === null && (
+            <li>
+              <NavLink
+                to="/chat"
+                onClick={handleChatbotClick}
+                style={({ isActive }) => ({
+                  backgroundColor: isActive ? '#F3F5F8' : '',
+                  padding: isActive ? '' : '',
+                  borderRadius: isActive ? '13px' : '',
+                  color: isActive ? '#5F6165' : ''
+                })}
+              >
+                <RiRobot2Line size={24} />&nbsp;
+                CHATBOT
+              </NavLink>
+            </li>
+          )}
         </ul>
       </div>
       <div className="sidebar-user">

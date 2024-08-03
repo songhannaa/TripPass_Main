@@ -136,10 +136,10 @@ const DailyPlan = () => {
   }, [user.mainTrip, fetchTripPlans]);
 
   useEffect(() => {
-    if (trip === "save_plan") {
+    if (trip === "save_plan" || trip === "update_trip_plan" || trip === "add_plan") {
       fetchTripPlans();
       dispatch(deleteTrip());
-    }
+    } 
   }, [trip, fetchTripPlans, dispatch]);
 
   return (
