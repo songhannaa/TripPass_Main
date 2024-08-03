@@ -192,7 +192,7 @@
 .dailyPlanContentTitle{
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 8%;
+  margin-bottom: 6%;
 }
 
 .dailyPlanDate{
@@ -212,4 +212,10 @@
   top:40px;
   line-height: 1.3rem;
   color: #808080;
+}
+
+.dailyPlanListContent{
+  margin-bottom: 20px;
+  border-bottom: px solid #ddd;
+  padding-bottom: 10px;
 }
