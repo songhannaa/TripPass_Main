@@ -92,6 +92,7 @@ const TripPlace = () => {
     setPlaceToDelete(null);
   };
 
+
   return (
     <>
       <div className="tripPlaceSection">

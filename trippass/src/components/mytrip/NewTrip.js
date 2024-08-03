@@ -41,7 +41,9 @@ const NewTrip = ({ onClose }) => {
   const [endDate, setEndDate] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const [loading, setLoading] = useState(false); // 로딩 상태 추가
   const navigate = useNavigate();
 
   const handleCountryChange = (event) => {
@@ -50,13 +52,21 @@ const NewTrip = ({ onClose }) => {
 
     const selectedCountryObj = countries.data.find(c => c.country === country);
     if (selectedCountryObj) {
-      setSelectedCity(selectedCountryObj.city[0].city_name);
+      const city = selectedCountryObj.city[0];
+      setSelectedCity(city.city_name);
+      setLatitude(city.latitude);
+      setLongitude(city.longitude);
     }
   };
 
   const handleCityChange = (event) => {
-    const city = event.target.value;
-    setSelectedCity(city);
+    const city_name = event.target.value;
+    const selectedCountryObj = countries.data.find(c => c.country === selectedCountry);
+    const city = selectedCountryObj.city.find(city => city.city_name === city_name);
+
+    setSelectedCity(city.city_name);
+    setLatitude(city.latitude);
+    setLongitude(city.longitude);
   };
 
   const handleSubmit = async (event) => {
@@ -67,6 +77,8 @@ const NewTrip = ({ onClose }) => {
     formData.append('title', title);
     formData.append('contry', selectedCountry);
     formData.append('city', selectedCity);
+    formData.append('latitude', latitude);
+    formData.append('longitude', longitude);
     formData.append('startDate', startDate ? startDate.toISOString().split('T')[0] : '');
     formData.append('endDate', endDate ? endDate.toISOString().split('T')[0] : '');
 
