@@ -112,7 +112,7 @@
   .form-group input,
   .form-group select,
   .form-group textarea,
-  .file-input-container {
+  .file-input-container{
 	width: 80%;
 	padding: 10px;
 	border: 1px solid #DDDDDD;
@@ -120,6 +120,14 @@
 	box-sizing: border-box;
 	color: #757575;
   }
+
+  .form-group .date-picker-container {
+	width: 80%;
+	box-sizing: border-box;
+	color: #757575;
+  }
+
+
   
   .region-select {
 	display: grid;
