@@ -9,6 +9,7 @@ import { API_URL } from "../../config";
 import { useNavigate } from 'react-router-dom';
 import { updateUserMainTrip } from '../../store/userSlice';
 import 지영이 from '../../assets/지영이.png';
+import Swal from "sweetalert2";
 
 
 const TypingEffect = ({ text, typingSpeed = 100, delay = 1000 }) => {
@@ -89,17 +90,62 @@ const NewTrip = ({ onClose }) => {
         }
       });
       if (response.data["result code"] === 200) {
-        alert('여행 계획이 저장되었습니다!');
+        //alert('여행 계획이 저장되었습니다!');
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "success",
+          title: "여행 계획이 저장되었습니다!"
+        });
         navigate('/tripPlan');
         const tripId = response.data.response;
         dispatch(updateUserMainTrip(tripId));
         onClose();
       } else {
-        alert('여행 정보 저장에 실패했습니다. 다시 시도해주세요.');
+        //alert('여행 정보 저장에 실패했습니다. 다시 시도해주세요.');
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "error",
+          title: "여행 정보 저장에 실패했습니다. 다시 시도해주세요."
+        });
       }
     } catch (error) {
       console.error('Error adding trip:', error);
-      alert('여행 정보 저장에 실패했습니다. 다시 시도해주세요.');
+      //alert('여행 정보 저장에 실패했습니다. 다시 시도해주세요.');
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 1000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "error",
+        title: "여행 정보 저장에 실패했습니다. 다시 시도해주세요."
+      });
     } finally {
       setLoading(false);
     }
