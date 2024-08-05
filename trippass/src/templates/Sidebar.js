@@ -9,6 +9,7 @@ import { LuCalendarDays } from "react-icons/lu";
 import axios from 'axios';
 import { API_URL } from '../config';
 import { useNavigate } from 'react-router-dom';
+import Swal from "sweetalert2";
 
 const Sidebar = () => {
   const { isAuthenticated, user } = useSelector(state => state.user);
@@ -20,7 +21,12 @@ const Sidebar = () => {
     if (user && user.mainTrip) {
       navigate('/chat');
     } else if (user && user.mainTrip === null) {
-      alert("아직 여행 계획이 없어요! 계획을 먼저 만들어볼까요?");
+      Swal.fire({
+        icon: 'error',
+        title: '아직 여행 계획이 없어요!',
+        text: '계획을 먼저 만들어볼까요?',
+      })
+      //alert("아직 여행 계획이 없어요! 계획을 먼저 만들어볼까요?");
       navigate('/mytrip');
     }
   };
@@ -129,23 +135,6 @@ const Sidebar = () => {
               TRIP CREW
             </NavLink>
           </li>
-          {isAuthenticated && user && user.mainTrip && (
-            <li>
-              <NavLink
-                to="/chat"
-                style={({ isActive }) => ({
-                  backgroundColor: isActive ? '#F3F5F8' : '',
-                  padding: isActive ? '' : '',
-                  borderRadius: isActive ? '13px' : '',
-                  color: isActive ? '#5F6165' : ''
-                })}
-              >
-                <RiRobot2Line size={24} />&nbsp;
-                CHATBOT
-              </NavLink>
-            </li>
-          )}
-          {isAuthenticated && user && user.mainTrip === null && (
             <li>
               <NavLink
                 to="/chat"
@@ -161,7 +150,6 @@ const Sidebar = () => {
                 CHATBOT
               </NavLink>
             </li>
-          )}
         </ul>
       </div>
       <div className="sidebar-user">
