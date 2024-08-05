@@ -10,6 +10,8 @@ RUN npm install
 
 COPY . ./
 
+COPY src/secret.json ./src/secret.json
+
 RUN npm run build
 
 # Step 2: Serve the application with nginx
