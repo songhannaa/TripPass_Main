@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; // useRef 제거
+import React, { useState, useEffect } from "react"; 
 import { useSelector, useDispatch } from 'react-redux';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -43,7 +43,7 @@ const NewTrip = ({ onClose }) => {
   const [selectedCity, setSelectedCity] = useState(null);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const [loading, setLoading] = useState(false); // 로딩 상태 추가
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleCountryChange = (event) => {
@@ -79,8 +79,8 @@ const NewTrip = ({ onClose }) => {
     formData.append('city', selectedCity);
     formData.append('latitude', latitude);
     formData.append('longitude', longitude);
-    formData.append('startDate', startDate ? startDate.toISOString().split('T')[0] : '');
-    formData.append('endDate', endDate ? endDate.toISOString().split('T')[0] : '');
+    formData.append('startDate', startDate ? new Date(startDate.getTime() - (startDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0] : '');
+    formData.append('endDate', endDate ? new Date(endDate.getTime() - (endDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0] : '');
 
     try {
       const response = await axios.post(`${API_URL}/insertmyTrips`, formData, {
