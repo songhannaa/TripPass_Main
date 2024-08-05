@@ -250,7 +250,7 @@ const Chat = () => {
 
         // 성향 반영 메시지 추가
         if (function_name === "search_places") {
-          const preferenceMessage = { message: `${user.nickname}님의 여행 성향을 반영하여 추천된 장소들입니다🤓\n가고싶은 곳의 번호와 함께 저장할게라고 말해주세요!\n예시: "2, 7,8번 저장할게"`, sender: 'bot', isSerp: false, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
+          const preferenceMessage = { message: `${user.nickname}님의 여행 성향을 반영하여 추천된 장소들입니다🤓\n가고싶은 곳의 번호와 함께 저장할게라고 말해주세요!\n예시: "2,7,8번 저장할게"`, sender: 'bot', isSerp: false, timestamp: new Date().toISOString(), currentPage: 0, isLoading: false };
           setMessages(prevMessages => [...prevMessages, preferenceMessage]);
 
           await axios.post(`${API_URL}/saveChatMessage`, {
@@ -304,8 +304,9 @@ const Chat = () => {
   const handleUserInputUpdateButtonClick = async () =>{
     const botMessage = `어떤 일정 수정을 도와드릴까요?🤓\n
                         수정을 원하시는 일정의 시간 또는 날짜를 입력해주세요.📆\n
-                        예시: British Museum 관람 일정을 17시 30분으로 바꿔줘, \n
-                             Serp Kitchen 식사 일정을 9월 27일 17시 30분으로 바꿔줘`;
+                        [예시]\n
+                        British Museum 관람 일정의 시간을 17시 30분으로 변경해줘, \n
+                        Serp Kitchen 식사 일정을 9월 27일 17시 30분으로 바꿔줘`;
     const botChatMessage = { message: botMessage, sender: 'bot', isSerp: false, timestamp: new Date().toISOString() };
 
     setMessages(prevMessages => [...prevMessages, botChatMessage]);

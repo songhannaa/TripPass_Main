@@ -111,6 +111,7 @@
   
   .form-group input,
   .form-group select,
+  .form-group textarea,
   .file-input-container {
 	width: 80%;
 	padding: 10px;
