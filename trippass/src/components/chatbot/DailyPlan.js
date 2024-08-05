@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { FaMapMarkerAlt } from "react-icons/fa"; 
 import { FcCalendar } from "react-icons/fc";
 import { IoIosRemoveCircle } from "react-icons/io";
+import Swal from "sweetalert2";
 
 
 // Styled components
@@ -144,24 +145,61 @@ const DailyPlan = () => {
     } 
   }, [trip, fetchTripPlans]);
 
-  const handleDeleteClick = async (planId) => {
-    const confirmDelete = window.confirm('여행 계획을 삭제하시겠습니까?');
-    if (confirmDelete) {
-      try {
-        // Axios DELETE 요청에서 쿼리 파라미터를 URL에 직접 추가합니다.
-        const response = await axios.delete(`${API_URL}/deleteTripPlan`, {
-          params: { planId }
-        });
-        console.log(response.data);
-        if (response.data['result code'] === 200) {
-          alert('삭제되었습니다!');
-          fetchTripPlans();
+  const handleDeleteClick = (planId) => {
+    Swal.fire({
+      title: "해당 여행을 삭제하시겠습니까?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "삭제",
+      cancelButtonText: "취소"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.delete(`${API_URL}/deleteTripPlan`, {
+            params: { planId }
+          });
+          console.log(response.data);
+          if (response.data['result code'] === 200) {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 1000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              }
+            });
+            Toast.fire({
+              icon: "success",
+              title: "계획이 삭제되었습니다."
+            });
+            fetchTripPlans();
+          }
+        } catch (error) {
+          console.error('Error deleting plan data:', error);
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            }
+          });
+          Toast.fire({
+            icon: "error",
+            title: "계획 삭제 중 오류가 발생했습니다."
+          });
         }
-      } catch (error) {
-        console.error('Error deleting plan data:', error);
       }
-    }
-};
+    });
+  };
 
 
   return (

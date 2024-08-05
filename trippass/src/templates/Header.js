@@ -9,6 +9,7 @@ import { MdOutlineNotificationsNone } from "react-icons/md";
 import { FaTimes} from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { API_URL } from '../config';
+import Swal from "sweetalert2";
 
 const Header = () => {
   const { isAuthenticated, user } = useSelector(state => state.user);
@@ -72,9 +73,22 @@ const Header = () => {
   const handleLogout = async () => {
     try {
       await axios.post(`${API_URL}/clearMemory`);
-      alert("로그아웃 되었습니다");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 1000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "info",
+        title: "로그아웃 되었습니다."
+      });
       dispatch(logout());
-      window.location.reload();
     } catch (error) {
       console.error('Error clearing memory:', error);
     }

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { API_URL } from '../../config';
 import styled from 'styled-components';
 import { updateTrip } from "../../store/tripSlice";
+import Swal from "sweetalert2";
 
 const PopupContainer = styled.div`
   position: fixed;
@@ -99,7 +100,22 @@ const NewTripPlanPopup = ({ onClose, placeInfo }) => {
         )
     
         if (response.data['result code'] === 200) {
-            alert('일정를 추가했습니다.');
+            //alert('일정를 추가했습니다.');
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 1000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              }
+            });
+            Toast.fire({
+              icon: "success",
+              title: "일정을 추가했습니다!"
+            });
             dispatch(updateTrip("add_plan"));
             onClose();
         } else {

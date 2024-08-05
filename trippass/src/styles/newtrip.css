@@ -189,6 +189,17 @@
 	text-align: center;
   }
 
+  .new-trip-form button[type="button"] {
+	background: #ff6d6d;
+	color: #ffffff;
+	padding: 10px;
+	border: none;
+	border-radius: 10px;
+	cursor: pointer;
+	width: 25%;
+	text-align: center;
+  }
+
   
   .btnList{
 	justify-content: center;

@@ -10,6 +10,7 @@ import { FaMapMarkerAlt } from "react-icons/fa"; // 아이콘 임포트
 import { RiTeamLine } from 'react-icons/ri'; // RiTeamLine 아이콘 임포트
 import { IoArrowForwardCircleSharp } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom'; // useNavigate 임포트
+import Swal from "sweetalert2";
 
 
 const colors = [
@@ -217,7 +218,12 @@ const DashboardCalendar = () => {
     if(user.mainTrip){
       navigate('/chat');
     }else if(user.mainTrip === null){
-      alert("아직 여행 계획이 없어요! 계획을 먼저 만들어볼까요?");
+      //alert("아직 여행 계획이 없어요! 계획을 먼저 만들어볼까요?");
+      Swal.fire({
+        icon: 'error',
+        title: '아직 여행 계획이 없어요!',
+        text: '계획을 먼저 만들어볼까요? 😎',
+      })
       navigate('/mytrip');
     }
   };
