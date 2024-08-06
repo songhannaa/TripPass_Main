@@ -126,7 +126,7 @@ const UserDeletePopup = ({ onClose }) => {
             </div>
             <div className="form-group btnList">
               <button type="submit" onClick={handleConfirm}>탈퇴하기</button>
-              <button type="button" onClick={onClose}>함께하기</button>
+              <button type="button" className="userDeletePopupButton" onClick={onClose}>함께하기</button>
             </div>
           </form>
         </PopupContent>

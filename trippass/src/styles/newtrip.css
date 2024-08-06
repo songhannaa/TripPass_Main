@@ -189,7 +189,7 @@
 	text-align: center;
   }
 
-  .new-trip-form button[type="button"] {
+  .userDeletePopupButton {
 	background: #ff6d6d;
 	color: #ffffff;
 	padding: 10px;
