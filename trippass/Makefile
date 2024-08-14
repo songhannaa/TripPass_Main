@@ -1,8 +1,9 @@
 start:
 	PORT=3001 npm start
-
-docker-build:
-	docker build -t trippass-react .
-
-docker-run:
-	docker run -d -p 80:80 trippass-react
+build:
+	docker build -t dockerId/imageName:latest .
+push:
+	docker push dockerId/imageName:latest
+deploy:
+	kubectl apply -f secret.yaml
+	kubectl apply -f deployment.yaml
