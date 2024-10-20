@@ -99,6 +99,13 @@
 
 
 ### 📁프로젝트 주요 기능
+1. openAI 챗봇을 통한 여행 계획 생성
+   - 사용자의 발화 의도를 파악한 함수콜링 기법을 사용하여 회원 성향에 맞는 여행 계획을 추천합니다.
+	![Group 2](https://github.com/songhannaa/TripPass_Main/blob/main/pdf/0012.png)
 
-
-
+2. 임베딩을 통한 정보 업데이트
+   - 사용자의 여행 정보를 임베딩하고 입력한 문장에 맞는 유사도를 찾아 일정을 업데이트 합니다.
+   	![Group 2](https://github.com/songhannaa/TripPass_Main/blob/main/pdf/0015.png)
+3. serpAPI를 사용한 정확한 정보 제공
+   - openAI 할루시네이션 현상을 해결하기 위해 Goolgle Map 기반의 최신의 정확한 정보를 제공합니다.
+        ![Group 2](https://github.com/songhannaa/TripPass_Main/blob/main/pdf/0022.png)
