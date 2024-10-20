@@ -53,10 +53,47 @@
 	<tr>
 		<td align="center" width="100px">사용 기술</td>
 		<td width="800px">
-		<img src="https://img.shields.io/badge/fastapi쳐 및 기능</span>
+		<img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">&nbsp
+		<img src="https://img.shields.io/badge/express-000000?style=for-the-badge&logo=express&logoColor=white">&nbsp
+		<img src="https://img.shields.io/badge/fastapi-009688?style=for-the-badge&logo=fastapi&logoColor=white">&nbsp
+		</td>
+	</tr>
+	<tr>
+		<td align="center">패키지</td>
+		<td>
+			<img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=NPM&logoColor=ffffff"/>&nbsp
+		</td>
+	</tr>
+	<tr>
+		<td align="center">언어</td>
+		<td>
+		<img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white">&nbsp
+		<img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
+		</td>
+	</tr>
+	<tr>
+		<td align="center">협업</td>
+		<td>
+			<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>&nbsp
+			<img src="https://img.shields.io/badge/Notion-5a5d69?style=for-the-badge&logo=Notion&logoColor=white"/>&nbsp
+		</td>
+	<tr> 
+		<td align="center">디자인</td>
+		<td>
+			<img src="https://img.shields.io/badge/Figma-d90f42?style=for-the-badge&logo=Figma&logoColor=white"/>&nbsp
+		</td> 
+	</tr> 
+	<tr>
+		<td align="center">IDE</td>
+		<td>
+		<img src="https://img.shields.io/badge/VSCode-007ACC?style=for-the-badge&logo=Visual%20Studio%20Code&logoColor=white"/>&nbsp
+	</tr>
+</table>
+
+## <span id="function-and-structure">5. 🔍프로젝트 구조 및 기능</span>
 
 ### 📁프로젝트 아키텍쳐
-![Group 2](https://github.com/songhannaa/TripPass_Main/blob/main/pdf/0005.png)
+![Group 2](https://github.com/songhannaa/TripPass_Main/blob/main/pdf/0012.png)
 
 
 ### 📁프로젝트 주요 기능
