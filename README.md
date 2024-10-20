@@ -27,27 +27,21 @@
 - Google Map 과 Open AI 기반의 챗봇을 통해 정확한 여행지 정보를 제공하고, 자연스러운 대화가 가능합니다.
 - 또한 , 비슷한 일정과 성향을 가진 크루를 추천 받아 만날 수 있습니다.
 
-![Group 2](https://github.com/songhannaa/findtheshop/blob/62c459f58b9b5213d1c640274164f2f1b0b26dcf/ppt/003.jpg)
+![Group 2](https://github.com/songhannaa/TripPass_Main/blob/main/pdf/0005.png)
 
 <br>
 
 ## <span id="team">2. 👨‍👩‍👧‍👦팀 소개 및 역할</span>
 
-**"농담곰 연구소"** 팀 입니다.<br/>
+**"T라노사우르스"** 팀 입니다.<br/>
 
-### 역할 분담
-| **송한나** | **장다은** | 
-| :---------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------: | 
-| <img width="360" alt="한나" src="https://avatars.githubusercontent.com/u/131218435?v=4"> | <img width="360"  alt="다은" src="https://avatars.githubusercontent.com/u/128432201?v=4"> | 
-| [songhannaa](https://github.com/songhannaa) | [absolutelydawn](https://github.com/absolutelydawn) | 
-| <img src="https://img.shields.io/badge/Team Leader-7569db"/><br> - 프로젝트 기획/개발 <br> - 백엔드 / 프론트엔드 총괄 <br> - 크롤링 및 스크래핑 <br>- 상품 정보 데이터 관리| <img src="https://img.shields.io/badge/Team Member-118704"/><br> - 프로젝트 기획/개발 <br> - 크롤링 및 스크래핑 <br> - 리뷰 데이터 관리 | 
-
+![Group 2](https://github.com/songhannaa/TripPass_Main/blob/main/pdf/0002.png)
 
 <br>
 
 ## <span id="period">3. 🗓️개발 일정</span>
 
-![Group 2](https://github.com/songhannaa/findtheshop/blob/365f75ad4a95dfbca44b91419f32c53107570eec/ppt/005.jpg)
+![Group 2](https://github.com/songhannaa/TripPass_Main/blob/main/pdf/0015.png)
 
 <br>
 
