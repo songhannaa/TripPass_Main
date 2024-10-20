@@ -1,6 +1,6 @@
 # ✈ 챗봇 기반의 맞춤형 여행 서비스 | TRIPPASS ✈
 
-![Group 2](https://github.com/songhannaa/findtheshop/blob/139b3e49bb4dc9a47fd40814aba6c8d18e3aca3e/ppt/001.jpg)
+![Group 2](https://github.com/songhannaa/TripPass_Main/blob/main/pdf/0001.png)
 
 <div align="center">
 
