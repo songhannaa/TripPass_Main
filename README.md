@@ -17,6 +17,7 @@
 3. [🗓️개발 일정](#period)
 4. [🔨기술 스택 ](#technology-stack)
 5. [🔍기능 및 아키텍쳐](#function-and-structure)
+6. [🎥프로젝트 시연 영상](#project-video)
 
 <br>
 
@@ -110,3 +111,15 @@
    - openAI 할루시네이션 현상을 해결하기 위해 Goolgle Map 기반의 정보를 제공합니다.
    - 최신의 여행지 및 관광지 정보를 제공합니다. 
         ![Group 2](https://github.com/songhannaa/TripPass_Main/blob/main/pdf/0022.png)
+
+## <span id="project-video">6. 🎥 프로젝트 시연</span>
+
+### 🎥 시연 영상
+<a href = "https://drive.google.com/file/d/1ad_G7_xU3oxUH44IbKzzpp6FqSo8gU8f/view?usp=sharing">
+<img src="https://img.shields.io/badge/프로젝트 소개 영상-a374db?style=for-the-badge&logoColor=white"/>
+</a>
+<a href = "https://drive.google.com/file/d/1YiN4J9GIzEKVOqw6IEpehGkDNqBocLhd/view?usp=sharing">
+<img src="https://img.shields.io/badge/프로젝트 시연 영상-a374db?style=for-the-badge&logoColor=white"/>
+</a>
+<br/>
+
